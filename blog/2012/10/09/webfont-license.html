@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Web フォントとライセンス | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/10/09/webfont-license.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Web フォントとライセンス
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-10-08T15:00:00.000Z" itemprop="datePublished">2012-10-09</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/css/">css</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>Web フォントを利用する際、技術として理解するだけでなく、フォントに適用されたライセンスを理解しておくことも大切です。</p>
+<p>特に和文フォントにおいては</p>
+<ul>
+<li><a href="http://scripts.sil.org/OFL" target="_blank" rel="noopener">SIL Open Font License (OFL)</a></li>
+<li><a href="http://mplus-fonts.sourceforge.jp/mplus-outline-fonts/#license" target="_blank" rel="noopener">mplus Font License</a></li>
+<li><a href="http://ossipedia.ipa.go.jp/ipafont/#LicenseTOP" target="_blank" rel="noopener">IPAフォントライセンスv1.0</a></li>
+</ul>
+<p>あたりを適用されるケースが多いようです。また、これらのいずれかのライセンスが適用されていれば Web フォントとして利用することができます。ただし、ライセンスによる指示に従う必要があります。</p>
+<p>##各ライセンスの要点</p>
+<p>###SIL Open Font License (OFL)<br>OFL であることを明示すればほぼ自由に Web フォントに利用できます。ライセンス明示方法は後述。</p>
+<p>###mplus Font License<br>ほぼ自由に Web フォントに利用できます。ライセンス明示方法は後述。</p>
+<p>###IPA フォントライセンス v1.0<br>IPA フォントライセンスであることを明示し、かつ、オリジナルのフォントファイルを同梱すれば Web フォントに利用できます。ライセンス明示方法は後述。</p>
+<p>##各ライセンスの明示方法</p>
+<p>各ライセンスともに明確なライセンス明示方法は示されていません。しかし、これは <a href="http://www.exljbris.com/eula.html" target="_blank" rel="noopener">exljbris Font Foundry Free Font License</a> で指示されている方法が参考になります。</p>
+<p>exljbris Font Foundry Free Font License では、</p>
+<blockquote>
+<p>You may use this font for Font-Face embedding, but only if you put a link to <a href="http://www.exljbris.nl" target="_blank" rel="noopener">www.exljbris.nl</a> on your page and/or put this notice /<em> A font by Jos Buivenga (exljbris) -&gt; <a href="http://www.exljbris.com" target="_blank" rel="noopener">www.exljbris.com</a> </em>/ in your CSS file as near as possible to the piece of code that declares the Font-Face embedding of this font.</p>
+</blockquote>
+<p>のように、Web フォントを想定したライセンスとなっており、Web ページにフォントを埋め込む際には</p>
+<ul>
+<li>Web ページ内に配布元へのリンクを用意する</li>
+<li>CSS ファイル内にコメントで配布元の URL を用意する</li>
+</ul>
+<p>のいずれかで明示する必要があることを定めています。</p>
+<p>ですのでこれを参考に、OFL, M+, IPA ライセンスにおいても、例えば次のような形式で CSS ソースコード内にライセンス情報明示しておく方法がよさそうです。</p>
+<pre><code>/*!
+ * &quot;fontname&quot; is lisenced under the SIL Open Font License 1.1
+ * by http://font-foundry.com/fontname/
+ */
+@font-face {
+font-family: &apos;MyFontID&apos;;
+src: url(&apos;fontname.eot?&apos;) format(&apos;oldIE&apos;),
+     url(&apos;fontname.woff&apos;) format(&apos;woff&apos;),
+     url(&apos;fontname.ttf&apos;) format(&apos;truetype&apos;);
+}
+</code></pre><p>IPA フォントライセンスについては、これに追加して、オリジナルのフォントファイルをダウンロードできる URL を用意しておけばよさそうです。[要出典]</p>
+<p>##その他のライセンス</p>
+<p><a href="http://opentype.jp/" target="_blank" rel="noopener">武蔵システム</a>さんが公開しているフォントなどにはパブリックドメインが適用されています。パブリックドメインは、何も気にせず自由に利用していいライセンスです。</p>
+<p>##その他の独自ライセンス</p>
+<p>また一方で、個人でフォントを作成しているかたの場合、上記のような一般的なライセンスを明示していないケースも多いです。その場合は、それぞれの作者さんに確認する必要があります。</p>
+<p>2010年の時点で私が作者さんに連絡を取り、いただいた回答から確認した限りでは</p>
+<ul>
+<li>アームド・レモンなどの<a href="http://calligra-tei.oops.jp/" target="_blank" rel="noopener">海沿いカリグラ邸！</a>さん</li>
+<li>あんずもじなどの<a href="http://www8.plala.or.jp/p_dolce/" target="_blank" rel="noopener">京風子</a>さん</li>
+<li>ふい字などの<a href="http://hp.vector.co.jp/authors/VA039499/" target="_blank" rel="noopener">ふい</a>さん</li>
+</ul>
+<p>が Web フォントとして利用可能という回答をいただきました。ただし ふい字置き場。さんの公開するフォントについてはサブセットを承認していません。</p>
+<p>とはいえ、専門のフォントファウンダリ等が作成したフォントに比べると、個人の方が作成したフォントはグリフのアウトラインが複雑なものも多く、Web フォントとして利用する場合にはサブセット化するなどして容量を節約するなどの工夫が必要そうです。</p>
+<p>##CDN を利用する</p>
+<p>Web フォントの分野においてそれらの CDN の多くは有償です。例えば、<a href="http://webfont.fontplus.jp/" target="_blank" rel="noopener">FONT+</a> や <a href="http://www.typesquare.com/" target="_blank" rel="noopener">TypeSquare</a> が該当します。</p>
+<p>しかし、これらのサービスを利用するメリットとしては、サービス側でライセンスの問題を吸収してくれていますし、また、ダイナミックサブセッティングに対応している場合もあります。またその他様々な手間がかかる処理を CDN 側で引き受けてくれます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-10-09-webfont-license/img_01.png" alt=""></p>
+<p>費用はかかるものの、現時点においてはこうした CDN を利用するという選択肢が最良かもしれません。</p>
+<p>##関連情報</p>
+<ul>
+<li><a href="http://sourceforge.jp/projects/opensource/wiki/SIL_Open_Font_License_1.1" target="_blank" rel="noopener">SIL 日本語訳</a></li>
+<li><a href="http://slashdot.jp/journal/552099" target="_blank" rel="noopener">IPAフォント(or IPAフォントの派生フォント)はWebフォントとして使用できるか?</a></li>
+<li><a href="http://ossipedia.ipa.go.jp/ipafont/faq.html#q005-3" target="_blank" rel="noopener">5.3 AcrobatやFlashなどのコンテンツ作成用サーバーでの利用（ASP的なフォントの利用）について</a></li>
+</ul>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/10/01/mediaquery-goodpractice.html">
+					レスポンシブ・ウェブデザインでの CSS コードの書き方
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/01/create-terrain-with-threejs.html">
+					three.js の PlaneGeometry で地形を作る
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

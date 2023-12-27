@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの一歩、CSS Filter を知る | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/06/cssshaders1.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの一歩、CSS Filter を知る
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-05T15:00:00.000Z" itemprop="datePublished">2012-12-06</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 6日目の記事です。</p>
+<p>CSS Shaders は、利用することでこれまでの CSS の表現ではできなかった、要素に対する複雑な変形を行うことができます。例えば、サイン波を利用して次のような変形が可能です。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-06-cssshaders1/1.png" alt=""></p>
+<p>まずは CSS Shaders の書き方を知る前に CSS Filters についても少し知っておきましょう。</p>
+<h2 id="CSS-Filters-とは"><a href="#CSS-Filters-とは" class="headerlink" title="CSS Filters とは"></a>CSS Filters とは</h2><p>SVG にあった Filter 機能を整理した新しい仕様、<a href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/filters/index.html" target="_blank" rel="noopener">Filter Effects 1.0</a>の草案が現在 W3C に提出されています。この中には CSS のインターフェイスとして用意された filter プロパティーも含まれています。 CSS Filter とは特にこの filter プロパティーを指します。</p>
+<p>CSS の filter プロパティーには値として指定できる関数がいくつか用意されており、これらを利用すると簡単に表現効果を HTML の要素に与えることができます。</p>
+<p>例えば、半径を 5px ぼかしたいのであれば</p>
+<pre><code>selector{
+    -webkit-filter: blur( 5px );
+}
+</code></pre><p>のように記述します。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-06-cssshaders1/2.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-06-cssshaders1/blur.html">demo</a></p>
+<p>コントラストを強めたいのであれば</p>
+<pre><code>selector{
+    -webkit-filter: contrast( 5 );
+}
+</code></pre><p>のように指定します。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-06-cssshaders1/3.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-06-cssshaders1/contrast.html">demo</a></p>
+<p>この他に filter プロパティーの値として<a href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/filters/index.html#FilterFunction" target="_blank" rel="noopener">指定できる関数は様々あり</a>、その引数も、関数に応じて様々です。これらの filter 効果により、これまでの Web ではできなかった表現が可能となるわけです。</p>
+<table>
+<thead>
+<tr>
+<th>効果</th>
+<th>関数名</th>
+<th>引数に指定できる値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>グレースケール</td>
+<td>grayscale()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>セピア</td>
+<td>sepia()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>彩度</td>
+<td>saturate()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>色相</td>
+<td>hue-rotate()</td>
+<td>角度</td>
+</tr>
+<tr>
+<td>階調の反転</td>
+<td>invert()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>透明度</td>
+<td>opacity()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>明度</td>
+<td>brightness()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>コントラスト</td>
+<td>contrast()</td>
+<td>数値 or パーセンテージ</td>
+</tr>
+<tr>
+<td>ぼかし</td>
+<td>blur()</td>
+<td>長さ</td>
+</tr>
+<tr>
+<td>ドロップシャドウ</td>
+<td>drop-shadow()</td>
+<td>影</td>
+</tr>
+<tr>
+<td>SVGを参照する</td>
+<td>url()</td>
+<td>URL</td>
+</tr>
+<tr>
+<td>CSS Shaders!</td>
+<td>custom()</td>
+<td>shaderや分割数など</td>
+</tr>
+</tbody>
+</table>
+<p>さて、こうした filter プロパティーの関数の一つに custom() が存在します。CSS Shaders は、CSS Filters の中でも特に custom 関数のことを指します。そして、CSS Shaders、つまり CSS Filters の custom 関数利用することにより、冒頭に示したキャプチャーのような複雑な変形が可能なのです。</p>
+<p>次回は、custom() の使い方についてを解説します。</p>
+<hr>
+<p>余談ですが、Firefox では、SVG の Filter を CSS 経由で HTML の要素にも適用することができます。これにより、現在 WebKit に実装されている CSS Filters とほぼ同じ表現が Firefox でも可能です。ここで紹介した関数もおそらく<a href="https://developer.mozilla.org/en-US/docs/CSS/filter" target="_blank" rel="noopener">近いうちに実装される</a>でしょう。</p>
+<p>加えて余談ですが、冒頭で解説した通り、Internet Explorer は 4.0 から 9 まで独自に filter プロパティーを実装していました。これは今回紹介した W3C に提出されている filter プロパティーとシンタックスは別物ではありますが、よく似ているものも多数ありました。IE は Web 標準に足りない表現を昔からわかっていたというわけですね。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/01/create-terrain-with-threejs.html">
+					three.js の PlaneGeometry で地形を作る
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/07/cssshaders2.html">
+					CSS Shaders はじめの 2歩目、custom() で何が行われるのか
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

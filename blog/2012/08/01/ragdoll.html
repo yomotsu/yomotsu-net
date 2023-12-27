@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>THREE.js と box2dweb.js の組み合わせ | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/08/01/ragdoll.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				THREE.js と box2dweb.js の組み合わせ
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-07-31T15:00:00.000Z" itemprop="datePublished">2012-08-01</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>THREE.js の表示と Box2dweb.js の物理演算世界の組み合わせをためしてみました。</p>
+<p>##基本例</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-08-01-ragdoll/img_01.png" alt=""></p>
+<p>##マウス操作で遊べる例</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-08-01-ragdoll/img_02.png" alt=""></p>
+<p>Box2dweb.js は、Web上に情報が少ないものの box2d.js よりも使い勝手がよく、さまざまな表示系技術との組み合わせがしやすそうです。特徴としては、</p>
+<ul>
+<li>1ファイルにまとまっている</li>
+<li>依存ライブラリーは単体で動作する</li>
+<li>外部の表示技術と組み合わせなくても、物理演算世界のみをデバック表示できる</li>
+</ul>
+<p>といった感じです。</p>
+<p>基本は、付属の example.html を読めばわかると思うのですが、物理演算世界からの座標などの取得方法がそこになかったので以下にメモ。</p>
+<p>MyCreatedBody は、物理演算世界上に作成した剛体と考えてください。</p>
+<table><br><tr><th>x 座標取得</th><td>MyCreatedBody.GetPosition().x</td></tr><br><tr><th>y 座標取得</th><td>MyCreatedBody.GetPosition().y</td></tr><br><tr><th>回転角度取得</th><td>MyCreatedBody.GetAngle()</td></tr><br><tr><th>活動中か否か</th><td>MyCreatedBody.IsAwake()</td></tr><br></table>
+
+<p>これくらいわかれば Box2dweb の世界で計算した結果の座標を 2Dcanvas や SVG, WebGL に渡して楽しむことができるでしょう。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/07/29/physics-libraries.html">
+					box2d の JS ポートがたくさんある
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/09/11/think-about-rwd.html">
+					マルチデバイス時代のWebページ
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

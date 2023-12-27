@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width">
+<title>with Paper.js</title>
+</head>
+<body>
+
+<canvas width="960" height="540" id="myCanvas"></canvas>
+
+<script src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
+<script src="http://code.createjs.com/tweenjs-0.4.0.min.js"></script>
+<script src="paper.js"></script>
+<script>
+
+( function () {
+  var canvas = document.getElementById( 'myCanvas' );
+  paper.setup( canvas );
+
+   var segments = [
+    { x : 100 + Math.cos(   0 * Math.PI / 180 ) * 50 , y : 100 + Math.sin(   0 * Math.PI / 180 ) * 50 },
+    { x : 100 + Math.cos(  30 * Math.PI / 180 ) * 30 , y : 100 + Math.sin(  30 * Math.PI / 180 ) * 30 },
+    { x : 100 + Math.cos(  60 * Math.PI / 180 ) * 50 , y : 100 + Math.sin(  60 * Math.PI / 180 ) * 50 },
+    { x : 100 + Math.cos(  90 * Math.PI / 180 ) * 30 , y : 100 + Math.sin(  90 * Math.PI / 180 ) * 30 },
+    { x : 100 + Math.cos( 120 * Math.PI / 180 ) * 50 , y : 100 + Math.sin( 120 * Math.PI / 180 ) * 50 },
+    { x : 100 + Math.cos( 150 * Math.PI / 180 ) * 30 , y : 100 + Math.sin( 150 * Math.PI / 180 ) * 30 },
+    { x : 100 + Math.cos( 180 * Math.PI / 180 ) * 50 , y : 100 + Math.sin( 180 * Math.PI / 180 ) * 50 },
+    { x : 100 + Math.cos( 210 * Math.PI / 180 ) * 30 , y : 100 + Math.sin( 210 * Math.PI / 180 ) * 30 },
+    { x : 100 + Math.cos( 240 * Math.PI / 180 ) * 50 , y : 100 + Math.sin( 240 * Math.PI / 180 ) * 50 },
+    { x : 100 + Math.cos( 270 * Math.PI / 180 ) * 30 , y : 100 + Math.sin( 270 * Math.PI / 180 ) * 30 },
+    { x : 100 + Math.cos( 300 * Math.PI / 180 ) * 50 , y : 100 + Math.sin( 300 * Math.PI / 180 ) * 50 },
+    { x : 100 + Math.cos( 330 * Math.PI / 180 ) * 30 , y : 100 + Math.sin( 330 * Math.PI / 180 ) * 30 }
+  ];
+  var path = new paper.Path( segments );
+  path.closed = true;
+  path.smooth();
+  path.fillColor = '#ff3399';
+  path.selected = true;
+  path.position = {
+    x : 100,
+    y : 100
+  }
+
+  createjs.Tween.get( path.position, { loop: true } )
+  .to( { x: 300 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .to( { x: 100, y: 100 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .call( function() {
+    console.log( 'done!' );
+  } );
+
+  var update = function() {
+    paper.view.draw();
+  }
+
+  createjs.Ticker.setFPS( 60 );
+  createjs.Ticker.addEventListener( 'tick', update );
+} )();
+</script>
+</body>
+</html>

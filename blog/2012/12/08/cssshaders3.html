@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 3歩目、簡単な vertex shader を適用する | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/08/cssshaders3.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 3歩目、簡単な vertex shader を適用する
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-07T15:00:00.000Z" itemprop="datePublished">2012-12-08</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 8日目の記事です。</p>
+<p>この記事では、CSS Shaders の基本として、何も変形しない CSS Shader を適用する方法を解説します。特に vertex shader に注目し、fragment shader については後日触れます。</p>
+<h2 id="1-HTML-を用意する"><a href="#1-HTML-を用意する" class="headerlink" title="1. HTML を用意する"></a>1. HTML を用意する</h2><p>まずは CSS を適用する HTML を用意します。ここでは、テキストと画像のみの HTML を用意しました。あわせて CSS Shader による変化がわかりやすいように幅と背景スタイルを適用しておきます。</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;CSS Shaders!&lt;/title&gt;
+&lt;style&gt;
+.sample {
+    width:500px;
+    background: url( bg.png );
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;sample&quot;&gt;
+    &lt;p&gt;CSS Shader!! シィーエスエス シェーダー!! &lt;/p&gt;
+    &lt;img src=&quot;nyantocat.gif&quot; alt=&quot;&quot;&gt;
+    &lt;p&gt;the Nyantocat by Cameron McEfee&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p><img src="http://yomotsu.net/blog/assets/2012-12-08-cssshaders3/1.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-08-cssshaders3/1.html">ここまでの状態の demo</a></p>
+<h2 id="2-CSS-Shader-を適用する"><a href="#2-CSS-Shader-を適用する" class="headerlink" title="2. CSS Shader を適用する"></a>2. CSS Shader を適用する</h2><p>先ほど用意した div.sample に filter プロパティーで custom() を適用します。</p>
+<p>前回、custom 関数のシンタックスは</p>
+<pre><code>custom(&lt;vertex-shader&gt; &lt;fragment-shader&gt;? [ , &lt;vertex-mesh&gt; ]? [ , &lt;params&gt; ]?)
+</code></pre><p>のように紹介しました。それに沿い、ここでは custom() の引数に</p>
+<ol>
+<li>vertex shader : <code>url( shader.vs )</code></li>
+<li>fragment shader : <code>mix( url( shader.fs ) )</code></li>
+<li>分割数 : <code>32 32</code></li>
+</ol>
+<p>を指定していきます。なお、草案によると fragment shader は省略可能なのですが、Chrome 25 時点では明示する必要があったため、内容が空の fs ファイルを mix 関数で指定しています。fragment shader の扱いについては、後々解説できればと。</p>
+<p>上記をまとめた CSS のコードをつぎに示します。</p>
+<pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32
+    );
+}
+</code></pre><p>上記の <code>url()</code> で参照している shader.fs の内容は空です。</p>
+<h2 id="3-shader-vs-を用意する"><a href="#3-shader-vs-を用意する" class="headerlink" title="3. shader.vs を用意する"></a>3. shader.vs を用意する</h2><p>各 shader は GLSL という言語で記述する必要があります。ここでは次のようなコードを shader.vs としてみましょう。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+
+void main() {
+    gl_Position = a_position;
+}
+</code></pre><p>すると次のような表示がされるはずです。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-08-cssshaders3/2.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-08-cssshaders3/2.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<p>元の要素の大きさが WebGL のビューポートのように振る舞い、<code>a_position</code> で渡された要素の座標を <code>gl_Position</code> そのまま代入するとビューポートに対して 1 * 1 の大きさで表示されます。このビューポートのことを filter region box というようです。</p>
+<p>vertex shader のコードを 1行ずつ見ていきましょう。</p>
+<h3 id="1-行目"><a href="#1-行目" class="headerlink" title="1 行目"></a>1 行目</h3><pre><code>precision mediump float;
+</code></pre><p>float の精度を宣言しています。</p>
+<h3 id="3-行目"><a href="#3-行目" class="headerlink" title="3 行目"></a>3 行目</h3><pre><code>attribute vec4 a_position;
+</code></pre><p>attribute 変数として vec4 型の a_position を宣言しています。<code>a_position</code> はオブジェクト (HTML 要素) の座標情報で、その内容は CSS から自動的に vec4 型で渡されています。(WebGL では、これらの変数を自身で入力する必要がありますが、CSS Shader は分割数だけ宣言しておけば座標情報は自動で入力されるのです。) なお、<code>vec4</code> とは 4つの小数点数で構成される型です。<code>a_position</code> の内容には、x, y, z, w が入っています。</p>
+<p>なお、<code>a_position</code> のほかにも CSS から Shader へ暗黙に渡される変数は次があります。</p>
+<table>
+<thead>
+<tr>
+<th>変数種</th>
+<th>型</th>
+<th>変数名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attribute</td>
+<td>vec4</td>
+<td>a_position</td>
+</tr>
+<tr>
+<td>attribute</td>
+<td>vec2</td>
+<td>a_texCoord</td>
+</tr>
+<tr>
+<td>attribute</td>
+<td>vec2</td>
+<td>a_meshCoord</td>
+</tr>
+<tr>
+<td>attribute</td>
+<td>vec3</td>
+<td>a_triangleCoord</td>
+</tr>
+<tr>
+<td>uniform</td>
+<td>mat4</td>
+<td>u_projectionMatrix</td>
+</tr>
+<tr>
+<td>uniform</td>
+<td>vec2</td>
+<td>u_textureSize</td>
+</tr>
+<tr>
+<td>uniform</td>
+<td>vec4</td>
+<td>u_meshBox</td>
+</tr>
+<tr>
+<td>uniform</td>
+<td>vec2</td>
+<td>u_tileSize</td>
+</tr>
+<tr>
+<td>uniform</td>
+<td>vec2</td>
+<td>u_meshSize</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-7-行目"><a href="#5-7-行目" class="headerlink" title="5 ~ 7 行目"></a>5 ~ 7 行目</h3><pre><code>void main() {
+    gl_Position = a_position;
+}
+</code></pre><p>main 関数で <code>gl_Position</code> への代入をしています。shader は必ず一つの main 関数を持ち、自動的に実行されます。最終的に <code>gl_Position</code> に代入された座標が表示されるボックスの座標となります。ここでは、<code>a_position</code> をそのまま <code>gl_Position</code> に代入しているので、ビューポートの中央に 1 * 1 の大きさで元の要素が配置されます。</p>
+<h2 id="3-元の位置に配置する"><a href="#3-元の位置に配置する" class="headerlink" title="3. 元の位置に配置する"></a>3. 元の位置に配置する</h2><p>元の位置に表示するためには、射影変換行列として CSS から自動的に渡された <code>u_projectionMatrix</code> を <code>a_position</code> に乗算します。<code>u_projectionMatrix</code> は <code>mat4</code> 型なので vec4 型である <code>a_position</code> とは型が違いますがそこは GLSL がよしなにやってくれます。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+void main() {
+    gl_Position = u_projectionMatrix * a_position;
+}
+</code></pre><p>すると元の位置に表示されました。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-08-cssshaders3/3.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-08-cssshaders3/3.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<p>次回は表示結果をもうすこし変形させてみようと思います。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/07/cssshaders2.html">
+					CSS Shaders はじめの 2歩目、custom() で何が行われるのか
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/09/cssshaders4.html">
+					CSS Shaders はじめの 4歩目、簡単な変形 1
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

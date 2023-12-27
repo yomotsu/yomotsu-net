@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>New skinned mesh animation system in three.js r73 and r74 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2015/10/31/three-r73-anim.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				New skinned mesh animation system in three.js r73 and r74
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2015-10-30T15:00:00.000Z" itemprop="datePublished">2015-10-31</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>The animation system for Skinned Mesh of three.js has been changed alot at <a href="https://github.com/mrdoob/three.js/releases/tag/r73" target="_blank" rel="noopener">r73</a> and the documentation for it is still not added. Therefore, getting it might be a little bit difficult for now. Also Blender Exporter has been renewed recently. This blog post is a quick note of a basic usage of the new animation system.</p>
+<p>First, you need to prepare a 3D model in three.js JSON format. To publish it, I personally recommend Blender (Blender Exporter is well maintained as well as three.js). Make sure to apply <strong>rest pose</strong> before publishing. To apply it,</p>
+<p>Clear all pose and hit [CTRL + A] in Pose Mode (might be unnecessary)</p>
+<p><img src="/blog/assets/2015-10-31-three-r73-anim/img_01.png" alt=""></p>
+<p>Hit [CTRL + A] in Object Mode and check Location, Rotation and Scale in the left pane (necessary)</p>
+<p><img src="/blog/assets/2015-10-31-three-r73-anim/img_02.png" alt=""></p>
+<p>See also <a href="https://youtu.be/ZFb5F8brFLw?t=5m6s" target="_blank" rel="noopener">this video</a></p>
+<p>When you publish the model, check skinned mesh related options.</p>
+<p><img src="/blog/assets/2015-10-31-three-r73-anim/img_03.png" alt=""></p>
+<p>If you see this message below, select the mesh in 3D View before export. FYI: Multiple meshes must be merged to one mesh.</p>
+<p><img src="/blog/assets/2015-10-31-three-r73-anim/img_04.png" alt=""></p>
+<p>And then, write some code as usual. After loaded the model file, make <code>THREE.AnimationAction</code> instances which is a kinda container for an animation, and then add them to a <code>THREE.AnimationMixer</code> instance which manages animations. The Mixer will mix all animations together as one mixed animation, and you can set how much influence from each animations. Generally set <code>weight</code> to <code>1</code> for the active animation and <code>0</code> for others. To change the animation smoothly, there is <code>crossFade</code> method of the mixer. It will cross-fade <code>weight</code> values of 2 animations.</p>
+<p>Here is the code and a demo down below.</p>
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><ul>
+<li><a href="/blog/assets/2015-10-31-three-r73-anim/demo1.html">demo1 (three.js r73)</a></li>
+<li><a href="/blog/assets/2015-10-31-three-r73-anim/demo2.html">demo2 (three.js r73)</a></li>
+</ul>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">&apos;use strict&apos;;</span><br><span class="line"></span><br><span class="line">var width, height, clock, scene, camera, renderer;</span><br><span class="line">var loader = new THREE.JSONLoader();</span><br><span class="line">var ambientLight, mesh, action = &#123;&#125;, mixer, fadeAction;</span><br><span class="line"></span><br><span class="line">width  = window.innerWidth;</span><br><span class="line">height = window.innerHeight;</span><br><span class="line">clock  = new THREE.Clock();</span><br><span class="line">scene  = new THREE.Scene();</span><br><span class="line">camera = new THREE.PerspectiveCamera( 40, width / height, 1, 100 );</span><br><span class="line">camera.position.set( 0, 1, 4 );</span><br><span class="line">renderer = new THREE.WebGLRenderer();</span><br><span class="line">renderer.setSize( width, height );</span><br><span class="line">document.body.appendChild( renderer.domElement );</span><br><span class="line"></span><br><span class="line">ambientLight = new THREE.AmbientLight( 0xffffff );</span><br><span class="line">scene.add( ambientLight );</span><br><span class="line"></span><br><span class="line">loader.load( &apos;./rin.json&apos;, function( geometry, materials ) &#123;</span><br><span class="line"></span><br><span class="line">  materials.forEach( function ( material ) &#123;</span><br><span class="line"></span><br><span class="line">    material.skinning = true;</span><br><span class="line"></span><br><span class="line">  &#125; );</span><br><span class="line"></span><br><span class="line">  mesh = new THREE.SkinnedMesh(</span><br><span class="line">    geometry,</span><br><span class="line">    new THREE.MeshFaceMaterial( materials )</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  action.idle  = new THREE.AnimationAction( geometry.animations[ 0 ] );</span><br><span class="line">  action.run   = new THREE.AnimationAction( geometry.animations[ 1 ] );</span><br><span class="line">  action.jump  = new THREE.AnimationAction( geometry.animations[ 2 ] );</span><br><span class="line">  action.slide = new THREE.AnimationAction( geometry.animations[ 3 ] );</span><br><span class="line"></span><br><span class="line">  action.idle.weight  = 1;</span><br><span class="line">  action.run.weight   = 0;</span><br><span class="line">  action.jump.weight  = 0;</span><br><span class="line">  action.slide.weight = 0;</span><br><span class="line">  // action.jump.loop = THREE.LoopOnce;</span><br><span class="line"></span><br><span class="line">  mixer = new THREE.AnimationMixer( mesh );</span><br><span class="line">  mixer.addAction( action.idle );</span><br><span class="line">  mixer.addAction( action.run );</span><br><span class="line">  mixer.addAction( action.jump );</span><br><span class="line">  mixer.addAction( action.slide );</span><br><span class="line"></span><br><span class="line">  scene.add( mesh );</span><br><span class="line"></span><br><span class="line">&#125; );</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fadeAction = function () &#123;</span><br><span class="line"></span><br><span class="line">  var activeActionName = &apos;idle&apos;;</span><br><span class="line"></span><br><span class="line">  return function ( name ) &#123;</span><br><span class="line"></span><br><span class="line">    mixer.crossFade( action[ activeActionName ], action[ name ], .3 );</span><br><span class="line">    activeActionName = name;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;( function update () &#123;</span><br><span class="line"></span><br><span class="line">  requestAnimationFrame( update );</span><br><span class="line"></span><br><span class="line">  var delta = clock.getDelta();</span><br><span class="line">  var theta = clock.getElapsedTime();</span><br><span class="line"></span><br><span class="line">  if ( mixer ) &#123; mixer.update( delta ); &#125;</span><br><span class="line"></span><br><span class="line">  renderer.render( scene, camera );</span><br><span class="line"></span><br><span class="line">&#125; )();</span><br></pre></td></tr></table></figure>
+<p>You can change the animation, using <code>crossFade</code>. The animation will cross-fade from actionInstanceA to actionInstanceB over 0.5 sec.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mixerInstance.crossFade( actionInstanceA, actionInstanceB, 0.5 );</span><br></pre></td></tr></table></figure>
+<hr>
+<p>Updated and added below on Feb 7th, 2016</p>
+<h2 id="three-js-r74"><a href="#three-js-r74" class="headerlink" title="three.js r74"></a>three.js r74</h2><p>Animation System was changed again at r74, for <a href="https://github.com/mrdoob/three.js/pull/7312" target="_blank" rel="noopener">performance optimization</a>.</p>
+<p><code>AnimationAction</code> class has been removed, you need to make <strong>instant</strong> instances with <code>mixer.clipAction()</code>.</p>
+<p><code>fadeIn()</code> and <code>fadeOut()</code> are now clip instance’s methods, and previous <code>crossFade()</code> has been split into <code>crossFadeFrom()</code> and <code>crossFadeTo()</code>.</p>
+<p>If you would like to set <code>LoopOnce</code>, use <code>setLoop()</code> and <code>clampWhenFinished</code> prop.</p>
+<p>Here is an example for r74. check the code.</p>
+<ul>
+<li><a href="/blog/assets/2015-10-31-three-r73-anim/demo3.html">demo3 (three.js r74)</a></li>
+</ul>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2015/10/12/autodesk-a360-view-api.html">
+					Advanced usage of A360 View and Data API
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2015/12/25/xmas.html">
+					Merry Christmas with three.js and cannon.js
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

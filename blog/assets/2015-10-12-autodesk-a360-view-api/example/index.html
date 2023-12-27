@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>=^.^=</title>
+<link rel="stylesheet" href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.css">
+<style>
+body{margin: 0;}
+#viewer{display: block;}
+#ctrl{position: absolute; z-index: 2;}
+</style>
+</head>
+<body>
+<div id="ctrl"><button onclick="modelData.play()">play</button><button onclick="modelData.pause()">pause</button></div>
+<div id="viewerContainer"></div>
+
+<script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.min.js"></script>
+<script type="application/javascript;version=1.7">
+// <script>
+;( function () {
+
+  // A360 viewer version: 1.2.16
+
+  'use strict';
+
+  let urn = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6ZXhhbXBsZTEvY2xvY2szLjNkcw';
+  let viewerElement = document.getElementById( 'viewerContainer' );
+  let viewer = new Autodesk.Viewing.Viewer3D( viewerElement, {} );
+
+  let ModelData = function ( viewer ) {
+
+    let that = this;
+
+    this.isAnim = false;
+    this.viewer = viewer;
+    this.clock  = new THREE.Clock();
+    this.mesh = [
+      {
+        // outer gear
+        id: 0,
+        flagProxy: null,
+        position: new THREE.Vector3( 0, 16.4, 5.5 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // body
+        id: 1,
+        flagProxy: null,
+        position: new THREE.Vector3( 0, 15, 5 ),
+        animation: ( function ( time ) {
+
+          return function ( time ) {
+
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // inner gear
+        id: 2,
+        flagProxy: null,
+        position: new THREE.Vector3( 0, 16.4, 5.5 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // small gear top
+        id: 3,
+        flagProxy: null,
+        position: new THREE.Vector3( 0, 53.5, 5.25 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 * 5 + 20 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // small gear left
+        id: 4,
+        flagProxy: null,
+        position: new THREE.Vector3( 5.2, 29, 5.25 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 * 5 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // small gear right
+        id: 5,
+        flagProxy: null,
+        position: new THREE.Vector3( -5.2, 29, 5.25 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 * 5 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // shaft top
+        id: 6,
+        flagProxy: null,
+        position: new THREE.Vector3( 0, 53.5, 5.25 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 * 5 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // shaft left
+        id: 7,
+        flagProxy: null,
+        position: new THREE.Vector3( 5.2, 29, 5.25 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 * 5 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      },
+      {
+        // shaft left
+        id: 8,
+        flagProxy: null,
+        position: new THREE.Vector3( -5.2, 29, 5.25 ),
+        animation: ( function ( time ) {
+
+          const AXIS = new THREE.Vector3( 0, 0, 1 );
+
+          return function ( time ) {
+
+            that.rotate( this.flagProxy, AXIS, time * 60 * 5 );
+            that.translate( this.flagProxy, this.position );
+
+          }
+
+        } )()
+      }
+    ];
+
+    //mesh
+    this.mesh.forEach( function ( obj ) {
+
+      let flagProxy;
+
+      flagProxy = viewer.impl.getFragmentProxy( viewer.model, obj.id );
+      obj.flagProxy = flagProxy;
+      obj.animation( 0 );
+
+    } );
+
+  }
+
+  ModelData.prototype = {
+
+    translate: function ( flagProxy, vec3 ) {
+
+      flagProxy.getAnimTransform();
+      flagProxy.position.copy( vec3 );
+      flagProxy.updateAnimTransform();
+
+    },
+
+    scale: function ( flagProxy, vec3 ) {
+
+      flagProxy.getAnimTransform();
+      flagProxy.scale.copy( vec3 );
+      flagProxy.updateAnimTransform();
+
+    },
+
+    rotate: function ( flagProxy, axis, deg ) {
+
+      flagProxy.getAnimTransform();
+      flagProxy.quaternion.setFromAxisAngle( axis, THREE.Math.degToRad( deg ) );
+      flagProxy.updateAnimTransform();
+
+    },
+
+    play: function () {
+
+      this.clock.start();
+      this.isAnim = true;
+      this.animation();
+
+    },
+
+    pause: function () {
+
+      this.clock.stop();
+      this.isAnim = false;
+
+    },
+
+    animation: function () {
+
+      if ( !this.isAnim ) { return; }
+
+      requestAnimationFrame( this.animation.bind( this ) );
+      let theta = this.clock.getElapsedTime();
+
+      this.mesh.forEach( function ( obj ) {
+
+        obj.animation( theta );
+
+      } );
+
+      viewer.impl.invalidate( true );
+
+    }
+
+  };
+
+  //--
+
+  let accessToken = {
+    // expires: 0,
+    data: null,
+    get: function () {
+
+      return this.data;
+
+    },
+    update: function () {
+
+      return new Promise( function( onFulfilled, onRejected ) {
+
+        var req = new XMLHttpRequest();
+        req.open( 'GET', './get-token.php?test=false' );
+
+        req.onload = function() {
+
+          if ( req.status === 200 ) {
+
+            let data = JSON.parse( req.response );
+            // accessToken.expires = Date.now() + data.expires_in;
+            accessToken.data    = data.access_token;
+            onFulfilled();
+
+          }
+
+        };
+
+        req.send();
+
+      } );
+
+    }
+  };
+
+
+  //--
+
+  function initViewer () {
+    
+    let options = {
+
+      env:'AutodeskProduction',
+      accessToken: accessToken.get(),
+      document : 'urn:' + urn,
+
+    };
+
+    return new Promise( function( onFulfilled, onRejected ) {
+
+      Autodesk.Viewing.Initializer( options, function () {
+
+        viewer.initialize();
+        viewer.impl.setLightPreset( 8 );
+        viewer.setOptimizeNavigation( true );
+        // viewer.navigation.setZoomTowardsPivot( true );
+        // viewer.navigation.setReverseZoomDirection( true );
+        onFulfilled();
+
+
+        viewer.addEventListener(
+          Autodesk.Viewing.SELECTION_CHANGED_EVENT,
+          function ( event ) {
+            console.log( event.fragIdsArray );
+        } );
+
+      } );
+
+    } );
+
+  }
+
+
+  function loadDocument () {
+
+    return new Promise( function( onFulfilled, onRejected ) {
+
+      viewer.addEventListener(
+        Autodesk.Viewing.GEOMETRY_LOADED_EVENT,
+        function () { onFulfilled(); }
+      );
+
+      Autodesk.Viewing.Document.load( 'urn:' + urn, function ( doc ) {
+
+        let geometryItems = [];
+
+        geometryItems = Autodesk.Viewing.Document.getSubItemsWithProperties(
+          doc.getRootItem(),
+          {
+            'type' : 'geometry',
+            'role' : '3d'
+          },
+          true
+        );
+
+        if ( geometryItems.length > 0 ) {
+
+          viewer.load( doc.getViewablePath( geometryItems[ 0 ] ) );
+
+        }
+
+      }, function( errorMsg ) {// onErrorCallback
+
+        alert( 'Load Error: ' + errorMsg );
+
+      } );
+
+    } );
+
+  }
+
+
+  function onload () {
+
+    console.log( 'loaded!' );
+    window.modelData = new ModelData( viewer );
+
+  }
+
+  //--
+
+  Promise.resolve()
+  .then( accessToken.update )
+  .then( initViewer )
+  .then( loadDocument )
+  .then( onload );
+
+} )();
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>a solution to control font-size relatively with media queries in Sass | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2014/03/30/relative-font-size-in-sass.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				a solution to control font-size relatively with media queries in Sass
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2014-03-29T15:00:00.000Z" itemprop="datePublished">2014-03-30</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>SCSS で media queries を使いながら、相対的に font-size を扱うよさ気な方法を思いついた。</p>
+<p>I just conceived a good solution to control font-size relatively with media queries in Sass.</p>
+<h2 id="settings"><a href="#settings" class="headerlink" title="settings"></a>settings</h2><p>At first, you can change…</p>
+<ul>
+<li>base font sizes, which is referenced by reading text like <p> and othres…</p></li>
+<li>brakepoints for mediaqueries</li>
+</ul>
+<p>and here is the settings and mixins</p>
+<pre><code>$font-size-desktop     : 12px; // base font size for desktop
+$font-size-middlescreen: 14px; // base font size for tablet
+$font-size-smallscreen : 16px; // base font size for smartphone
+
+$breakpoint-desktop     : 1024px;
+$breakpoint-middlescreen: 768px;
+$breakpoint-smallscreen : 320px;
+
+// do not change below this line ---
+
+$_basefontsize: $font-size-desktop;
+
+@function parseInt ( $x ) {
+  @return $x / ( 1 + $x - $x );
+}
+
+@function fs ( $relativeSize ) {
+  @return $_basefontsize + ( $relativeSize * 2 );
+}
+
+@mixin max-screen( $res ) {
+  @media screen and ( max-width: $res ) {
+    @if parseInt( $res ) &lt; parseInt( $breakpoint-desktop ) {
+      $_basefontsize: $font-size-desktop;
+    }
+    @if parseInt( $res ) &lt; parseInt( $breakpoint-middlescreen ) {
+      $_basefontsize: $font-size-middlescreen;
+    }
+    @if parseInt( $res ) &lt; parseInt( $breakpoint-smallscreen ) {
+      $_basefontsize: $font-size-smallscreen;
+    }
+    @content;
+    $_basefontsize: $font-size-desktop;
+  }
+}
+</code></pre><h2 id="SCSS-code-example"><a href="#SCSS-code-example" class="headerlink" title="SCSS code example"></a>SCSS code example</h2><p>And then, write some code in scss, with <code>fs</code> mixin and <code>max-screen</code> mixin. here is a example.</p>
+<pre><code>.myModule1 {
+  font-size: fs( 0 );
+  @include max-screen( $breakpoint-smallscreen ) {
+    font-size: fs( 0 );
+  }
+}
+
+.myModule2 {
+  font-size: fs( +1 );
+  @include max-screen( $breakpoint-smallscreen ) {
+    font-size: fs( +1 );
+  }
+}
+
+.myModule3 {
+  font-size: fs( +2 );
+    @include max-screen( $breakpoint-smallscreen ) {
+      font-size: fs( +2 );
+    }
+  .myModule3__elm{
+    font-size: fs( 0 );
+    @include max-screen( $breakpoint-smallscreen ) {
+      font-size: fs( 0 );
+    }
+  }
+}
+</code></pre><h2 id="output"><a href="#output" class="headerlink" title="output"></a>output</h2><p>after compilation, you will get css code below</p>
+<pre><code>.myModule1 {
+  font-size: 12px; }
+  @media screen and (max-width: 320px) {
+    .myModule1 {
+      font-size: 14px; } }
+
+.myModule2 {
+  font-size: 14px; }
+  @media screen and (max-width: 320px) {
+    .myModule2 {
+      font-size: 16px; } }
+
+.myModule3 {
+  font-size: 16px; }
+  @media screen and (max-width: 320px) {
+    .myModule3 {
+      font-size: 18px; } }
+  .myModule3 .myModule3__elm {
+    font-size: 12px; }
+    @media screen and (max-width: 320px) {
+      .myModule3 .myModule3__elm {
+        font-size: 14px; } }
+</code></pre>
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/02/26/facial-animation.html">
+					applying facial animations to Miku (WIP)
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/03/31/fractal.html">
+					WebGL でマンデルブロ集合とジュリア集合
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

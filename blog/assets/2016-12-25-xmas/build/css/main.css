@@ -1,0 +1,916 @@
+/*! normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
+/**
+ * 1. Change the default font family in all browsers (opinionated).
+ * 2. Correct the line height in all browsers.
+ * 3. Prevent adjustments of font size after orientation changes in
+ *    IE on Windows Phone and in iOS.
+ */
+/* Document
+   ========================================================================== */
+@import url("https://fonts.googleapis.com/css?family=Josefin+Sans:400");
+@import url("https://fonts.googleapis.com/css?family=Vast+Shadow:400");
+html {
+  font-family: sans-serif;
+  /* 1 */
+  line-height: 1.15;
+  /* 2 */
+  -ms-text-size-adjust: 100%;
+  /* 3 */
+  -webkit-text-size-adjust: 100%;
+  /* 3 */ }
+
+/* Sections
+   ========================================================================== */
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+body {
+  margin: 0; }
+
+/**
+ * Add the correct display in IE 9-.
+ */
+article,
+aside,
+footer,
+header,
+nav,
+section {
+  display: block; }
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0; }
+
+/* Grouping content
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in IE.
+ */
+figcaption,
+figure,
+main {
+  /* 1 */
+  display: block; }
+
+/**
+ * Add the correct margin in IE 8.
+ */
+figure {
+  margin: 1em 40px; }
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+hr {
+  box-sizing: content-box;
+  /* 1 */
+  height: 0;
+  /* 1 */
+  overflow: visible;
+  /* 2 */ }
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+pre {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */ }
+
+/* Text-level semantics
+   ========================================================================== */
+/**
+ * 1. Remove the gray background on active links in IE 10.
+ * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.
+ */
+a {
+  background-color: transparent;
+  /* 1 */
+  -webkit-text-decoration-skip: objects;
+  /* 2 */ }
+
+/**
+ * Remove the outline on focused links when they are also active or hovered
+ * in all browsers (opinionated).
+ */
+a:active,
+a:hover {
+  outline-width: 0; }
+
+/**
+ * 1. Remove the bottom border in Firefox 39-.
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+abbr[title] {
+  border-bottom: none;
+  /* 1 */
+  text-decoration: underline;
+  /* 2 */
+  text-decoration: underline dotted;
+  /* 2 */ }
+
+/**
+ * Prevent the duplicate application of `bolder` by the next rule in Safari 6.
+ */
+b,
+strong {
+  font-weight: inherit; }
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+b,
+strong {
+  font-weight: bolder; }
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */ }
+
+/**
+ * Add the correct font style in Android 4.3-.
+ */
+dfn {
+  font-style: italic; }
+
+/**
+ * Add the correct background and color in IE 9-.
+ */
+mark {
+  background-color: #ff0;
+  color: #000; }
+
+/**
+ * Add the correct font size in all browsers.
+ */
+small {
+  font-size: 80%; }
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+sub {
+  bottom: -0.25em; }
+
+sup {
+  top: -0.5em; }
+
+/* Embedded content
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ */
+audio,
+video {
+  display: inline-block; }
+
+/**
+ * Add the correct display in iOS 4-7.
+ */
+audio:not([controls]) {
+  display: none;
+  height: 0; }
+
+/**
+ * Remove the border on images inside links in IE 10-.
+ */
+img {
+  border-style: none; }
+
+/**
+ * Hide the overflow in IE.
+ */
+svg:not(:root) {
+  overflow: hidden; }
+
+/* Forms
+   ========================================================================== */
+/**
+ * 1. Change the font styles in all browsers (opinionated).
+ * 2. Remove the margin in Firefox and Safari.
+ */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: sans-serif;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: 1.15;
+  /* 1 */
+  margin: 0;
+  /* 2 */ }
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+button,
+input {
+  /* 1 */
+  overflow: visible; }
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+button,
+select {
+  /* 1 */
+  text-transform: none; }
+
+/**
+ * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
+ *    controls in Android 4.
+ * 2. Correct the inability to style clickable types in iOS and Safari.
+ */
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */ }
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0; }
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText; }
+
+/**
+ * Change the border, margin, and padding in all browsers (opinionated).
+ */
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em; }
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+legend {
+  box-sizing: border-box;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  display: table;
+  /* 1 */
+  max-width: 100%;
+  /* 1 */
+  padding: 0;
+  /* 3 */
+  white-space: normal;
+  /* 1 */ }
+
+/**
+ * 1. Add the correct display in IE 9-.
+ * 2. Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+progress {
+  display: inline-block;
+  /* 1 */
+  vertical-align: baseline;
+  /* 2 */ }
+
+/**
+ * Remove the default vertical scrollbar in IE.
+ */
+textarea {
+  overflow: auto; }
+
+/**
+ * 1. Add the correct box sizing in IE 10-.
+ * 2. Remove the padding in IE 10-.
+ */
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */ }
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto; }
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */ }
+
+/**
+ * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.
+ */
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */ }
+
+/* Interactive
+   ========================================================================== */
+/*
+ * Add the correct display in IE 9-.
+ * 1. Add the correct display in Edge, IE, and Firefox.
+ */
+details,
+menu {
+  display: block; }
+
+/*
+ * Add the correct display in all browsers.
+ */
+summary {
+  display: list-item; }
+
+/* Scripting
+   ========================================================================== */
+/**
+ * Add the correct display in IE 9-.
+ */
+canvas {
+  display: inline-block; }
+
+/**
+ * Add the correct display in IE.
+ */
+template {
+  display: none; }
+
+/* Hidden
+   ========================================================================== */
+/**
+ * Add the correct display in IE 10-.
+ */
+[hidden] {
+  display: none; }
+
+/* ==========================================================================
+   Yu Gothic
+   ========================================================================== */
+@font-face {
+  font-family: "xYuGothic";
+  font-weight: normal;
+  src: local("YuGothic-Medium"), local("Yu Gothic Medium"), local("YuGo-Medium"), local("YuGothic Medium"), local("YuGothic-Regular"), local("Yu Gothic");
+  /* family name */ }
+
+@font-face {
+  font-family: "xYuGothic";
+  font-weight: bold;
+  src: local("YuGothic-Bold"), local("Yu Gothic Bold"), local("YuGo-Bold"), local("YuGothic Bold"), local("Yu Gothic");
+  /* family name */ }
+
+/* ==========================================================================
+   Yu Mincho
+   ========================================================================== */
+@font-face {
+  font-family: "xYuMincho";
+  font-weight: normal;
+  src: local("YuMincho-Regular"), local("Yu Mincho Regular"), local("YuMin-Medium"), local("YuMincho Medium"), local("Yu Mincho");
+  /* family name */ }
+
+@font-face {
+  font-family: "xYuMincho";
+  font-weight: bold;
+  src: local("YuMincho-Demibold"), local("Yu Mincho Demibold"), local("YuMin-Demibold"), local("YuMincho Demibold"), local("Yu Mincho");
+  /* family name */ }
+
+/* ==========================================================================
+   Section comment block
+   ========================================================================== */
+/* Sub-section comment block
+   ========================================================================== */
+/* Basic comment */
+/* jump
+   ========================================================================== */
+@keyframes anim-jump {
+  0% {
+    transform: translateY(0) scaleY(1); }
+  20% {
+    transform: translateY(2px) scaleY(0.6); }
+  60% {
+    transform: translateY(-5px) scaleY(1.1); }
+  100% {
+    transform: translateY(0) scaleY(1); } }
+
+/* scale
+   ========================================================================== */
+@keyframes anim-scaleup {
+  0% {
+    transform: none; }
+  40% {
+    transform: scale(1.05); }
+  100% {
+    transform: none; } }
+
+/* ==========================================================================
+   for styleguide
+   ========================================================================== */
+.DEBUG {
+  color: #FFF;
+  font-size: 16px;
+  font-family: "Josefin Sans", "xYuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+  padding: 5px;
+  margin: 1em 0;
+  background: orange; }
+
+#__bs_notify__ {
+  pointer-events: none; }
+
+@media \0screen {
+  _x {
+    _x: 0; } }
+
+@media (min-width: 0\0) and (min-resolution: 0.001dpcm) {
+  _x {
+    _x: 1; } }
+
+@media (max-width: 979px) {
+  _x {
+    _x: 2; } }
+
+@media (max-width: 767px) {
+  _x {
+    _x: 3; } }
+
+@media (max-width: 639px) {
+  _x {
+    _x: 4; } }
+
+/* modifier: align
+   ========================================================================== */
+.xmas2016--alignLeft {
+  text-align: left !important; }
+
+.xmas2016--alignRight {
+  text-align: right !important; }
+
+.xmas2016--alignCenter {
+  text-align: center !important; }
+
+.xmas2016--alignTop {
+  vertical-align: top !important; }
+
+.xmas2016--alignMiddle {
+  vertical-align: middle !important; }
+
+.xmas2016--alignBottom {
+  vertical-align: bottom !important; }
+
+/* modifier: display
+   ========================================================================== */
+:root .xmas2016--disableLargeScreen {
+  display: none; }
+
+@media screen and (max-width: 767px) and (min-width: 640px) {
+  :root .xmas2016--disableLargeScreen {
+    display: block; }
+  :root .xmas2016--disableMiddleScreen {
+    display: none !important; }
+  :root .xmas2016--disableSmallScreen {
+    display: block; }
+  :root span.xmas2016--disableLargeScreen,
+  :root br.xmas2016--disableLargeScreen {
+    display: inline; }
+  :root span.xmas2016--disableMiddleScreen,
+  :root br.xmas2016--disableMiddleScreen {
+    display: none !important; }
+  :root span.xmas2016--disableSmallScreen,
+  :root br.xmas2016--disableSmallScreen {
+    display: inline; } }
+
+@media (max-width: 639px) {
+  :root .xmas2016--disableLargeScreen {
+    display: block; }
+  :root .xmas2016--disableMiddleScreen {
+    display: block; }
+  :root .xmas2016--disableSmallScreen {
+    display: none !important; }
+  :root span.xmas2016--disableLargeScreen,
+  :root br.xmas2016--disableLargeScreen {
+    display: inline; }
+  :root span.xmas2016--disableMiddleScreen,
+  :root br.xmas2016--disableMiddleScreen {
+    display: inline; }
+  :root span.xmas2016--disableSmallScreen,
+  :root br.xmas2016--disableSmallScreen {
+    display: none !important; } }
+
+/* ==========================================================================
+   general style
+   ========================================================================== */
+::-moz-selection {
+  background: rgba(204, 204, 204, 0.6);
+  text-shadow: none; }
+
+::selection {
+  background: rgba(204, 204, 204, 0.6);
+  text-shadow: none; }
+
+html {
+  color: #242424;
+  font-family: "Josefin Sans", "xYuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0; }
+
+a {
+  transition: color .2s; }
+  a:hover, a:active {
+    transition: color 0s; }
+
+input, button {
+  font-family: inherit; }
+
+/* ==========================================================================
+   Section comment block
+   ========================================================================== */
+/* Sub-section comment block
+   ========================================================================== */
+/* Basic comment */
+/* ==========================================================================
+   .xmas2016-Splash
+   ========================================================================== */
+.xmas2016-Splash.xmas2016-Splash {
+  color: #FFF;
+  position: absolute;
+  z-index: 12;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: table;
+  width: 100%;
+  height: 100%;
+  background-color: #A81C1C; }
+
+.xmas2016-Splash.v-leave, .xmas2016-Splash.v-leave-active {
+  opacity: 0;
+  transition: all 1.5s; }
+
+.xmas2016-Splash .xmas2016-Splash__Inner {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 20px; }
+
+.xmas2016-Splash .xmas2016-Splash__Title {
+  font-family: 'Vast Shadow', cursive;
+  line-height: 1.2;
+  text-align: center; }
+
+.xmas2016-Splash .xmas2016-Splash__TitleMain {
+  font-size: 32px; }
+
+.xmas2016-Splash .xmas2016-Splash__TitleSub {
+  font-size: 24px; }
+
+.xmas2016-Splash .xmas2016-Splash__TitleLogo {
+  width: 200px;
+  height: 60px;
+  margin: 0 auto 10px;
+  background-image: url("../../static/img/bg_01.svg"); }
+
+.xmas2016-Splash .xmas2016-Splash__StartButtonOuter {
+  text-align: center;
+  margin: 35px 0 10px;
+  position: relative;
+  z-index: 1; }
+
+.xmas2016-Splash .xmas2016-Splash__StartButton {
+  color: #fff;
+  font-size: 100%;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  min-width: 160px;
+  padding: 12px 10px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(255, 255, 255, 0.5);
+  background-color: #EB9619;
+  transition: color .2s, letter-spacing .6s, background-color .2s; }
+  .xmas2016-Splash .xmas2016-Splash__StartButton:disabled {
+    color: #ccc;
+    background-color: #FFF; }
+  .xmas2016-Splash .xmas2016-Splash__StartButton:hover:not(:disabled) {
+    color: #fff;
+    letter-spacing: 0.1em;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1), 0 0 0 10px rgba(255, 255, 255, 0);
+    background-color: #f4ad45;
+    transition: color 0.2s, letter-spacing 0.2s, box-shadow 0.6s cubic-bezier(0.25, 0.8, 0.5, 1), background-color 0.2s; }
+
+.xmas2016-Splash .xmas2016-Splash__ProgressBar {
+  max-width: 300px;
+  padding: 0 10px;
+  margin: auto; }
+
+.xmas2016-Splash .xmas2016-Splash__ProgressBarIcon {
+  position: relative;
+  width: 60px;
+  height: 40px;
+  margin: 0 0 5px -30px;
+  background-image: url("../../static/img/bg_02.svg");
+  transition: left .5s; }
+
+.xmas2016-Splash .xmas2016-Splash__ProgressBarTrack {
+  width: 100%;
+  height: 14px;
+  border-radius: 6px;
+  background: #002D40; }
+
+.xmas2016-Splash .xmas2016-Splash__ProgressBarValue {
+  width: 0;
+  height: 100%;
+  border-radius: 6px;
+  background-color: #ade7ff;
+  transition: width .5s; }
+
+.xmas2016-Splash .xmas2016-Splash__ProgressBarPercentage {
+  color: #002D40;
+  font-size: 14px;
+  text-align: center;
+  position: relative;
+  width: 4em;
+  padding: 2px 0;
+  margin: 10px 0 0 -30px;
+  border-radius: 2px;
+  background: #FFF;
+  transition: left .5s; }
+  .xmas2016-Splash .xmas2016-Splash__ProgressBarPercentage::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: calc( 50% - 5px);
+    display: block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    background-color: inherit; }
+
+.xmas2016-Splash .xmas2016-Splash__ProgressBarData {
+  font-size: 12px;
+  text-align: center; }
+
+/* ==========================================================================
+   .xmas2016-Intro
+   ========================================================================== */
+.xmas2016-Intro.xmas2016-Intro {
+  color: #FFF;
+  position: absolute;
+  z-index: 11;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: table;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition-timing-function: ease;
+  transition-duration: 0.3s; }
+  .xmas2016-Intro.xmas2016-Intro.v-leave, .xmas2016-Intro.xmas2016-Intro.v-leave-active {
+    opacity: 0;
+    transform: scale(0);
+    transition-duration: 0.5s; }
+
+.xmas2016-Intro .xmas2016-Intro__Inner {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 20px; }
+
+.xmas2016-Intro .xmas2016-Intro__Item {
+  text-align: center; }
+
+.xmas2016-Intro .xmas2016-Intro__ItemImage {
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 10px; }
+
+/* ==========================================================================
+   .xmas2016-AddButton
+   ========================================================================== */
+.xmas2016-AddButton.xmas2016-AddButton {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #FFF;
+  font-weight: bold;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+  position: fixed;
+  z-index: 10;
+  bottom: 20px;
+  left: calc( 50% - 30px);
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+  background: rgba(180, 180, 180, 0.4);
+  transition: background-color .2s; }
+  .xmas2016-AddButton.xmas2016-AddButton:hover {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.2s, box-shadow 0.6s cubic-bezier(0.25, 0.8, 0.5, 1); }
+  .xmas2016-AddButton.xmas2016-AddButton:active {
+    background-color: #FFF; }
+
+/* ==========================================================================
+   .xmas2016-Viewer
+   ========================================================================== */
+.xmas2016-Viewer.xmas2016-Viewer {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100vh; }
+
+.xmas2016-Viewer .xmas2016-Viewer__Canvas {
+  -webkit-tap-highlight-color: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block; }
+
+/* ==========================================================================
+   .xmas2016-Info
+   ========================================================================== */
+.xmas2016-Info .xmas2016-Info__Toolbar {
+  position: fixed;
+  z-index: 13;
+  right: 10px;
+  bottom: 10px; }
+
+.xmas2016-Info .xmas2016-Info__Button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #FFF;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: content-box;
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+  background: rgba(180, 180, 180, 0.4);
+  transition: background-color .2s; }
+  .xmas2016-Info .xmas2016-Info__Button:hover {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.2s, box-shadow 0.6s cubic-bezier(0.25, 0.8, 0.5, 1); }
+  .xmas2016-Info .xmas2016-Info__Button:active {
+    background-color: #FFF; }
+
+.xmas2016-Info .xmas2016-Intro__InfoIcon {
+  display: block;
+  width: 100%;
+  height: 100%; }
+
+.xmas2016-Info .xmas2016-Info__Panel {
+  position: absolute;
+  z-index: 14;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.01);
+  transition-timing-function: cubic-bezier(0, 1.4, 1, 1);
+  transition-duration: 0.35s; }
+  .xmas2016-Info .xmas2016-Info__Panel.v-enter, .xmas2016-Info .xmas2016-Info__Panel.v-leave-active {
+    opacity: 0;
+    transition-timing-function: ease; }
+  .xmas2016-Info .xmas2016-Info__Panel.v-leave-active {
+    transition-duration: 0.2s; }
+
+.xmas2016-Info .xmas2016-Info__PanelInner {
+  color: #FFF;
+  box-sizing: border-box;
+  overflow: auto;
+  max-height: 100%;
+  padding: 20px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.75); }
+  .xmas2016-Info .xmas2016-Info__PanelInner h2 {
+    font-size: 18px;
+    margin: 0 0 10px; }
+  .xmas2016-Info .xmas2016-Info__PanelInner ul {
+    font-size: 14px;
+    padding-left: 20px;
+    margin: 10px 0; }
+  .xmas2016-Info .xmas2016-Info__PanelInner a {
+    color: #EB9619; }
+
+.xmas2016-Info .xmas2016-Info__Panel .xmas2016-Info__PanelInner {
+  transform: scale(1);
+  transition-timing-function: cubic-bezier(0, 1.4, 1, 1);
+  transition-duration: 0.35s; }
+
+.xmas2016-Info .xmas2016-Info__Panel.v-enter .xmas2016-Info__PanelInner, .xmas2016-Info .xmas2016-Info__Panel.v-leave-active .xmas2016-Info__PanelInner {
+  opacity: 0;
+  transform: scale(0);
+  transition-timing-function: ease; }
+
+.xmas2016-Info .xmas2016-Info__Panel.v-leave-active .xmas2016-Info__PanelInner {
+  transition-duration: 0.2s; }
+
+.xmas2016-Info .xmas2016-Info__PanelCloseButtonOuter {
+  text-align: center;
+  margin: 20px 0 0; }
+
+.xmas2016-Info .xmas2016-Info__PanelCloseButton {
+  color: #000;
+  font-size: 100%;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  min-width: 160px;
+  padding: 12px 10px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(255, 255, 255, 0.5);
+  background-color: #ccc;
+  transition: color .2s, letter-spacing .6s, background-color .2s; }
+  .xmas2016-Info .xmas2016-Info__PanelCloseButton:hover {
+    letter-spacing: 0.1em;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1), 0 0 0 10px rgba(255, 255, 255, 0);
+    background-color: #FFF;
+    transition: color 0.2s, letter-spacing 0.2s, box-shadow 0.6s cubic-bezier(0.25, 0.8, 0.5, 1), background-color 0.2s; }

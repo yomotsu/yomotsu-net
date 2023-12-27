@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>WebGL でマンデルブロ集合とジュリア集合 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2014/03/31/fractal.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				WebGL でマンデルブロ集合とジュリア集合
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2014-03-30T15:00:00.000Z" itemprop="datePublished">2014-03-31</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<h2 id="複素平面を理解する"><a href="#複素平面を理解する" class="headerlink" title="複素平面を理解する"></a>複素平面を理解する</h2><p>普段使う”数”に実数 (real number) がある。例えば 0, 1, -10, 0.3, 1/2, √2 など。</p>
+<p>これとは別に、虚数 (imaginary number) がある。虚数は √-1 や √(-1/2) などといった、2 乗すると 0 未満になる数のこと。</p>
+<p>実数と虚数は、直接足したり掛けたりすることはできない。水と油のような関係。実数の単位は 1 に対して、一般的に虚数の単位は i とする。</p>
+<p>実数と虚数を混ぜた数は 10 <em> 1 + 10 </em> i のようになる。実数と虚数が混ざった数を複素数 (complex number) という。</p>
+<p>複素数は、実数と虚数を軸に、2 次元の平面で表すことができる。これを複素平面 (complex plane) という。例えば、複素数 3 + 2i は次の青い点のように表すことができる。</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_01.png" alt=""></p>
+<h2 id="漸化式と発散"><a href="#漸化式と発散" class="headerlink" title="漸化式と発散"></a>漸化式と発散</h2><p>マンデルブロ集合は、漸化式</p>
+<p>Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C<br>ただし、Z<sub>0</sub> = 0</p>
+<p>を複素平面上の全ての複素数 (座標) C に対して行い、漸化式にあてはめ再起的に処理すると</p>
+<ul>
+<li>確定せず振動する場合</li>
+<li>無限となり発散する場合</li>
+</ul>
+<p>に分かれる。発散しない場合の C 全体をマンデルブロ集合といい、その全ての座標に色をつけると独特のあの形状となる。</p>
+<p>例えば、C = -1 <em> 1 + 0 </em> i、つまり -1、複素平面上の ( -1, 0 ) を上記の漸化式に当てはめると…</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_02.png" alt=""></p>
+<p>の様に同じあたいを行き来し発散しない。つまり、-1 はマンデルブロ集合に属すことになる。なので、座標 ( -1, 0 ) を塗りつぶす。</p>
+<p>一方で、C = -1 <em> 1 + 1 </em> i つまり -1 + i、複素平面上の ( -1, 1 ) では</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_03.png" alt=""></p>
+<p>の様に、最終的に無限となり発散する。 -1 + i はマンデルブロ集合に属さない。なので、座標 ( -1, i ) は塗りつぶさない</p>
+<p>このように全ての複素平面上の座標に対して、同じことを繰り返すわけだ。</p>
+<p>なお、C の絶対値が 2 以上のときは必ず発散するので絶対にマンデルブロ集合に属さない。</p>
+<h2 id="GLSL-で描く"><a href="#GLSL-で描く" class="headerlink" title="GLSL で描く"></a>GLSL で描く</h2><p>フラグメントシェーダーでの gl_FragCoord を加工して複素平面の座標として使い、複素数を vec2 形式で代用する。uniform resolution は、ビューポート (canvas要素) の縦横の大きさをピクセル単位で入力している。</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_04.jpg" alt=""></p>
+<pre><code>#ifdef GL_ES
+precision mediump float;
+#endif
+uniform vec2 resolution;
+
+const int ITETARION = 300; // 振動 or 発散を判断する上限
+
+void main( void ) {
+
+  vec2 position = ( ( gl_FragCoord.xy / resolution.xy ) * 2. - 1. ) * resolution / resolution.y;
+  vec2 z     = vec2( 0, 0 ); // Zn   (xは実部、yは虚部)
+  vec2 zNext = vec2( 0, 0 ); // Zn+1 (xは実部、yは虚部)
+  vec2 c = position.xy;      // 複素平面上の座標 (xは実部、yは虚部)
+  bool diverge = false;      // 発散する true, しない false。発散しないならマンデルブローセット。
+  int elapsed = 0;
+
+  for ( int i = 0; i &lt; ITETARION; i ++ ) {
+    zNext.x = pow( z.x, 2. ) - pow( z.y, 2. );
+    zNext.y = 2. * z.x * z.y ;
+    z = zNext + c;
+    if ( length( z ) &gt; 2. ) {
+      diverge = true;
+      break;
+    }
+    elapsed = i;
+  }
+  if( diverge ) {
+    gl_FragColor = vec4( 1 );
+  } else {
+    gl_FragColor = vec4( 0, 0, 0, 1 );
+  }
+}
+</code></pre><p><a href="/blog/assets/2014-03-31-fractal/mandelbrot.html">動く例</a></p>
+<p>色をつけてみる。mod を用いて、発散するまでに要した繰り返し回数の “あまり” に応じて色を変える</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_05.jpg" alt=""></p>
+<p><a href="/blog/assets/2014-03-31-fractal/mandelbrot2.html">動く例</a></p>
+<p>uniform で経過時間を入力し、sin( 経過時間 ) に応じて拡大させると、フラクタルを実感できる。最大拡大時に、形状が劣化している部分は、発散を判断するまでの再起回数が十分でないため。for の繰り返し処理の無限回に近づけることでより鮮明にできる。</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_06.jpg" alt=""></p>
+<p><a href="/blog/assets/2014-03-31-fractal/mandelbrot3.html">動く例</a></p>
+<h2 id="ジュリア集合"><a href="#ジュリア集合" class="headerlink" title="ジュリア集合"></a>ジュリア集合</h2><p>マンデルブロの漸化式</p>
+<p>Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C</p>
+<p>の C を任意の複素数に固定し、Z<sub>0</sub>を平面の座標として使い、発散を判断すればジュリア集合となる。</p>
+<p>次の例では、C を 0.5 + 0.5i で固定している。マンデルブロセットで描かれる図形のように自己相似な図形が繰り返されており美しい。</p>
+<p><img src="/blog/assets/2014-03-31-fractal/img_07.jpg" alt=""></p>
+<p><a href="/blog/assets/2014-03-31-fractal/julia.html">動く例</a></p>
+<p>複素数 C を時間に応じて変化させると面白いアニメーションとなる。</p>
+<p><a href="/blog/assets/2014-03-31-fractal/julia2.html">動く例</a></p>
+<p>参考</p>
+<ul>
+<li><a href="http://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%B3%E3%83%87%E3%83%AB%E3%83%96%E3%83%AD%E9%9B%86%E5%90%88" target="_blank" rel="noopener">マンデルブロ集合 - Wikipedia</a></li>
+<li><a href="http://azisava.sakura.ne.jp/mandelbrot/definition.html" target="_blank" rel="noopener">マンデルブロ集合の不思議な世界 - マンデルブロ集合とは</a></li>
+</ul>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/03/30/relative-font-size-in-sass.html">
+					a solution to control font-size relatively with media queries in Sass
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/07/19/watershader.html">
+					water shader を試す
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+$basefontSize : 16;
+$baseFontSizeMobile : 16;
+$color1:#000;
+$color2:#45ad9b;
+
+// $fontSansSerif : '\30D2\30E9\30AE\30CE\89D2\30B4\20\50\72\6F\20\57\33','Hiragino Kaku Gothic Pro','\30E1\30A4\30EA\30AA',Meiryo,'\FF2D\FF33\20\FF30\30B4\30B7\30C3\30AF',sans-serif;
+
+// $fontSerif : "\30D2\30E9\30AE\30CE\660E\671D ProN W3", "HiraMinProN-W3",
+//              "\30D2\30E9\30AE\30CE\660E\671D Pro W3", "Hiragino Mincho Pro",
+//              "\0048\0047\6B63\6977\66F8\4F53\002D\0050\0052\004F",
+//              "\FF24\FF26\4E2D\6977\66F8\4F53",
+//              "\FF2D\FF33\0020\660E\671D", "MS Mincho",
+//              "\30E1\30A4\30EA\30AA",Meiryo,
+//              serif;
+
+
+
+
+// media queries
+// ========================================================================== */
+
+// @mixin mediaL () {
+//   @media ( max-width: $breakpoint-base ) {
+//     @content;
+//   }
+// }
+
+@mixin mediaM () {
+  @media ( max-width: 940px ) {
+    @content;
+  }
+}
+
+@mixin mediaS () {
+  @media ( max-width: 640px ) {
+    @content;
+  }
+}
+
+// filter for only less than IE8 (CSS Hack)
+// ==========================================================================
+@mixin ie8 () {
+  // only for IE8
+  @media \0screen {
+    @content;
+  }
+}
+
+// filter for only less than IE9 (CSS Hack)
+// ==========================================================================
+@mixin ie9 () {
+  // only for IE9
+  @media (min-width:0\0) and (min-resolution:.001dpcm) {
+    @content;
+  }
+}
+
+// clearfix
+// ========================================================================== */
+@mixin clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// wordbreak
+// ========================================================================== */
+@mixin wordbreak () {
+  white-space: normal;
+  word-break: break-word;
+  word-break: break-all;
+  hyphens: auto;
+}

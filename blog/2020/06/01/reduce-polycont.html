@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Reduce polygon count | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2020/06/01/reduce-polycont.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Reduce polygon count
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2020-05-31T15:00:00.000Z" itemprop="datePublished">2020-06-01</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>3D models especially 3D scanned objects tend to have a high polygon count. Therefore the file size is proportional to the number of polygons and are at least 10MB which is unsuitable for web usage.</p>
+<p>Since the topology of 3D scanned model is usually complex, reducing the number polygons seems difficult… But actually quite simple to do!</p>
+<h2 id="Here-is-the-result-of-the-reduction"><a href="#Here-is-the-result-of-the-reduction" class="headerlink" title="Here is the result of the reduction."></a>Here is the result of the reduction.</h2><p>Original: 201,380 triangles.</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/01.png" alt=""></p>
+<p>Reduced: 30,000 triangles.</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/02.png" alt=""></p>
+<p>Original: 19MB / Reduced: 3MB</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/03.png" alt=""></p>
+<p>Original</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/04.jpg" alt=""></p>
+<p>Reduced</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/05.jpg" alt=""></p>
+<p>Original: Almost completely filled in orange and points can’t be recognized.</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/06.png" alt=""></p>
+<p>Reduced: Each point can be recognized in the reduced model.</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/07.png" alt=""></p>
+<p>Original:</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/08.png" alt=""></p>
+<p>Reduced: UV coords are also reduced as a side effect, then the stripes pattern on the shirt was slightly deteriorated. it’s still acceptable for me, and it depends on number of reduced points.</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/09.png" alt=""></p>
+<h2 id="How-to-do-it"><a href="#How-to-do-it" class="headerlink" title="How to do it?"></a>How to do it?</h2><p>An open-source 3D mesh processing tool called <a href="http://www.meshlab.net/" target="_blank" rel="noopener">MeshLab</a> can help! Available for Windows, macOS, and Linux.</p>
+<p>Step 1: Import the 3D model</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/10.png" alt=""></p>
+<p>Step 2: Follow these steps in the menu: Filters -&gt; Remeshing, Simplification and Reconstruction -&gt; Simplification: Quadric Edge Collapse Decimation (with texture)</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/11.jpg" alt=""></p>
+<p>Step 3: Input the polygon count to be.</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/12.jpg" alt=""></p>
+<p>Step 4: Export</p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/13.jpg" alt=""></p>
+<p><img src="/blog/assets/2020-06-01-reduce-polycont/14.png" alt=""></p>
+<p>That’s it!</p>
+<p><a href="/blog/assets/2020-06-01-reduce-polycont/me.html">Wanna see me in 3D as a result?</a></p>
+<p>By the way, if you convert the 3D model into GLB (glTF), the file size will be even more compressed.</p>
+<p>OBJ without texture image: 3MB<br>GLB contains texture image: 1.4MB<br><img src="/blog/assets/2020-06-01-reduce-polycont/15.png" alt=""></p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2018/03/16/the-future-of-ec-experience-with-webar.html">
+					The future of EC experience with WebAR
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2022/06/16/history-of-ie.html">
+					IE の歴史
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

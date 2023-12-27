@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Chrome で WebGL が動かなくなった | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2014/01/20/problem-of-webgl-on-chrome.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Chrome で WebGL が動かなくなった
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2014-01-19T15:00:00.000Z" itemprop="datePublished">2014-01-20</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>Windows 8.1 で、Chrome が自動アップデートされ、Chrome 32 になっていました。すると、昨日まで動いていた WebGL のコンテンツがうまく表示されなくなってしましまいました。例えば新しい Google Map では WebGL が利用されているのですが、これを表示しようとすると次のように Chrome が停止してしまいます。</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_01.jpg" alt=""></p>
+<p>Chrome では、URL バーに about:gpu と入力すると現在の GPU アクセラレーションの状態を確認できるのですが、問題が起こる環境では次のようにほとんどの項目について GPU が無効となってしまっていました。昨日、つまりアップデートされる前までは何事もなかったのに！</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_02.png" alt=""></p>
+<p>Khronos Web サイト内の表示テストでも WebGL が停止中と認識されています。</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_03.png" alt=""></p>
+<p>一方で、同 PC 上の IE 11 では、何の問題もなく表示テストをクリアします。</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_04.png" alt=""></p>
+<p>この件に関して、親切な方から Twitter でヒントをいただきました。</p>
+<p><blockquote class="twitter-tweet" lang="ja"><p><a href="https://twitter.com/yomotsu" target="_blank" rel="noopener">@yomotsu</a> Did you try to update your graphic card drivers ? &#10;<a href="https://t.co/kO5OXpigbb" target="_blank" rel="noopener">https://t.co/kO5OXpigbb</a></p>&mdash; Gassepouille (@Gassepouille) <a href="https://twitter.com/Gassepouille/statuses/424923198988115968" target="_blank" rel="noopener">2014, 1月 19</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>なるほどと思い、GPU ベンダーの Web ページでドライバーを確認したところ、つい先日の 2014.1.7 付けでドライバーがアップデートされています。</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_05.png" alt=""></p>
+<p>そこで、このドライバーをダウンロードし、アップデートを行いました。</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_06.png" alt=""></p>
+<p>アップデートが完了すると Chrome 32 の GPU アクセラレーション機能は見事に復帰しました。</p>
+<p><img src="/blog/assets/2014-01-20-problem-of-webgl-on-chrome/img_07.png" alt=""></p>
+<p>Chrome について、自動アップデートが適用されると急に GPU アクセラレーションが無効になってしまうという経験は、Mac OS X Snow leopard での Chrome でも経験したことがあります。</p>
+<p>GPU アクセラレーション系の API の利用ついては残念ながらこれからもしばらく注意が必要そうです…。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/01/13/windowsxpmode.html">
+					Windows XP モードも 2014 年 4 月まで
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/02/13/chocolate4u.html">
+					JS で AR
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

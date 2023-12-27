@@ -1,0 +1,102 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+( function(){
+    $( function() {
+
+        var RAF = ( function(){
+            return window.requestAnimationFrame       || 
+                   window.webkitRequestAnimationFrame || 
+                   window.mozRequestAnimationFrame    || 
+                   window.oRequestAnimationFrame      || 
+                   window.msRequestAnimationFrame     || 
+                   function( callback ){
+                       window.setTimeout( callback, 1000 / 60 );
+                   };
+        } )();
+
+    var now = window.performance && (
+       performance.now || 
+       performance.mozNow || 
+       performance.msNow || 
+       performance.oNow || 
+       performance.webkitNow );
+
+    var getTime = function() {
+        return ( now && now.call( performance ) ) || ( new Date().getTime() );
+    }
+
+    var startTime = getTime();
+
+    var $log = $( '.log' );
+    var $time = $( '.time' );
+
+    var timeLineCount = 0;
+    var timeLine = [
+        {
+            //this should be fire 0 sec after
+            time : 0.0,
+            fn : function(){
+              $log.append( '<br>this was fired at ' + getTime() );
+            }
+        },
+        {
+            //this should be fire 3 sec after
+            time : 3000.0,
+            fn : function(){
+              //var begenTime = startTime + this.time;
+              $log.append( '<br>this was fired at ' + getTime() );
+          }
+        },
+        {
+            //this should be fire 5 sec after
+            time : 5000.0,
+            fn : function(){
+                $log.append( '<br>this was fired at ' + getTime() );
+            }
+        },
+        {
+            //this should be fire 10 sec after
+            time : 10000.0,
+            fn : function(){
+                $log.append( '<br>this was fired at ' + getTime() );
+            }
+        }
+    ];
+
+    ( function timeLineLoop(){
+        if( timeLine.length <= timeLineCount ){
+            return;
+        }
+        RAF( timeLineLoop );
+        if( getTime() >= startTime + timeLine[ timeLineCount ].time ){
+        //if( getTime() >= startTime + timeLine[ timeLineCount ].time - ( 1000  .0 / 6.0 ) ){ 
+            timeLine[ timeLineCount ].fn(); 
+            timeLineCount++;
+        }
+  
+        $time.html( ( ( getTime() - startTime )|0 ) + 'ms' );
+
+        } )();
+
+    } );
+} )();
+</script>
+</head>
+<body>
+
+<p>
+1st function should be fired after 0 ms.<br>
+2nd function should be fired after 3000 ms.<br>
+3rd function should be fired after 5000 ms.<br>
+4th function should be fired after 10000 ms.
+</p>
+<div class="time"></div>
+<div class="log"></div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<script src="paper.min.js"></script>
+<script src="easeljs-0.5.0.min.js"></script>
+<script src="tweenjs-0.3.0.min.js"></script>
+<script>
+
+window.requestAnimationFrame = ( function(){
+  return  window.requestAnimationFrame       || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame    || 
+          window.oRequestAnimationFrame      || 
+          window.msRequestAnimationFrame     || 
+          function( callback ){
+            window.setTimeout( callback, 1000 / 60 );
+          };
+} )();
+
+document.addEventListener( 'DOMContentLoaded', function(){
+  createjs.Ticker.setFPS( 60 );
+
+  var canvas = document.querySelector( '#canvas' );
+  paper.setup( canvas );
+
+  var circle = new paper.Path.Circle( new paper.Point( 100, 100 ), 50 );
+  circle.fillColor = '#ff0000';
+  circle.selected = true;
+
+  createjs.Tween.get( circle.position, { loop: true } )
+  .to( { x: 300 }, 1000, createjs.Ease.quadOut )
+  .wait( 300 )
+  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )
+  .to( { x: 100, y: 100 }, 1000, createjs.Ease.quadOut )
+  .call( function() {
+    console.log( 'done!' );
+  } );
+
+  ( function animloop(){
+    requestAnimationFrame( animloop );
+    paper.view.draw();
+  } )();
+
+}, false );
+
+</script>
+</head>
+<body>
+
+<canvas width="500" height="500" id="canvas"></canvas>
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>IE11 で WebGL がサポートされるかもしれない | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/03/31/webgl-on-ie.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				IE11 で WebGL がサポートされるかもしれない
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-03-30T15:00:00.000Z" itemprop="datePublished">2013-03-31</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>IE11 で WebGL がサポートされるかもしれない。Windows Blue と呼ばれている次期 Windows の情報が出回っていて、それに搭載されている IE11 では、WebGL が動作したという情報がでている。ただし、あくまでも流出したビルドでの話なので、この後このままその通りになるかは確証がないので注意。</p>
+<p>Web 上の情報、(<a href="http://fremycompany.com/BG/2013/Internet-Explorer-11-rsquo-s-leaked-build-395/" target="_blank" rel="noopener">Internet Explorer 11’s leaked build (new features)</a> によると…</p>
+<p>通常状態の IE11 では、WebGL の API がある、ただし、それらは動作しない (API はこの記事の最後参照)</p>
+<p>レジストリーのフラグを切り替えると、WebGL の API が動作するようになる (GPU のドライバーは最新の状態にしておく必要があるらしい)</p>
+<pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl]
+
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_WEBGL]
+&quot;iexplore.exe&quot;=dword:00000001
+
+[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_WEBGL_HLSL_SHADERS]
+&quot;iexplore.exe&quot;=dword:00000001
+</code></pre><p>FEATURE_WEBGL_HLSL_SHADERS のフラグにより、シェーダーは GLSL の代わりに IESL (HLSL の制限版) で動くらしい。このフラグを有効にしなければ、シェーダーには GLSL が有効になるらしい。</p>
+<p>つまり、ゲーム開発における主要なシェーダーのどちらかを選択できるわけですね。WebGL が動作している様子は以下。</p>
+<iframe width="420" height="315" src="http://www.youtube.com/embed/McMVn8rP048" frameborder="0" allowfullscreen></iframe>
+
+<p>WebGL は既に正式な仕様としてリリースされているし、多くのブラウザーでも実装されているので、IE でもこのまま正式にサポートしてほしいところです。さて、これは IE11 のお話ですが、IE 10 では、自動アップデートがデフォルトで有効になっています。</p>
+<p><img src="/blog/assets/2013-03-31-webgl-on-ie/img_01.png" alt=""></p>
+<p>ですので、現在の IE10 はそのまま IE11 になってくれるはずです(IEAK などで無効にされてなければ)。さらに、WindowsXP のライフサイクルが来年の 4 月で切れるため、今年は現在出回っている WindowsXP が、Windows7 または 8 にリプレイスされていくはずです。これからリプレースされる Windows OS にのっている IE は IE10 でしょうから、IE11 へのオートアップデートともに、WebGL の利用できる環境が大きく広がっていくのではないでしょうか。</p>
+<p>該当ビルドの IE11 で有効だった WebGL の API (<a href="http://fremycompany.com/BG/2013/Internet-Explorer-11-rsquo-s-leaked-build-395/" target="_blank" rel="noopener">Internet Explorer 11’s leaked build (new features)</a> より)</p>
+<p>canvas, drawingBufferHeight, drawingBufferWidth, activeTexture, attachShader, bindAttribLocation, bindBuffer, bindFramebuffer, bindRenderbuffer, bindTexture, blendColor, blendEquation, blendEquationSeparate, blendFunc, blendFuncSeparate, bufferData, bufferSubData, checkFramebufferStatus, clear, clearColor, clearDepth, clearStencil, colorMask, compileShader, compressedTexImage2D, compressedTexSubImage2D, copyTexImage2D, copyTexSubImage2D, createBuffer, createFramebuffer, createProgram, createRenderbuffer, createShader, createTexture, cullFace, deleteBuffer, deleteFramebuffer, deleteProgram, deleteRenderbuffer, deleteShader, deleteTexture, depthFunc, depthMask, depthRange, detachShader, disable, disableVertexAttribArray, drawArrays, drawElements, enable, enableVertexAttribArray, finish, flush, framebufferRenderbuffer, framebufferTexture2D, frontFace, generateMipmap, getActiveAttrib, getActiveUniform, getAttachedShaders, getAttribLocation, getBufferParameter, getContextAttributes, getError, getExtension, getFramebufferAttachmentParameter, getParameter, getProgramInfoLog, getProgramParameter, getRenderbufferParameter, getShaderInfoLog, getShaderParameter, getShaderPrecisionFormat, getShaderSource, getSupportedExtensions, getTexParameter, getUniform, getUniformLocation, getVertexAttrib, getVertexAttribOffset, hint, isBuffer, isContextLost, isEnabled, isFramebuffer, isProgram, isRenderbuffer, isShader, isTexture, lineWidth, linkProgram, pixelStorei, polygonOffset, readPixels, renderbufferStorage, sampleCoverage, scissor, shaderSource, stencilFunc, stencilFuncSeparate, stencilMask, stencilMaskSeparate, stencilOp, stencilOpSeparate, texImage2D, texParameterf, texParameteri, texSubImage2D, uniform1f, uniform1fv, uniform1i, uniform1iv, uniform2f, uniform2fv, uniform2i, uniform2iv, uniform3f, uniform3fv, uniform3i, uniform3iv, uniform4f, uniform4fv, uniform4i, uniform4iv, uniformMatrix2fv, uniformMatrix3fv, uniformMatrix4fv, useProgram, validateProgram, vertexAttrib1f, vertexAttrib1fv, vertexAttrib2f, vertexAttrib2fv, vertexAttrib3f, vertexAttrib3fv, vertexAttrib4f, vertexAttrib4fv, vertexAttribPointer, viewport, …</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/02/26/gdl copy.html">
+					GDL 素材置場
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/08/04/blendmode-in-webgl.html">
+					WebGL で高速 BlendMode
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

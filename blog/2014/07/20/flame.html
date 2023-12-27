@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>ポイントスプライトで炎 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2014/07/20/flame.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				ポイントスプライトで炎
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2014-07-19T15:00:00.000Z" itemprop="datePublished">2014-07-20</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>ポイントスプライトを使えば炎も簡単に表現できる。three.js では、自分で GLSL で書いたシェーダーを material としてそのまま利用することもできる。</p>
+<p><a href="/blog/assets/2014-07-20-flame/">demo</a></p>
+<p><img src="/blog/assets/2014-07-20-flame/img_01.jpg" alt=""></p>
+<p>スプライトは 64 個表示しているが、ポイントスプライトなので Drawcall は 1 回しか発生しない。キャプチャでは全体で 4 回発生しているが、地面や clear の回数を含めた合計の回数。</p>
+<p>FYI:</p>
+<p>自動で渡される変数については<a href="http://qiita.com/edo_m18/items/6c0b67f43c88194ca444" target="_blank" rel="noopener">Three.jsでWebGLを触ってみる</a>が参考になる</p>
+<ul>
+<li><code>uniform</code> <code>mat4</code>: modelMatrix</li>
+<li><code>uniform</code> <code>mat4</code>: viewMatrix</li>
+<li><code>uniform</code> <code>mat4</code>: modelViewMatrix</li>
+<li><code>uniform</code> <code>mat4</code>: projectionMatrix</li>
+<li><code>uniform</code> <code>mat3</code>: normalMatrix</li>
+<li><code>uniform</code> <code>vec3</code>: cameraPosition</li>
+<li><code>attribute</code> <code>vec3</code>: position</li>
+<li><code>attribute</code> <code>vec3</code>: normal</li>
+<li><code>attribute</code> <code>vec2</code>: uv</li>
+</ul>
+<p>任意で渡す変数の type と値のクラス</p>
+<ul>
+<li><code>&#39;i&#39;</code> : 数値 (int 型)</li>
+<li><code>&#39;f&#39;</code> : 数値 (float 型)</li>
+<li><code>&#39;c&#39;</code> : <code>THREE.Color</code></li>
+<li><code>&#39;v2&#39;</code> : <code>THREE.Vector2</code></li>
+<li><code>&#39;v3&#39;</code> : <code>THREE.Vector3</code></li>
+<li><code>&#39;v4&#39;</code> : <code>THREE.Vector4</code></li>
+<li><code>&#39;m4&#39;</code> : <code>THREE.Matrix4</code></li>
+<li><code>&#39;t&#39;</code> : <code>THREE.Texture</code></li>
+<li><code>&#39;iv1&#39;</code> : 整数の配列</li>
+<li><code>&#39;iv&#39;</code> : 整数の配列 (長さは 3 の倍数)</li>
+<li><code>&#39;fv1&#39;</code> : 浮動小数点値の配列</li>
+<li><code>&#39;fv&#39;</code> : 浮動小数点値の配列 (長さは 3 の倍数)</li>
+<li><code>&#39;v2v&#39;</code> : <code>THREE.Vector2</code> の配列</li>
+<li><code>&#39;v3v&#39;</code> : <code>THREE.Vector3</code> の配列</li>
+<li><code>&#39;v4v&#39;</code> : <code>THREE.Vector4</code> の配列</li>
+<li><code>&#39;m4v&#39;</code> : <code>THREE.Matrix4</code> の配列</li>
+<li><code>&#39;tv&#39;</code> : <code>THREE.Texture</code> の配列</li>
+</ul>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/07/19/watershader.html">
+					water shader を試す
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/07/26/portal.html">
+					ポータル
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

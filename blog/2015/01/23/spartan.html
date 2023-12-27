@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Project Spartan | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2015/01/23/spartan.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Project Spartan
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2015-01-22T15:00:00.000Z" itemprop="datePublished">2015-01-23</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/IE/">IE</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>2015 年 1 月 22 日に Microsoft から Windows 10 の発表とともに、Windows 10 のサービスのひとつとして Project Spartan というブラウザーの発表があった。「Project Spartan」と呼ばれているが正式名称ではなくあくまでもコードネームである、とも言っていた。</p>
+<p><img src="/blog/assets/2015-01-23-spartan/img_01.jpg" alt=""></p>
+<p>コルタナ (Siri の親戚みたいな機能。Siri よりかわいい) との連携、ブラウザー上でメモをしてシェアする機能、ページの本文を抽出してオフラインでも読めるようにするリーディングモードの機能など、ブラウザーのインターフェイスとしての新しい機能がいくつか追加されることになっている。</p>
+<p><img src="/blog/assets/2015-01-23-spartan/img_02.jpg" alt=""></p>
+<p>Project Spartan は、これまでの IE とは別のブラウザーになるようだ。レンダリングエンジンは IE とは完全に別のものとなる。また、Project Spartan は「サービス」という立ち位置で、Chrome や Firefox のように常にアップデートされるとのことだ。</p>
+<p>モダンウェブのために。</p>
+<p>ただし、Project Spartan のメインエンジンとは別に、レガシーな Web サイトを表示するために IE11 のレンダリングエンジン (MSHTML) も搭載し、必要に応じて切り替えることができるらしい。</p>
+<p>Windows から IE はなくなるのか、というとそうでもないらしく、Windows 10 では引き続き IE も提供されるらしい。この IE では Spartan とおなじレンダリングエンジンたちが使われるらしい。</p>
+<p><a href="http://blogs.msdn.com/b/ie/archive/2014/11/11/living-on-the-edge-our-next-step-in-interoperability.aspx#10572654" target="_blank" rel="noopener">ieblog からの情報</a>によると <em>Windows 10 プレビューの IE</em> の<a href="https://gist.github.com/jacobrossi/c9699b27df2f4e97c0bd" target="_blank" rel="noopener">UAString</a> 以下のとおりで、<del>レンダリングエンジンは Blink (WebKit) 系になるのかもしれないことがわかる。</del><ins>新しいレンダリングエンジンは EdgeHTML という MSHTML (Trident) からフォークされたエンジンらしい。</ins></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla/5.0 (Windows NT 6.4; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36 Edge/12.0</span><br></pre></td></tr></table></figure>
+<p><code>Edge/12.0</code> と末尾についており、これが新しい IE なのか、<del>別の WebKit 系</del><ins>その他の</ins>ブラウザーなのかを区別するための目印になりそうだ。</p>
+<hr>
+<p>Blink 系レンダリングエンジンを使いそうな新 IE。そして、完全に新しいレンダリングエンジンを搭載した Project Spartan。Project Spartan は IE 12 なのか、それともそうでないのか。まだよくわからない。</p>
+<p><ins>remote.ie の <a href="http://devchannel.modern.ie/" target="_blank" rel="noopener">IE Technical Preview</a> を使ってみていろいろわかってきたけれど、<a href="https://insider.windows.com/Home/TermsOfUse" target="_blank" rel="noopener">守秘義務</a>があるので公になっている情報以外はシェアできません。しかし、<a href="https://insider.windows.com/" target="_blank" rel="noopener">Windows Insider Program</a> に登録すればだれでも直接試すことができます。そしてもちろんフィードバックも。</ins></p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2015/01/03/tps-game-engine.html">
+					three.js (WebGL) で TPS / FPS ゲームエンジン
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2015/03/01/js2png.html">
+					JavaScript を PNG に圧縮する
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

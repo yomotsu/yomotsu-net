@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>three.js 用にボーンアニメを持つ 3D モデルを書き出すために | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/12/27/bone-for-threejs.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				three.js 用にボーンアニメを持つ 3D モデルを書き出すために
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-12-26T15:00:00.000Z" itemprop="datePublished">2013-12-27</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>three.js は skeletal animation （ボーンやリグ）を持った 3D モデルを読み込み、再生することができます。3D モデルを three.js 用に書き出すため一番いいツールは Blender です。</p>
+<p>Blender 上でボーンとアニメーションをつけていきます。Dope Sheet を使って、アニメーションを複数持たせると、three.js 上でも異なる複数のアニメーションとして利用することができます。</p>
+<p>なお、Blender 上のボーンをつけて書きだすまでの操作は動画にしているので合わせて参考にどうぞ。</p>
+<iframe width="640" height="480" src="//www.youtube.com/embed/VSownh2xeXE" frameborder="0" allowfullscreen></iframe>
+
+<h2 id="1-アニメーションを-Bake-する"><a href="#1-アニメーションを-Bake-する" class="headerlink" title="1. アニメーションを Bake する"></a>1. アニメーションを Bake する</h2><p>FK のみでアニメーションをさせている場合には、この設定は必要ありません。</p>
+<p>three.js 上では基本的に FK のみ対応しています。IK や物理演算による自動計算には対応していません。そのため、FK 以外で動かしているボーンがある場合は、書き出す直前にそれらをすべて FK として焼き付ける必要があります。</p>
+<p>すべてを FK として焼き付けるためには、Bake Action を利用します。3D ビュー上でスペースキーを押し、”Bake Action” を検索し実行します。Bake Action の設定は、Frame Step を 1 にし、Visual Keying と Clear Constraints のみ、チェックをつけ、Bake Data の項目は、Pose を選択します。</p>
+<p>すると、IK 以外のボーンはすべて IK として焼き付けられます。</p>
+<p>ただし、Frame Step を 1 で Bake すると、キーフレームが多く、JSON として出力する際に、ファイル容量が上がる原因となってしまいます。必要に応じて間引くといいでしょう。間引くには、再度 Bake Action を行い、2 回目の Bake Action では Frame Step を 3 などすることで、 1/3 にキーフレームを減らすことができます。</p>
+<p>(物理演算を利用している場合には、1度目の Bake Action は 必ず Frame Step を 1 にして行いましょう ）</p>
+<h2 id="2-Rest-Pose-を登録する"><a href="#2-Rest-Pose-を登録する" class="headerlink" title="2. Rest Pose を登録する"></a>2. Rest Pose を登録する</h2><p>書きだす前の準備として、もう一つ。Rest Pose を登録します。これをしないと、three.js に読み込んだ後、動いているけど奇妙な動きをしてしまいます。（意図しない起点をもとに、メッシュの変形が行われるため）</p>
+<p>Rest Pose を登録するためには、</p>
+<ol>
+<li>Pose Mode に移行</li>
+<li>Pose から、Clear Transforms の All を実行し、一度意図する Rest Pose に戻す</li>
+<li>Object Mode に移行</li>
+<li>Mesh 全体を選択し、CTRL + A で Apply のメニューを出し、 Location を選択する。Rotation と Scale についても同様に行う</li>
+<li>全てのボーンを選択し、先程と同様の手順で、CTRL + A で Apply のメニューを出し、 Location を選択する。Rotation と Scale についても同様に行う</li>
+</ol>
+<p>で完了します。とても重要なのでお忘れなく。</p>
+<h2 id="3-マルチバイト文字をアスキーにしておく"><a href="#3-マルチバイト文字をアスキーにしておく" class="headerlink" title="3. マルチバイト文字をアスキーにしておく"></a>3. マルチバイト文字をアスキーにしておく</h2><p>メッシュ名、マテリアル名、アニメーション名などに日本語などが使われていると、うまく書き出すことができません。事前にそれらをすべてアスキー文字にしておいてください。</p>
+<h2 id="4-JSON-に書き出す"><a href="#4-JSON-に書き出す" class="headerlink" title="4. JSON に書き出す"></a>4. JSON に書き出す</h2><p>three.js 書き出し用のプラグインを有効にしている状態で File &gt; Export &gt; Three.js(.js) を実行し、書き出し設定を開きます。</p>
+<p>Skeltal Animation にチェックを入れます。Copy Textures にチェックを入れると、テクスチャー画像を画像ファイルとして同時に書き出すことができますが、既に同名のファイルが存在している場合、上書きできずエラーになってしまいますのでご注意を。</p>
+<h2 id="5-three-js-で読み込む"><a href="#5-three-js-で読み込む" class="headerlink" title="5. three.js で読み込む"></a>5. three.js で読み込む</h2><p>このコードを参考にどうぞ。（r64 現在のコードです）</p>
+<pre><code>var loader = new THREE.JSONLoader();
+loader.load( &apos;filename.js&apos;, function( geo, mats ) {
+
+  mats.forEach(function ( mat ) {
+    if ( isWebGLVersionLessThan1 ) {
+      // IE11 does not render if THREE.DoubleSide (gl_frontFacing) is applyed
+      mat.side = THREE.DoubleSide;
+    }
+    mat.skinning = true;
+  } );
+
+  mesh = new THREE.SkinnedMesh(
+    geo,
+    new THREE.MeshFaceMaterial( mats )
+  );
+
+  mesh.traverse( function ( child ) {
+    child.castShadow = true;
+    child.receiveShadow = false;
+  } );
+
+  THREE.AnimationHandler.add( mesh.geometry.animations[ 0 ] );
+  THREE.AnimationHandler.add( mesh.geometry.animations[ 1 ] );
+
+  walk = new THREE.Animation(
+    mesh,
+    mesh.geometry.animations[ 0 ].name,
+    THREE.AnimationHandler.CATMULLROM
+  );
+
+  run = new THREE.Animation(
+    mesh,
+    mesh.geometry.animations[ 1 ].name,
+    THREE.AnimationHandler.CATMULLROM
+  );
+
+  scene.add( mesh );
+} );
+</code></pre><p>あわせて、レンダリングの前に <code>THREE.AnimationHandler.update</code> を実行しておきます。</p>
+<pre><code>( function renderLoop (){
+  requestAnimationFrame( renderLoop );
+
+  // clock is a instance of THREE.Clock() 
+  var delta = clock.getDelta();
+  THREE.AnimationHandler.update( delta );
+  renderer.render( scene, camera );
+} )();
+</code></pre><p>myAnimation というアニメーションインスタンスを再生する場合は</p>
+<pre><code>otherAnimation.stop();
+myAnimation.play();
+</code></pre><p>のように、実行中のアニメーションを止めてから再生を始めます。</p>
+<p>myAnimation を停止する場合には、</p>
+<pre><code>myAnimation.stop();
+</code></pre><p>をします。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/12/25/mmd.html">
+					MMD on three.js
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/01/13/windowsxpmode.html">
+					Windows XP モードも 2014 年 4 月まで
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

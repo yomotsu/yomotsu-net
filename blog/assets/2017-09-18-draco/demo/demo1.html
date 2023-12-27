@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>=^.^=</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<style>
+body {
+	margin: 0;
+}
+canvas{
+	display: block;
+}
+</style>
+</head>
+
+<body>
+<script src="./libs/three.min.js"></script>
+<script src="./libs/OrbitControls.js"></script>
+<script src="./libs/DRACOLoader.js"></script>
+<script>
+var DRACO_PATH = './libs/';
+var DRACO_TYPE = !! window.WebAssembly ? 'wasm' : 'js';
+var width = window.innerWidth;
+var height = window.innerHeight;
+// var dracoLoader = new THREE.DRACOLoader( DRACO_PATH );
+var dracoLoader = new THREE.DRACOLoader( DRACO_PATH, { type: DRACO_TYPE } );
+
+var scene = new THREE.Scene();
+
+var camera = new THREE.PerspectiveCamera( 35, width / height, 0.1, 100 );
+camera.position.set( 0, 0, 10 );
+
+var renderer = new THREE.WebGLRenderer( { antialias: true } );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.gammaInput = true;
+renderer.gammaOutput = true;
+document.body.appendChild( renderer.domElement );
+
+var controls = new THREE.OrbitControls( camera, renderer.domElement );
+controls.enableDamping = true;
+controls.dampingFactor = 0.2;
+
+scene.add(
+	new THREE.AmbientLight( 0xddddff ),
+	new THREE.HemisphereLight( 0xffcccc, 0x6666cc )
+);
+
+var texture = new THREE.TextureLoader().load( './model/rameses.jpg' );
+
+dracoLoader.load( './model/rameses.drc', function ( geometry ) {
+
+	var material = new THREE.MeshStandardMaterial( {
+		map: texture
+	} );
+	var mesh = new THREE.Mesh( geometry, material );
+	mesh.castShadow = true;
+	mesh.receiveShadow = true;
+	scene.add( mesh );
+} );
+
+( function animate() {
+
+	requestAnimationFrame( animate );
+	controls.update();
+	renderer.render( scene, camera );
+
+} )();
+
+window.addEventListener( 'resize', function () {
+
+	var width = window.innerWidth;
+	var height = window.innerHeight;
+
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
+	renderer.setSize( width, height );
+
+} );
+</script>
+</body>
+</html>

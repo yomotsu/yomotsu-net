@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<title>なぞの野菜市場</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 電話番号/メアド自動リンク off -->
+<meta name="format-detection" content="telephone=no">
+<meta name="format-detection" content="address=no">
+
+<!-- Main Stylesheet -->
+<link rel="stylesheet" href="common/css/style.css">
+<script src="common/js/libs/modernizr.js"></script>
+
+</head>
+<body>
+<div class="mod-all">
+
+	<header class="mod-siteHeader">
+		<h1><img src="common/img/mod-siteHeader/logo.png" width="250" height="60" alt="なぞの野菜市場"></h1>
+		<nav class="mod-headerNav">
+			<ul>
+				<li><a href="#">商品一覧</a></li>
+				<li><a href="#">ご注文方法</a></li>
+				<li><a href="#">ブログ</a></li>
+				<li><a href="#">会社情報</a></li>
+			</ul>
+		</nav>
+	</header>
+	
+	<div class="mod-mainVisual">
+		<img src="common/img/mod-visual/img.jpg" width="320" height="80" alt="">
+	</div>
+	
+	<section class="mod-newProduct">
+		<h2>今朝採れた野菜たち</h2>
+		<p>今朝採れた新鮮すぎる野菜たちです！</p>
+		<div class="mod-itemSlider"><div>
+			<div class="flipsnap">
+				<div class="item"><a href="#"><img src="img/img.jpg" alt="" width="150" height="100"></a></div>
+				<div class="item"><a href="#"><img src="img/img_2.jpg" alt="" width="150" height="100"></a></div>
+				<div class="item"><a href="#"><img src="img/img_3.jpg" alt="" width="150" height="100"></a></div>
+				<div class="item"><a href="#"><img src="img/img_4.jpg" alt="" width="150" height="100"></a></div>
+				<div class="item"><a href="#"><img src="img/img_5.jpg" alt="" width="150" height="100"></a></div>
+			</div>
+			<div class="pointer"></div>
+		</div></div>
+	</section>
+	
+	<section class="mod-normalSection">
+		<h2>今すぐ会員登録を</h2>
+		<p>会員登録をすると、すべてのお買い物での送料が無料になります。さらに、注文いただくと無料で「なぞの野菜ステッカー」をプレゼント！</p>
+		<ul class="mod-buttonContainer">
+			<li class="ex-full"><a href="#" class="mod-button">会員登録</a></li>
+		</ul>
+	</section>
+	
+	<div class="mod-subNav">
+		<ul>
+			<li class="product"><a href="#">商品一覧</a></li>
+			<li class="order"><a href="#">ご注文方法</a></li>
+			<li class="blog"><a href="#">ブログ</a></li>
+			<li class="company"><a href="#">会社情報</a></li>
+		</ul>
+	</div>
+	
+	<footer class="mod-siteFooter">
+		<div class="copyright">&copy; Nazoyasai, Inc.</div>
+	</footer>
+
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="common/js/mylibs/flipsnap.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+	var $slider = $('div.mod-itemSlider');
+	for(var i = 0, l = $slider.find('.item').length; i < l; i++){
+		$slider.find('.pointer').append('<span></span>');
+	}
+	var $pointer = $slider.find('.pointer span');
+	$pointer.eq(0).addClass('current');
+	
+	var f = Flipsnap("div.mod-itemSlider div.flipsnap", { distance: 170 });
+	f.element.addEventListener('flipsnap.moveend', function() {
+			$pointer.filter(".current").removeClass("current");
+			$pointer.eq( f.currentPoint ).addClass("current");
+	}, false);
+}, false);
+</script>
+</body>
+</html>

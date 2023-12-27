@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>WebGL で高速 BlendMode | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/08/04/blendmode-in-webgl.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				WebGL で高速 BlendMode
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-08-03T15:00:00.000Z" itemprop="datePublished">2013-08-04</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>WebGL を使えば、色の加算、減算、乗算といったブレンドモードが高速で処理できるというお話。</p>
+<p>Canvas2D でもピクセルマニピュレーションができるので、様々なブレンドモードを自前で実装することができるのだが、ピクセル数 * 4色の処理負荷が CPU にかかるためパフォーマンスがよくない。しかし WebGL のフラグメントシェーダーを利用すれば色を高速で処理できる。</p>
+<p><a href="/blog/assets/2013-08-04-blendmode-in-webgl">demo</a></p>
+<p>WebGL は簡単なことをするにも、初期化の処理が冗長なためコードは長くなってしまうが、実際は大したことはやっていない。</p>
+<ol>
+<li>2つのトライアングルを用意する</li>
+<li>2枚のテクスチャー画像を適用する</li>
+<li>フラグメントシェーダーでテクスチャー画像の色をブレンドする</li>
+</ol>
+<p>GLSL では、4成分 (Red, Green, Blue, Alpha) をそのまま足したり掛けたりすることができるので、ブレンドの公式に当てはめるだけで処理できる。</p>
+<p>考え方は <a href="http://devmaster.net/posts/3040/shader-effects-blend-modes" target="_blank" rel="noopener">Shader Effects: Blend Modes</a> がとても参考になる。</p>
+<h2 id="ブレンドモードの計算式"><a href="#ブレンドモードの計算式" class="headerlink" title="ブレンドモードの計算式"></a>ブレンドモードの計算式</h2><ul>
+<li><code>src</code> は vec3 型の前景 (source) テクスチャー色</li>
+<li><code>dst</code> は vec3 型の背景 (dist) テクスチャー色</li>
+</ul>
+<h3 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h3><pre><code>src + dst;
+</code></pre><h3 id="SUBTRACT"><a href="#SUBTRACT" class="headerlink" title="SUBTRACT"></a>SUBTRACT</h3><pre><code>src - dst;
+</code></pre><h3 id="MULTIPLY"><a href="#MULTIPLY" class="headerlink" title="MULTIPLY"></a>MULTIPLY</h3><pre><code>src * dst;
+</code></pre><h3 id="DARKEN"><a href="#DARKEN" class="headerlink" title="DARKEN"></a>DARKEN</h3><pre><code>min( src, dst );
+</code></pre><h3 id="COLOUR-BURN"><a href="#COLOUR-BURN" class="headerlink" title="COLOUR BURN"></a>COLOUR BURN</h3><pre><code>vec3(
+    ( src.r == 0.0 ) ? 0.0 : ( 1.0 - ( ( 1.0 - dst.r ) / src.r ) ),
+    ( src.g == 0.0 ) ? 0.0 : ( 1.0 - ( ( 1.0 - dst.g ) / src.g ) ),
+    ( src.b == 0.0 ) ? 0.0 : ( 1.0 - ( ( 1.0 - dst.b ) / src.b ) )
+ );
+</code></pre><h3 id="LINEAR-BURN"><a href="#LINEAR-BURN" class="headerlink" title="LINEAR BURN"></a>LINEAR BURN</h3><pre><code>( src + dst ) - 1.0;
+</code></pre><h3 id="LIGHTEN"><a href="#LIGHTEN" class="headerlink" title="LIGHTEN"></a>LIGHTEN</h3><pre><code>max( src, dst );
+</code></pre><h3 id="SCREEN"><a href="#SCREEN" class="headerlink" title="SCREEN"></a>SCREEN</h3><pre><code>( src + dst ) - ( src * dst );
+</code></pre><h3 id="COLOUR-DODGE"><a href="#COLOUR-DODGE" class="headerlink" title="COLOUR DODGE"></a>COLOUR DODGE</h3><pre><code>vec3(
+    ( src.r == 1.0 ) ? 1.0 : min( 1.0, dst.r / ( 1.0 - src.r ) ),
+    ( src.g == 1.0 ) ? 1.0 : min( 1.0, dst.g / ( 1.0 - src.g ) ),
+    ( src.b == 1.0 ) ? 1.0 : min( 1.0, dst.b / ( 1.0 - src.b ) )
+);
+</code></pre><h3 id="LINEAR-DODGE"><a href="#LINEAR-DODGE" class="headerlink" title="LINEAR DODGE"></a>LINEAR DODGE</h3><pre><code>src + dst;
+</code></pre><h3 id="OVERLAY"><a href="#OVERLAY" class="headerlink" title="OVERLAY"></a>OVERLAY</h3><pre><code>vec3(
+    ( dst.r &lt;= 0.5 ) ? ( 2.0 * src.r * dst.r ) : ( 1.0 - 2.0 * ( 1.0 - dst.r ) * ( 1.0 - src.r ) ),
+    ( dst.g &lt;= 0.5 ) ? ( 2.0 * src.g * dst.g ) : ( 1.0 - 2.0 * ( 1.0 - dst.g ) * ( 1.0 - src.g ) ),
+    ( dst.b &lt;= 0.5 ) ? ( 2.0 * src.b * dst.b ) : ( 1.0 - 2.0 * ( 1.0 - dst.b ) * ( 1.0 - src.b ) )
+);
+</code></pre><h3 id="SOFT-LIGHT"><a href="#SOFT-LIGHT" class="headerlink" title="SOFT LIGHT"></a>SOFT LIGHT</h3><pre><code>vec3(
+    ( src.r &lt;= 0.5 ) ? ( dst.r - ( 1.0 - 2.0 * src.r ) * dst.r * ( 1.0 - dst.r ) ) : ( ( ( src.r &gt; 0.5 ) &amp;&amp; ( dst.r &lt;= 0.25 ) ) ? ( dst.r + ( 2.0 * src.r - 1.0 ) * ( 4.0 * dst.r * ( 4.0 * dst.r + 1.0 ) * ( dst.r - 1.0 ) + 7.0 * dst.r ) ) : ( dst.r + ( 2.0 * src.r - 1.0 ) * ( sqrt( dst.r ) - dst.r ) ) ),
+    ( src.g &lt;= 0.5 ) ? ( dst.g - ( 1.0 - 2.0 * src.g ) * dst.g * ( 1.0 - dst.g ) ) : ( ( ( src.g &gt; 0.5 ) &amp;&amp; ( dst.g &lt;= 0.25 ) ) ? ( dst.g + ( 2.0 * src.g - 1.0 ) * ( 4.0 * dst.g * ( 4.0 * dst.g + 1.0 ) * ( dst.g - 1.0 ) + 7.0 * dst.g ) ) : ( dst.g + ( 2.0 * src.g - 1.0 ) * ( sqrt( dst.g ) - dst.g ) ) ),
+    ( src.b &lt;= 0.5 ) ? ( dst.b - ( 1.0 - 2.0 * src.b ) * dst.b * ( 1.0 - dst.b ) ) : ( ( ( src.b &gt; 0.5 ) &amp;&amp; ( dst.b &lt;= 0.25 ) ) ? ( dst.b + ( 2.0 * src.b - 1.0 ) * ( 4.0 * dst.b * ( 4.0 * dst.b + 1.0 ) * ( dst.b - 1.0 ) + 7.0 * dst.b ) ) : ( dst.b + ( 2.0 * src.b - 1.0 ) * ( sqrt( dst.b ) - dst.b ) ) )
+);
+</code></pre><h3 id="HARD-LIGHT"><a href="#HARD-LIGHT" class="headerlink" title="HARD LIGHT"></a>HARD LIGHT</h3><pre><code>vec3(
+    ( src.r &lt;= 0.5 ) ? ( 2.0 * src.r * dst.r ) : ( 1.0 - 2.0 * ( 1.0 - src.r ) * ( 1.0 - dst.r ) ),
+    ( src.g &lt;= 0.5 ) ? ( 2.0 * src.g * dst.g ) : ( 1.0 - 2.0 * ( 1.0 - src.g ) * ( 1.0 - dst.g ) ),
+    ( src.b &lt;= 0.5 ) ? ( 2.0 * src.b * dst.b ) : ( 1.0 - 2.0 * ( 1.0 - src.b ) * ( 1.0 - dst.b ) )
+);
+</code></pre><h3 id="VIVID-LIGHT"><a href="#VIVID-LIGHT" class="headerlink" title="VIVID LIGHT"></a>VIVID LIGHT</h3><pre><code>vec3(
+    ( src.r &lt;= 0.5 ) ? ( 1.0 - ( 1.0 - dst.r ) / ( 2.0 * src.r ) ) : ( dst.r / ( 2.0 * ( 1.0 - src.r ) ) ),
+    ( src.g &lt;= 0.5 ) ? ( 1.0 - ( 1.0 - dst.g ) / ( 2.0 * src.g ) ) : ( dst.g / ( 2.0 * ( 1.0 - src.g ) ) ),
+    ( src.b &lt;= 0.5 ) ? ( 1.0 - ( 1.0 - dst.b ) / ( 2.0 * src.b ) ) : ( dst.b / ( 2.0 * ( 1.0 - src.b ) ) )
+);
+</code></pre><h3 id="LINEAR-LIGHT"><a href="#LINEAR-LIGHT" class="headerlink" title="LINEAR LIGHT"></a>LINEAR LIGHT</h3><pre><code>2.0 * src + dst - 1.0;
+</code></pre><h3 id="PIN-LIGHT"><a href="#PIN-LIGHT" class="headerlink" title="PIN LIGHT"></a>PIN LIGHT</h3><pre><code>vec3(
+    ( src.r &gt; 0.5 ) ? max( dst.x, 2.0 * ( src.r - 0.5 ) ) : min( dst.x, 2.0 * src.r ),
+    ( src.r &gt; 0.5 ) ? max( dst.y, 2.0 * ( src.g - 0.5 ) ) : min( dst.y, 2.0 * src.g ),
+    ( src.b &gt; 0.5 ) ? max( dst.z, 2.0 * ( src.b - 0.5 ) ) : min( dst.z, 2.0 * src.b )
+);
+</code></pre><h3 id="DIFFERENCE"><a href="#DIFFERENCE" class="headerlink" title="DIFFERENCE"></a>DIFFERENCE</h3><pre><code>abs(dst - src);
+</code></pre><h3 id="EXCLUSION"><a href="#EXCLUSION" class="headerlink" title="EXCLUSION"></a>EXCLUSION</h3><pre><code>src + dst - 2.0 * src * dst;
+</code></pre>
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/03/31/webgl-on-ie.html">
+					IE11 で WebGL がサポートされるかもしれない
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/08/07/blendmode-in-webgl2.html">
+					WebGL で高速 BlendMode その 2
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

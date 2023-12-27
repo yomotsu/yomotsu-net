@@ -1,0 +1,50 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+
+$( function(){
+    var requestAnimationFrame = ( function(){
+        return window.requestAnimationFrame       || 
+               window.webkitRequestAnimationFrame || 
+               window.mozRequestAnimationFrame    || 
+               window.oRequestAnimationFrame      || 
+               window.msRequestAnimationFrame     || 
+               function( callback ){
+                   alert( 'requestAnimationFrame isnt suported' );
+               };
+    } )();
+
+    var now = window.performance && (
+        performance.now || 
+        performance.mozNow || 
+        performance.msNow || 
+        performance.oNow || 
+        performance.webkitNow );
+
+    var getTime = function() {
+        return ( now && now.call( performance ) ) || ( new Date().getTime() );
+    }
+
+    var lastTime = getTime();
+    var i = 0;
+
+    ( function loop(){
+        if ( i >= 50 ) { return; }
+        requestAnimationFrame( loop );
+        $( '.log' ).prepend( ( ( 1000 / ( getTime() - lastTime ) )|0 ) + ' FPS<br>' );
+        lastTime = getTime();
+        i += 1;
+    } )();
+} );
+</script>
+</head>
+<body>
+requestAnimationFrame の実行頻度
+<div class="log"></div>
+
+</body>
+</html>

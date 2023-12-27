@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+div{
+float:left;
+padding:10px;
+border:1px solid #000;
+}
+div div{float:none;}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+
+$( function(){
+    // the framerate have to be set 60 or less
+    var FPS = 30;
+    var interval = 1000 / FPS;
+
+    var RAF = ( function(){
+        return window.requestAnimationFrame       || 
+               window.webkitRequestAnimationFrame || 
+               window.mozRequestAnimationFrame    || 
+               window.oRequestAnimationFrame      || 
+               window.msRequestAnimationFrame     || 
+               function( callback ){
+                  window.setTimeout( callback, 1000 / 60 );
+               };
+    } )();
+
+    var now = window.performance && (
+        performance.now || 
+        performance.mozNow || 
+        performance.msNow || 
+        performance.oNow || 
+        performance.webkitNow );
+
+    var getTime = function() {
+        return ( now && now.call( performance ) ) || ( new Date().getTime() );
+    }
+
+    var i = 0;
+    ( function loop(){
+        if ( i >= 30 ) { return; }
+        RAF( loop );
+        $( window ).trigger( 'frameUpdate' );
+        i += 1;
+    } )();
+
+    ( function(){
+        var lastTime = getTime();
+        $( window ).on( 'frameUpdate', function(){
+            if( getTime() - lastTime >= ( interval - 1 ) * 0.97 ){
+                $( '.log' ).prepend( ( 1000 / (getTime() - lastTime )) + ' FPS<br>' );
+                lastTime = getTime();
+            }
+        } );
+    } )();
+
+    ( function(){
+        var lastTime = getTime();
+        $( window ).on( 'frameUpdate', function(){
+            if( getTime() - lastTime >= ( interval - 1 ) * 0.97 ){
+                $( '.log2' ).prepend( ( 1000 / (getTime() - lastTime )) + ' FPS<br>' );
+                lastTime = getTime();
+            }
+        } );
+    } )();
+} );
+</script>
+</head>
+<body>
+30FPS を目標に指定。おおよそは出せるが、正確ではない。
+<hr>
+<div>interval A<div class="log"></div></div>
+<div>interval B<div class="log2"></div></div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Happy Holidays 2016 with WebGL | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2016/12/25/xmas.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Happy Holidays 2016 with WebGL
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2016-12-24T15:00:00.000Z" itemprop="datePublished">2016-12-25</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>It has been exactly one year since I posted last time…then finally, Santa came back!</p>
+<p><img src="/blog/assets/2016-12-25-xmas/img_01.jpg" alt=""></p>
+<p><a href="/blog/assets/2016-12-25-xmas/">The demo is available here. Enjoy!</a></p>
+<p>It works with three.js and cannon.js like last time. In addition, this time, I tried to mix three.js and <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue.js</a> which is a web app framework. Then it is working very well! Each 3D meshe is controlled as a vue component.</p>
+<p><img src="/blog/assets/2016-12-25-xmas/img_02.jpg" alt=""></p>
+<p>Thanks to Vue’s <strong>lifecycle hooks</strong>, you can handle adding and removing 3D objects at perfect timing.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">mounted () &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">const</span> scene = <span class="keyword">this</span>.getScene();</span><br><span class="line">	scene.add( <span class="keyword">this</span>.mesh );</span><br><span class="line"></span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">beforeDestroy () &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">const</span> scene = <span class="keyword">this</span>.getScene();</span><br><span class="line"></span><br><span class="line">	<span class="comment">// optional</span></span><br><span class="line">	<span class="comment">// this.mesh.material.map.dispose();</span></span><br><span class="line">	<span class="comment">// this.mesh.geometry.dispose();</span></span><br><span class="line">	<span class="comment">// this.mesh.material.dispose();</span></span><br><span class="line"></span><br><span class="line">	scene.remove( <span class="keyword">this</span>.mesh );</span><br><span class="line"></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/yomotsu/xmas2016" target="_blank" rel="noopener">Entire source code is available on github</a>.</p>
+<p>I learned alot from making this. Even if it is a WebGL project, using web app framework is one of solutions to make maintenance easier. cuz, WebGL is a Web technology for display things. In other words, WebGL is one of technologies to make <strong>views</strong> for Web.</p>
+<p>Vue.js is similar to other web app frameworks, such as React. Thus, this could be applicatable in other frameworks.</p>
+<p>I hope I could give a talk about this more at a local meetup sometime soon!</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2015/12/25/xmas.html">
+					Merry Christmas with three.js and cannon.js
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2017/09/18/draco.html">
+					Compress 3D model files with Draco
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

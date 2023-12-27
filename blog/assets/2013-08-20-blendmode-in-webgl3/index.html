@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+th,td{border:1px solid #ccc;}
+</style>
+</head>
+<body>
+
+blend mode:
+<select id="mode">
+    <option>NoBlending</option>
+    <option>NormalBlending</option>
+    <option>AdditiveBlending</option>
+    <option>SubtractiveBlending</option>
+    <option selected>MultiplyBlending</option>
+    <option>AdditiveAlphaBlending</option>
+</select>
+
+<table>
+    <tr>
+        <th>src</th>
+        <th>dst</th>
+        <th>result</th>
+    </tr>
+    <tr>
+        <td><img src="bg.jpg" alt=""></td>
+        <td><img src="miku.png" alt=""></td>
+        <td><span id="result"></span></td>
+    </tr>
+</table>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="three.min.js"></script>
+<script>
+
+var WIDTH = 256;
+var HEIGHT = 256;
+var $mode = $( '#mode' );
+
+var camera = new THREE.Camera();
+camera.position.z = 1;
+var scene = new THREE.Scene();
+var renderer = new THREE.WebGLRenderer( { setClearColor: 0x000000 } );
+renderer.setSize( WIDTH, HEIGHT );
+document.querySelector( '#result' ).appendChild( renderer.domElement );
+
+var distTexture = THREE.ImageUtils.loadTexture( 'bg.jpg' );
+var distMaterial = new THREE.MeshBasicMaterial( { map: distTexture } );
+var dist = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), distMaterial );
+dist.position.z = 1;
+scene.add( dist );
+
+var srcTexture = THREE.ImageUtils.loadTexture( 'miku.png' );
+var srcMaterial = new THREE.MeshBasicMaterial( { map: srcTexture } );
+srcMaterial.transparent = true;
+var src = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), srcMaterial );
+scene.add( src );
+
+( function render () {
+    requestAnimationFrame( render );
+    src.material.blending = THREE[ $mode.val() ];
+    src.position.x = Math.sin( ( performance.now() | 0 ) / 1000 );
+    renderer.render( scene, camera );
+} )();
+
+</script>
+
+
+</body>
+</html>

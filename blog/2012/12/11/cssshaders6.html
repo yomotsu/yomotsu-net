@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 6歩目、すこし複雑な変形 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/11/cssshaders6.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 6歩目、すこし複雑な変形
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-10T15:00:00.000Z" itemprop="datePublished">2012-12-11</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 11日目の記事です。</p>
+<p>CSS Shaders は<a href="http://yomotsu.net/blog/2012/12/07/cssshaders2.html">CSS Shaders はじめの 2歩目、custom() で何が行われるのか</a>で解説した通り、要素をメッシュにしてその頂点を自由に変換することができるのがおおきな特徴です。</p>
+<p>今回は、頂点を自由に操作できる特徴を利用し、CSS Shaders でしかできない変換を見ていきます。</p>
+<h2 id="sine-のおさらい"><a href="#sine-のおさらい" class="headerlink" title="sine のおさらい"></a>sine のおさらい</h2><p>sin(θ) についてθが増えていくとその結果は 0 … 0.5 … 1 … 0.5 のように増減を繰り返し、360度、つまり 2π で一周します。サイン波のグラフをみるとわかりやすいです。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-11-cssshaders6/sine.svg" alt=""></p>
+<p>今回はこれを利用し、頂点の z 方向が波状になるような変換をしてみます。</p>
+<p>まずは元となる状態として次のコードを用意しました。前回の記事で 2番目紹介した内容とまったく同じです。</p>
+<h3 id="HTML-と-CSS"><a href="#HTML-と-CSS" class="headerlink" title="HTML と CSS"></a>HTML と CSS</h3><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;CSS Shaders!&lt;/title&gt;
+&lt;style&gt;
+.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg )
+    );
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;sample&quot;&gt;
+    &lt;p&gt;CSS Shader!! シィーエスエス シェーダー!! &lt;/p&gt;
+    &lt;img src=&quot;nyantocat.gif&quot; alt=&quot;&quot;&gt;
+    &lt;p&gt;the Nyantocat by Cameron McEfee&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h3 id="vertex-shader"><a href="#vertex-shader" class="headerlink" title="vertex shader"></a>vertex shader</h3><pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+uniform mat4 u_transform;
+
+void main() {
+    gl_Position = u_projectionMatrix * u_transform * a_position;
+}
+</code></pre><p>なお、fragment shader として読み込んでいるファイルは相変わらず空です。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-11-cssshaders6/1.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-11-cssshaders6/1.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<p>今回は上記のうち、vertex shader のコードを操作していきます。順を追ってみていきましょう。</p>
+<h2 id="操作しやすいように-a-position-を分解する"><a href="#操作しやすいように-a-position-を分解する" class="headerlink" title="操作しやすいように a_position を分解する"></a>操作しやすいように <code>a_position</code> を分解する</h2><p>vec4 型の変数は、4つの成分で成り立っています。そして各成分は x, y, z, w として分解するができます。今回は <code>a_position</code> の <code>z</code> だけを操作するので、ひとまず以下のように準備をしておきます。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_transform;
+
+void main() {
+    float z = 0;
+    vec4 pos = vec4( a_position.xy, z, a_position.w );
+
+    gl_Position = u_projectionMatrix * u_transform * pos;
+}
+</code></pre><p>なお、上記で、<code>a_position.xy</code> は <code>vec2( a_position.x, a_position.y )</code> と同じ意味になります。</p>
+<h2 id="a-meshCoord-を宣言する"><a href="#a-meshCoord-を宣言する" class="headerlink" title="a_meshCoord を宣言する"></a>a_meshCoord を宣言する</h2><p>あとで <code>a_meshCoord</code> を利用したいので宣言します。<code>a_meshCoord</code> には、<code>vec2</code> 型でメッシュにおける現在処理中の頂点の <code>x</code> と <code>y</code> の位置がそれぞれ <code>0</code> ~ <code>1</code> で入っています。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-11-cssshaders6/2.png" alt=""></p>
+<p><code>a_meshCoord</code> は CSS が暗黙に渡してくれるので、shader 側で宣言するだけで利用できます。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+attribute vec2 a_meshCoord;
+
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_transform;
+
+void main() {
+    float z = 0;
+    vec4 pos = vec4( a_position.xy, z, a_position.w );
+
+    gl_Position = u_projectionMatrix * u_transform * pos;
+}
+</code></pre><h2 id="a-meshCoord-を目印に-z-を操作する"><a href="#a-meshCoord-を目印に-z-を操作する" class="headerlink" title="a_meshCoord を目印に z を操作する"></a><code>a_meshCoord</code> を目印に z を操作する</h2><p><code>sin( a_meshCoord.x * 3.1415)</code> のようにしておけば、sin( 0 ) から sin( π ) までの波を得ることができます。ただし、波の内容は 1 ~ -1 までと振れ幅が小さいので、これを大きくするために <code>100.0</code> を乗算しています。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+attribute vec2 a_meshCoord;
+
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_transform;
+
+void main() {
+    float z = sin( a_meshCoord.x * 3.1415) * 100.0;
+    vec4 pos = vec4( a_position.xy, z, a_position.w );
+
+    gl_Position = u_projectionMatrix * u_transform * pos;
+}
+</code></pre><p>これにより、次のような表示を得ることができます。いかにも CSS Shaders をつかってる感じになりました!</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-11-cssshaders6/3.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-11-cssshaders6/3.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/10/cssshaders5.html">
+					CSS Shaders はじめの 5歩目、簡単な変形 2
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/12/cssshaders7.html">
+					CSS Shaders はじめの 7歩目、色の塗りつぶしと乗算
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>マルチデバイス時代のWebページ | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/09/11/think-about-rwd.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				マルチデバイス時代のWebページ
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-09-10T15:00:00.000Z" itemprop="datePublished">2012-09-11</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/css/">css</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>レスポンシブ・ウェブデザインという言葉が多くの Web 制作者に認知されるようになり、”端末に合わせたコンテンツの出し分け” は古いなどという意見も出てきていますが、果たして本当にそうなのでしょうか。この記事では、それについてちょっと考えて見たことをまとめています。</p>
+<p>さて、最近、日本国内でもスマートフォンやタブレットといった PC 以外で Web ブラウジングできる端末が増えてきました。これにより、</p>
+<ul><br><li>Web ページは様々なサイズの画面で閲覧される</li><br><li>マウス / キーボード以外の入力が利用される (主にタッチ入力)</li><br></ul>
+
+<p>という、これまでの大きな画面でマウスを主体とした入力から大きく変わりつつあります。それにより、Web 制作者は、これらのデバイスへの対応が仕事の一つとなりました。</p>
+<p>こういった、マルチデバイスへの対応には主に 3 つの方法があると考えています。</p>
+<ul><br><li>メディアクエリー採用によるいわゆるレスポンシブ・ウェブデザイン</li><br><li>端末ごとにリソース (テンプレート) を出し分ける</li><br><li>PC 用画面に対してすこしだけメディアクエリーを利用する</li><br><li>なにもしない</li><br></ul>
+
+<p>それぞれが一長一短でどれも完璧なわけではありません。それぞれの特徴は以下に。</p>
+<p>##いわゆるレスポンシブ・ウェブデザイン</p>
+<ul><br><li>リソースを一つにまとめることができる</li><br><li>未知のデバイスが登場しても特性 (画面サイズなど) がマッチすれば自動的に適用される</li><br><li>かなり高度な HTML / CSS 設計知識が必要 (大規模サイトであればあるほど)</li><br><li>イニシャルコストは高い。ランニングコストは運用次第で2倍にならない程度に抑えることができる。</li><br><li>ワンソースであるため事前のコンテンツ量の調整が必要</li><br><li>画像など、共通のコンテンツを最適化できない (近い将来解決する見込み)</li><br><li>変形してクライアントへのウケがいい</li><br></ul>
+
+<p>##端末ごとの出し分け</p>
+<ul><br><li>ターゲットの端末に特化したコンテンツ量、クオリティーを保つことができ、最大限パフォーマンス調整ができる</li><br><li>同内容のリソースが分散してしまう<br><ul><br><li>機械に向けては <code>link@rel=”canonical”</code> や <code>link@rel=”alternate”</code> で軽減できる</li><br></ul><br></li><br><li>未知の UserAgentString を持つブラウザーが登場する都度に調整が必要</li><br></ul>
+
+<p>##すこしだけメディアクエリーを利用する</p>
+<p>フォントサイズが少し小さい場合などにメディア特性にあわせて調整する方法</p>
+<ul><br><li>後付けで導入できる</li><br></ul>
+
+<p>##なにもしない</p>
+<ul><br><li>変形が起こらないため、以前から利用しているユーザーに新たな学習を強いることがない</li><br><li>主なユーザーが PC と想定している場合、スモールスクリーンのユーザーは情報の発見に学習が多く必要となる</li><br><li>ただし、apple コンピューターの Web サイトのように情報量が整理されている場合は自然</li><br></ul>
+
+<hr>
+<p>繰り返しになりますが、どの方法も一長一短であるわけです。Web の作り手がやるべきは自分たちの満足のために技術主体で考えるのではなく、Web ページの特性、つまり、閲覧者の利益やクライアントの要望を汲み取った結果、どの実装が最適化なのかを判断し、その上で長寿命で堅牢な Web サイトを作ることだと考えています。</p>
+<p>知識不足により不安定な技術を使ってしえば、それはすぐに矛盾が現れ、Web サイトとしての寿命を縮めることになってしまいます。バズワードとなりつつあるレスポンシブ・ウェブデザイン。たしかに本来の理想的な Web ページの姿ではあります。しかし選択はほかにもあることを忘れないことも大切です。</p>
+<p>でも個人的にはいわゆるレスポンシブ・ウェブデザインも面白いので、機会があったらメディアクエリー採用におけるコードの書き方的な記事をそのうち…。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/08/01/ragdoll.html">
+					THREE.js と box2dweb.js の組み合わせ
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/10/01/mediaquery-goodpractice.html">
+					レスポンシブ・ウェブデザインでの CSS コードの書き方
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

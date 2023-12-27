@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 5歩目、簡単な変形 2 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/10/cssshaders5.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 5歩目、簡単な変形 2
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-09T15:00:00.000Z" itemprop="datePublished">2012-12-10</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 10日目の記事です。</p>
+<p>この記事では、変換行列 (transform matrix) を CSS 側から入力する方法について見ていきます。</p>
+<p>前回は vertex shader 内で変換行列を用意し、それを乗算することで移動や回転を行いました。しかし実は、別の方法でも変換行列を用意することもできます。</p>
+<p>CSS Shaders において、変換行列を用意する方法は、shader 内に用意する方法とは別に CSS で用意する方法もあります。この方法では、CSS transforms プロパティーの値のシンタックスを応用します。</p>
+<p>CSS で行列を用意し、回転する方法を見てみましょう。</p>
+<h2 id="回転する"><a href="#回転する" class="headerlink" title="回転する"></a>回転する</h2><p>前回までは、custum 関数にはの引数として</p>
+<ul>
+<li>第一引数に vertex shader と fragment shader</li>
+<li>第二引数に 分割数</li>
+</ul>
+<p>のみ利用していました。</p>
+<pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32
+    );
+}
+</code></pre><p>これに加えて第三引数以降も利用してみましょう。custom 関数の第三引数以降には任意の値を渡すことができます。Z 軸で 45 度回転させるために rotateZ( 45deg ) を第三引数としてみましょう。変数名はなんでもいいのですが、ここでは「u_transform」とします。</p>
+<h3 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h3><pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32,
+        u_transform rotateZ( 45deg )
+    );
+}
+</code></pre><p>vertex shader では u_transform を mat4 として受け取ることができます。vertex shader で受け取った u_transform を宣言し、この行列を乗算してみましょう。</p>
+<p>###vertex shader</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+uniform mat4 u_transform;
+
+void main() {
+    gl_Position = u_projectionMatrix * u_transform * a_position;
+}
+</code></pre><p>上記の CSS と vertex shader の組み合わせにより、前回の記事と同じように要素を回転することができます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-10-cssshaders5/1.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-10-cssshaders5/1.html">demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<h2 id="複雑な変換"><a href="#複雑な変換" class="headerlink" title="複雑な変換"></a>複雑な変換</h2><p>CSS からの入力を利用すれば、少し複雑な変換行列を用意することもできます。例えば、perspective() rotateX() で消失点、回転を同時に入力してみましょう。CSS 側では次のように指定します。</p>
+<h3 id="CSS-1"><a href="#CSS-1" class="headerlink" title="CSS"></a>CSS</h3><pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg )
+    );
+}
+</code></pre><p>vertes shader, fragment shader は先ほどとまったく同じです。</p>
+<h3 id="vertex-shader"><a href="#vertex-shader" class="headerlink" title="vertex shader"></a>vertex shader</h3><pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+uniform mat4 u_transform;
+
+void main() {
+    gl_Position = u_projectionMatrix * u_transform * a_position;
+}
+</code></pre><p><img src="http://yomotsu.net/blog/assets/2012-12-10-cssshaders5/2.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-10-cssshaders5/2.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<p>このように CSS Shader は CSS と Shader を組み合わせて利用することができるわけです。次回は CSS Shader でしかできない変換を試します。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/09/cssshaders4.html">
+					CSS Shaders はじめの 4歩目、簡単な変形 1
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/11/cssshaders6.html">
+					CSS Shaders はじめの 6歩目、すこし複雑な変形
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

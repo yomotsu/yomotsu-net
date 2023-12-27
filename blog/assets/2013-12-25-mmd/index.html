@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MMD on three.js</title>
+<style>
+body{
+  font-family: '\30D2\30E9\30AE\30CE\89D2\30B4\20\50\72\6F\20\57\33','Hiragino Kaku Gothic Pro','\30E1\30A4\30EA\30AA',Meiryo,'\FF2D\FF33\20\FF30\30B4\30B7\30C3\30AF',sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+canvas{
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+  display: block;
+}
+a{
+  color: #80F1F9;
+}
+
+.mod-spinner{
+  color: #fff;
+  text-align: center;
+  box-shadow: border-box;
+  padding: 30px 10px;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  position: absolute;
+  background: #59C8B2 url(spinner.gif) no-repeat 50% 50%;
+  z-index: 100;
+  -webkit-transition: all .2s;
+     -moz-transition: all .2s;
+      -ms-transition: all .2s;
+       -o-transition: all .2s;
+          transition: all .2s;
+}
+.mod-spinner--loaded{
+  top:-100%;
+  bottom:100%;
+}
+.mod-info{
+  color: #FFF;
+  font-size: 16px;
+  text-align: center;
+  left:0;
+  right:0;
+  position: absolute;
+  padding: 8px;
+  background: rgba( 0, 0, 0, .5 );
+}
+.mod-copyright{
+  color: #FFF;
+  font-size: 12px;
+  text-align: center;
+  left:0;
+  right:0;
+  bottom:0;
+  position: absolute;
+  padding: 8px;
+  background: rgba( 0, 0, 0, .5 );
+}
+span.mod-button{
+  cursor: pointer;
+  color: #fff;
+  padding: 6px 16px;
+  display: inline-block;
+  background: #59C8B2;
+  border-radius: 3px;
+  margin: 0 5px;
+}
+span.mod-button--disable{
+  cursor: auto;
+  background: #ddd;
+}
+span.mod-noteText{
+  font-size: 12px;
+}
+</style>
+<script src="modernizr.custom.js"></script>
+</head>
+<body>
+
+<div class="mod-spinner">
+  It takes a little time to load 3D models and sounds. about 3.5MB...
+</div>
+
+<div class="mod-info">
+  have fun with sound!
+  <span class="mod-button  mod-button--disable">Play</span><br>
+  <span class="mod-noteText">u can drag around to rotate camera, scroll wheel to rotate</span>
+</div>
+
+<div class="mod-copyright">
+  author: <a href="https://twitter.com/yomotsu">@yomotsu</a>, model:<a href="http://www49.atwiki.jp/ginjishi_catalog/">銀獅式ローミク</a> by <a href="https://twitter.com/ginjishi">@ginjishi</a>, motion: <a href="http://www.nicovideo.jp/watch/sm16719723">Tell Your World【モーション配布】</a> by gosikan, sound: Tell Your World by kz
+</div>
+
+<script src="three.min.js"></script>
+<script src="SphereCamera.js"></script>
+<script src="perlin-noise-simplex.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+<script>
+;( function () {
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    scene,
+    camera,
+    renderer,
+    ambientLight,
+    spotLight,
+    // helper,
+    ground,
+    snow,
+    miku,
+    idle,
+    tellYourWorld,
+    audio = new Audio(),
+    playing = false,
+    pointerX = pointerY = 0;
+
+var WEBGL_VERSION = ( function () {
+  var c = document.createElement( 'canvas' );
+  var gl = c.getContext( 'webgl' ) || c.getContext( 'experimental-webgl' );
+  var version = gl.getParameter( gl.VERSION );
+  return version;
+} )();
+var $win = $( window );
+var $button = $( '.mod-button' );
+var $spinner = $( '.mod-spinner' );
+
+scene = new THREE.Scene();
+
+camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+
+renderer = new THREE.WebGLRenderer();
+renderer.setSize( width, height );
+renderer.shadowMapEnabled = true;
+document.body.appendChild( renderer.domElement );
+
+ambientLight = new THREE.AmbientLight( 0xffffff, 0.3 );
+scene.add( ambientLight );
+
+spotLight = new THREE.SpotLight( 0xffffff, 0.2 );
+spotLight.position.set( -10, 50, 10 );
+spotLight.target.position.set( 0, 0, 0 );
+spotLight.castShadow = true;
+spotLight.shadowMapWidth = 512;
+spotLight.shadowMapHeight = 512;
+spotLight.shadowCameraFov = 60;
+spotLight.shadowCameraNear = 1;
+spotLight.shadowCameraFar = 300;
+spotLight.shadowBias = -0.0003;
+spotLight.shadowDarkness = 0.3;
+// spotLight.shadowCameraVisible = true;
+scene.add( spotLight );
+
+function play () {
+  if ( playing ) {
+    return;
+  }
+  playing = true;
+  $button.addClass( 'mod-button--disable' );
+  idle.stop();
+  tellYourWorld.play();
+  setTimeout( function () {
+    audio.play();
+  }, 2500 );
+}
+
+function loadMiku () {
+  var d = new $.Deferred();
+  var loader = new THREE.JSONLoader();
+    loader.load( 'miku.js', function( geo, mats ) {
+    
+    mats.forEach(function ( mat ) {
+      if ( !/0\.9/.test( WEBGL_VERSION ) ) {
+        // IE11 does not render if THREE.DoubleSide (gl_frontFacing) is applyed
+        mat.side = THREE.DoubleSide;
+      }
+      mat.skinning = true;
+    } );
+
+    miku = new THREE.SkinnedMesh(
+      geo,
+      new THREE.MeshFaceMaterial( mats )
+    );
+
+    miku.traverse( function ( child ) {
+      child.castShadow = true;
+      child.receiveShadow = false;
+    } );
+
+    THREE.AnimationHandler.add( miku.geometry.animations[ 0 ] );
+    THREE.AnimationHandler.add( miku.geometry.animations[ 1 ] );
+
+    idle = new THREE.Animation(
+      miku,
+      miku.geometry.animations[ 0 ].name,
+      THREE.AnimationHandler.CATMULLROM
+    );
+
+    tellYourWorld = new THREE.Animation(
+      miku,
+      miku.geometry.animations[ 1 ].name,
+      THREE.AnimationHandler.CATMULLROM
+    );
+
+    idle.play();
+    scene.add( miku );
+    d.resolve();
+  } );
+  return d.promise();
+}
+
+function loadSound () {
+  var file = Modernizr.audio.mp3 ? 'TellYourWorld1min.mp3' : 'TellYourWorld1min.ogg';
+  // IE11 does not accept 'audio/mp3', use 'audio/mpeg' instead
+  var type = Modernizr.audio.mp3 ? 'audio/mpeg' : 'audio/ogg';
+  var d = new $.Deferred();
+  var xhr = new XMLHttpRequest();
+  xhr.open( 'GET', file, true );
+  xhr.responseType = 'blob';
+  xhr.overrideMimeType( type );
+  xhr.onreadystatechange = function () {
+    if ( xhr.readyState === xhr.DONE ) {
+        var blob = this.response;
+        audio.addEventListener( 'loadeddata', function ( e ) {
+          URL.revokeObjectURL( e.target.src );
+        }, false );
+        audio.src = URL.createObjectURL( blob );
+        d.resolve();
+    }
+  }
+  xhr.send();
+  return d.promise();
+}
+
+function createGround () {
+  var i;
+  var simplexNoise = new SimplexNoise;
+  var vertex
+  var geometry = new THREE.PlaneGeometry( 150, 150, 64, 64 );
+  var diffuse;
+
+  for ( i = 0; i < geometry.vertices.length; i++ ) {
+    vertex = geometry.vertices[i];
+    vertex.z = simplexNoise.noise( vertex.x / 10, vertex.y / 10 ) / 3;
+  }
+  geometry.computeFaceNormals();
+  geometry.computeVertexNormals();
+
+  diffuse = THREE.ImageUtils.loadTexture( 'ground.jpg' );
+  diffuse.wrapS = diffuse.wrapT = THREE.RepeatWrapping;
+  diffuse.repeat.set( 6, 6 );
+
+  ground = new THREE.Mesh(
+    geometry,
+    new THREE.MeshPhongMaterial( {
+      specular: 0x333333,
+      shininess: 25, 
+      map: diffuse,
+    } )
+  );
+  ground.castShadow = false;
+  ground.receiveShadow = true;
+  ground.rotation.x = Math.PI / -2;
+  scene.add( ground );
+}
+
+function createSnow () {
+  var vertex;
+  var geometry = new THREE.Geometry();
+  var material = new THREE.ParticleSystemMaterial( {
+    color: 0xFFFFFF,
+    size: 3,
+    map: THREE.ImageUtils.loadTexture( 'snowflake.png' ),
+    blending: THREE.AdditiveBlending,
+    transparent: true
+  } );
+
+  for ( i = 0; i < 1000; i ++ ) {
+    vertex = new THREE.Vector3();
+    vertex.x = Math.random() * 200 - 100;
+    vertex.y = Math.random() * 100;
+    vertex.z = Math.random() * 200 - 100;
+    geometry.vertices.push( vertex );
+  }
+
+  snow = new THREE.ParticleSystem( geometry, material );
+  scene.add( snow );
+}
+
+function renderLoop (){
+  requestAnimationFrame( renderLoop );
+
+  var delta = clock.getDelta();
+  var theta = clock.getElapsedTime();
+  THREE.AnimationHandler.update( delta );
+
+  var particleLength = snow.geometry.vertices.length;
+  var particle;
+  while ( particleLength -- ) {
+    particle = snow.geometry.vertices[ particleLength ];
+    particle.y = particle.y < 0 ? 100 : particle.y - 0.1;
+    particle.x = particle.x < -100 ? 100 : particle.x - Math.random() * 0.05;
+  }
+  snow.geometry.verticesNeedUpdate = true;
+  renderer.render( scene, camera );
+}
+
+function onresize () {
+  width = window.innerWidth,
+  height = window.innerHeight;
+  renderer.setSize( width, height );
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+}
+
+function wait ( ms ) {
+  var d = new $.Deferred();
+  setTimeout( function () {
+    d.resolve();
+  }, ms );
+  return d.promise();
+}
+
+audio.addEventListener( 'ended', function () {
+  tellYourWorld.stop();
+  idle.play();
+  playing = false;
+  $button.removeClass( 'mod-button--disable' );
+} );
+
+$.when(
+  wait( 1000 ),
+  createGround(),
+  createSnow(),
+  loadMiku(),
+  loadSound()
+).done( function () {
+  var sphereCamera = new SphereCamera(
+    camera,
+    {
+      center: new THREE.Vector3( 0, 2, 0 ),
+      minRadius: 3,
+      rigidObjects: [ ground ]
+    }
+  );
+  $spinner.addClass( 'mod-spinner--loaded' );
+  $button.removeClass( 'mod-button--disable' );
+  $button.on( 'click', play );
+  $win.on( 'resize', onresize );
+  renderLoop();
+} );
+
+} )();
+</script>
+</body>
+</html>

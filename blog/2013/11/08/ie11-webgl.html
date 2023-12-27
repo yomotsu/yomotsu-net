@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>IE11 の WebGL | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/11/08/ie11-webgl.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				IE11 の WebGL
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-11-07T15:00:00.000Z" itemprop="datePublished">2013-11-08</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>2013 年 10 月 17 日に Windows 8.1 と IE11 が正式リリースされ、次いで、2013 年 11 月 8 日に Windows 7 版 IE11 が正式リリースされました。これでついに IE でも WebGL が利用可能になったわけです。そこで実際に Windows 8.1 と Windows 7 の IE11 で WebGL を動かしてみました。</p>
+<p>まずは対応スペック。</p>
+<p>次のコードで WebGL のスペックを調べることができます。</p>
+<pre><code>&lt;canvas id=&quot;viewport&quot;&gt;&lt;/canvas&gt;
+&lt;script&gt;
+var c = document.getElementById( &apos;viewport&apos; );
+var gl = c.getContext( &apos;webgl&apos; ) || c.getContext( &apos;experimental-webgl&apos; );
+
+var renderer = gl.getParameter( gl.RENDERER );
+var vendor = gl.getParameter( gl.VENDOR );
+var version = gl.getParameter( gl.VERSION );
+var glslVersion = gl.getParameter( gl.SHADING_LANGUAGE_VERSION );
+
+console.log( renderer );
+console.log( vendor );
+console.log( version );
+console.log( glslVersion );
+&lt;/script&gt;
+</code></pre><p>結果は以下のとおりです。</p>
+<p>以下は IE11 on Windows 8.1 </p>
+<p><img src="/blog/assets/2013-11-08-ie11-webgl/img_01.png" alt=""></p>
+<p>以下は IE11 on Windows 7</p>
+<p><img src="/blog/assets/2013-11-08-ie11-webgl/img_02.png" alt=""></p>
+<p>IE11 では Windows 8.1、Windows 7 ともに WebGL のバージョンは 0.92 です。他のブラウザーでは 1.0 となっています。これは、IE11 では <a href="http://news.turbulenz.com/post/54340340417/webgl-on-ie11-welcomed-but-unfinished" target="_blank" rel="noopener">WebGL の拡張仕様をサポートしていない</a>などの違いためです。</p>
+<p>さて、実際に<a href="/blog/assets/2013-11-08-ie11-webgl/demo.html">簡単な demo</a> を動かしてみました。</p>
+<p>以下は IE11 on Windows 8.1</p>
+<p><img src="/blog/assets/2013-11-08-ie11-webgl/img_03.jpg" alt=""></p>
+<p>以下は IE11 on Windows 7</p>
+<p><img src="/blog/assets/2013-11-08-ie11-webgl/img_04.jpg" alt=""></p>
+<p>キャプチャ内 左上の FPS カウンターをみてみると、Windows 8.1 版では 60 FPS 近くをキープしているのに対し、 Windows 7 版では半分以下の FPS しか出ておらず、アニメーションはカクカクしていました。これは、OS の差ではなく<strong>端末のスペックの差</strong>が原因と考えられます。</p>
+<p>今回利用した Windows 8.1 機はゲーム用に使っている端末、Windows 7 は 4 年ほど前に購入したラップトップです。グラフィック性能には、高性能の GPU と、低性能なオンボード GPU という違いがありました。</p>
+<p>利用した Windows 7 機のスペック</p>
+<p><img src="/blog/assets/2013-11-08-ie11-webgl/img_05.png" alt=""></p>
+<h1 id="まとめ"><a href="#まとめ" class="headerlink" title="まとめ"></a>まとめ</h1><p>IE11 上で WebGL がしっかり動作することが確認できました。ただし、IE11 では、一部の WebGL 拡張仕様を利用することができないので注意です。また、端末のスペックによっては、レンダリング性能に大きな違いがあることをわすれてはいけません。これは他のブラウザーでも同じことですが。</p>
+<p>加えて、IE11 は WebGL のコードが危険と判断した場合、GPU を使わずにソフトウェアレンダリングに切り替えることがあります。その場合はコンソールに切り替えた旨が表示されます。</p>
+<p>どの端末をサポートするか明確にし、それらに向けて GPU 許容上限を検出しながら WebGL のコードを書くといいでしょう。</p>
+<p>ちなみに仮想環境上の IE11 では、WebGL がうまく動かない可能性があります。これは OS と IE と GPU の関係にさらに、VM が割り込んでくるためだと考えれれます。ですので特に Mac をお使いの方は、IE 用のテスト環境に注意が必要そうです。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/08/20/blendmode-in-webgl3.html">
+					WebGL で高速 BlendMode その 3
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/12/01/happyholidays.html">
+					WebGL でクリスマス
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

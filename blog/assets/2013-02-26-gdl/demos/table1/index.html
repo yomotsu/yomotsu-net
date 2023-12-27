@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>demo</title>
+<style>
+/* main features are here! */
+.mod-pageContainer{display: block;}
+.mod-pageGlobalNav{
+  display: block;
+  background:url(images/bg_03.png);
+}
+.mod-pageBody{display: block;}
+
+@media(max-width:600px){
+  .mod-pageContainer{display:table; width:100%;}
+  .mod-pageGlobalNav{display:table-footer-group;}
+  .mod-pageBody     {display:table-header-group;}
+}
+
+.mod-pageHeader-inner,
+.mod-pageGlobalNav-inner,
+.mod-pageBody-inner,
+.mod-pageFooter-inner{
+  padding:10px;
+  display:block;
+  width:900px;
+  margin:0 auto;
+}
+@media(max-width:600px){
+  .mod-pageHeader-inner,
+  .mod-pageFooter-inner{
+    width:auto;
+  }
+  .mod-pageGlobalNav-inner,
+  .mod-pageBody-inner{
+    display:table-cell;
+    width:auto;
+  }
+}
+
+/* misc settings */
+body{font-family:"\30E1\30A4\30EA\30AA",Meiryo,"\30D2\30E9\30AE\30CE\89D2\30B4\20\50\72\6F\20\57\33","Hiragino Kaku Gothic Pro","\FF2D\FF33\20\FF30\30B4\30B7\30C3\30AF",sans-serif;padding:0;margin:0;background:url(images/bg_02.png)}.mod-pageHeader{display:block;box-shadow:3px 0 10px 0 #000;position:relative;background:url(images/bg_01.png)}.mod-pageHeader img{display:block}.mod-pageGlobalNav ul{padding:0;margin:-10px 0;list-style:none;*zoom:1}.mod-pageGlobalNav ul:after{content:'';clear:both;display:table}.mod-pageGlobalNav li{text-align:center;float:left;width:25%;padding:0;margin:0}.mod-pageGlobalNav a{color:#fff;text-decoration:none;display:block;width:100%;padding:10px 0}@media(max-width:600px){.mod-pageGlobalNav li{text-align:left;float:none;width:auto;margin:0 -10px;padding:0 10px;border-bottom:1px solid #444;background:url(images/ico_01.png) 100% 50% no-repeat}}.mod-pageFooter{color:#fff;text-align:center;display:block;padding:20px 0;box-shadow:inset 0 3px 10px -3px #000;background:url(images/bg_04.png)}
+</style>
+<script>
+//html5shiv for ie
+( function( d ){
+    d.createElement( 'header' );
+    d.createElement( 'footer' );
+    d.createElement( 'nav' );
+} )( document );
+</script>
+</head>
+<body>
+ 
+
+<header class="mod-pageHeader">
+  <div class="mod-pageHeader-inner">
+    <img src="images/logo.png" alt="">
+  </div>
+</header>
+
+<div class="mod-pageContainer">
+  <nav class="mod-pageGlobalNav">
+    <div class="mod-pageGlobalNav-inner">
+      <ul>
+        <li><a href="?">content1</a></li>
+        <li><a href="?">content2</a></li>
+        <li><a href="?">content3</a></li>
+        <li><a href="?">content4</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="mod-pageBody">
+    <div class="mod-pageBody-inner">
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+      例えばここにコンテンツがはいったりします。
+    </div>
+  <!-- /.mod-pageBody --></div>
+</div>
+
+<footer class="mod-pageFooter">
+  <div class="mod-pageFooter-inner">
+    © 2012 PixelGrid Inc.
+  </div>
+</footer>
+
+</body>
+</html>

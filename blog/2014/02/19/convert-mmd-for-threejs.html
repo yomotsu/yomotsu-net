@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>How to convert MMD files to JSON for three.js | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2014/02/19/convert-mmd-for-threejs.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				How to convert MMD files to JSON for three.js
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2014-02-18T15:00:00.000Z" itemprop="datePublished">2014-02-19</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>I published a video, which is explaining the way to convert MMD files ( PMX and VMD ) to a JSON file for three.js.</p>
+<p>Here is it.</p>
+<iframe width="640" height="480" src="//www.youtube.com/embed/ZFb5F8brFLw" frameborder="0" allowfullscreen></iframe>
+
+<p>The convert was operated on Blender.</p>
+<h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><ul>
+<li>Check the language setting at preference to display Japanese characters.</li>
+<li>Install and activate following addons<ul>
+<li><a href="https://github.com/sugiany/blender_mmd_tools" target="_blank" rel="noopener">mmd-tools</a></li>
+<li><a href="https://github.com/mrdoob/three.js/tree/master/utils/exporters/blender" target="_blank" rel="noopener">io_mesh_threejs</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="Load-MMD-files"><a href="#Load-MMD-files" class="headerlink" title="Load MMD files"></a>Load MMD files</h2><ol>
+<li>Load a PMX file</li>
+<li>Select all bones</li>
+<li>Load a VMD file</li>
+</ol>
+<h2 id="Bake-Action"><a href="#Bake-Action" class="headerlink" title="Bake Action"></a>Bake Action</h2><p>some bones of the MMD model are controled by IK or physics. However, three.js does not support IK and physics. Therefore, you need to bake all bones as FK bones.</p>
+<ol>
+<li>Select all bones</li>
+<li>Press space key, and search “bake action”</li>
+<li>Bake all frames, as “Frame Step:1” dont set except “1”. otherwise, bones which are controled by phtsics will not work as expected.</li>
+<li>Wait for bake to complete.</li>
+<li>Bake all frames again, as Frame Step: around 3, to thin out too much frames. This will reduce the file size.</li>
+<li>Wait for bake to complete.</li>
+<li>Check the animation.</li>
+</ol>
+<h2 id="Remove-garbage-animations"><a href="#Remove-garbage-animations" class="headerlink" title="Remove garbage animations"></a>Remove garbage animations</h2><ol>
+<li>Switch to Dope Sheet mode</li>
+<li>Select Action Editor</li>
+<li>Check Actions</li>
+<li>Save and close Blender once</li>
+<li>Open the file</li>
+<li>Check the Actions. Garbage animations should be removed</li>
+</ol>
+<h2 id="Replace-all-multibyte-Japanese-characters"><a href="#Replace-all-multibyte-Japanese-characters" class="headerlink" title="Replace all multibyte (Japanese) characters"></a>Replace all multibyte (Japanese) characters</h2><ul>
+<li>Switch to Text Editor mode</li>
+<li>Make a new text</li>
+<li>Copy and paste the script below, and then, press Run Script</li>
+</ul>
+<pre><code>import bpy
+
+for obj in bpy.data.objects:
+  obj.name = 'obj'
+
+for mesh in bpy.data.meshes:
+  mesh.name = 'mesh'
+
+for armature in bpy.data.armatures:
+  armature.name = 'arm'
+
+  for bone in armature.bones:
+      bone.name = 'b'
+
+for material in bpy.data.materials:
+  material.name = 'm'</code></pre>
+
+<h2 id="Fix-the-rest-pose"><a href="#Fix-the-rest-pose" class="headerlink" title="Fix the rest pose"></a>Fix the rest pose</h2><p>Fix the rest pose. To do so, press control + A, and then check all transforms.</p>
+<h2 id="Publish"><a href="#Publish" class="headerlink" title="Publish"></a>Publish</h2><p>Make sure that you checked “Skeltal animation”, and “Copy textures”. if you have already published textures, dont check “Copy textures”. Then, press “Export Three.js”. Publishing may take a few min.</p>
+<h2 id="Edit-json"><a href="#Edit-json" class="headerlink" title="Edit json"></a>Edit json</h2><p>WIP</p>
+<h2 id="Write-a-JavaScript-code"><a href="#Write-a-JavaScript-code" class="headerlink" title="Write a JavaScript code"></a>Write a JavaScript code</h2><p>As the result, you will see like this <a href="/blog/assets/2014-02-19-convert-mmd-for-threejs/">example (about 4MB)</a>.</p>
+<p><img src="/blog/assets/2014-02-19-convert-mmd-for-threejs/img_01.jpg" alt=""></p>
+<pre><code>var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    scene,
+    camera,
+    renderer,
+    loader,
+    miku,
+    action;
+
+scene = new THREE.Scene();
+
+camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+camera.position.set( 0, 2, 6 );
+
+renderer = new THREE.WebGLRenderer();
+renderer.setSize( width, height );
+document.body.appendChild( renderer.domElement );
+
+var ambientLight = new THREE.AmbientLight( 0xffffff )
+scene.add( ambientLight );
+
+var directionalLight = new THREE.DirectionalLight( 0xffffff );
+directionalLight.position.set( .5, 1, .5 ).normalize();
+scene.add( directionalLight );
+
+scene.add( new THREE.GridHelper( 10, 1 ) );
+
+loader = new THREE.JSONLoader();
+loader.load( &apos;miku.js&apos;, function( geometry, materials ) {
+  materials.forEach(function ( mat ) {
+    mat.skinning = true;
+    // mat.wireframe = true;
+  } );
+
+  miku = new THREE.SkinnedMesh(
+    geometry,
+    new THREE.MeshFaceMaterial( materials )
+  );
+
+  THREE.AnimationHandler.add( miku.geometry.animations[ 0 ] );
+
+  action = new THREE.Animation(
+    miku,
+    miku.geometry.animations[ 0 ].name,
+    THREE.AnimationHandler.CATMULLROM
+  );
+  scene.add( miku );
+  action.play();
+} );
+
+( function renderLoop (){
+  requestAnimationFrame( renderLoop );
+  var delta = clock.getDelta();
+  THREE.AnimationHandler.update( delta );
+  renderer.render( scene, camera );
+} )();
+</code></pre><ul>
+<li>the model by にがミクV205</li>
+<li>the motion by <a href="http://www.nicovideo.jp/watch/sm18232113" target="_blank" rel="noopener">【MMD】シグナルズでゴーバス！【モーション配布】</a></li>
+</ul>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/02/13/chocolate4u.html">
+					JS で AR
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/02/26/facial-animation.html">
+					applying facial animations to Miku (WIP)
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

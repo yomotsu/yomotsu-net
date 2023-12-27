@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>BEM と接頭辞 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/12/12/bem-with-namespace.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				BEM と接頭辞
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-12-11T15:00:00.000Z" itemprop="datePublished">2013-12-12</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>BEM をもとにした名前付けをする際、Block に接頭辞を入れるとより強固になります。接頭辞はバージョンでも、プロジェクト名でも、名前空間として使えるものを何かしら入れておくといいです。例えば、大規模 Web サイトにおける、グローバルヘッダーとよく呼ばれる Block を思い出してみましょう。</p>
+<p>すでにある大規模な Web ページをリニューアル、のようなお仕事の際、</p>
+<ul>
+<li>すでにあるコンテンツ領域は古いままを維持</li>
+<li>ただし、旧コンテンツのうち、有用な一部のページはヘッダーとフッターだけは新しいものにリプレースしたい</li>
+<li>手を付けられない一部のページは旧ヘッダーのまま凍結</li>
+</ul>
+<p>という用件があるかもしれません。</p>
+<p>そういう時、バージョン名が接頭辞として入っていれば…</p>
+<pre><code>&lt;header class=&quot;v1-pageHeader&quot;&gt;
+</code></pre><p>と</p>
+<pre><code>&lt;header class=&quot;v2-pageHeader&quot;&gt;
+</code></pre><p>は共存できるわけです。</p>
+<p>あるいは別の例として、Web サイトのリニューアルで資産として持っている旧コンテンツと、新テンプレートで作られた新コンテンツが混ざり合うとき、同じ役割の Block でも、接頭辞によって異なる世代、かつ同一の役割の Block を混在させることもできます。混在はできれば避けたいものですが、大規模サイトではよくあることです。</p>
+<p>例えば、以下のような共存があるかもしれません。</p>
+<pre><code>&lt;div class=&quot;v1-heading3&quot;&gt;
+</code></pre><p>と</p>
+<pre><code>&lt;div class=&quot;v2-heading3&quot;&gt;
+</code></pre><p>こんな場合でも世代を明示しておけば、共存できるわけです。</p>
+<p>また、接頭辞はプロジェクト名でもいいでしょう。例えば、何らかのキャンペーンを行うので、クリスマス仕様の装飾をした、グローバルヘッダーを一部のページで使いたい、そんな場合には、</p>
+<pre><code>&lt;header class=&quot;v1-pageHeader&quot;&gt;
+</code></pre><p>と</p>
+<pre><code>&lt;header class=&quot;xmas2013-pageHeader&quot;&gt;
+</code></pre><p>を共存できるわけです。</p>
+<p>Block, Element, Modifier の前に、名前空間を付与し、世代単位での管理を行ってみると、フロントエンドのお悩み解決につながるかもしれません。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/12/02/happyholidays.html">
+					Behind The Scene of &quot;WebGL でクリスマス&quot;
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/12/18/mh.html">
+					モンハン 4 で作った装備
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

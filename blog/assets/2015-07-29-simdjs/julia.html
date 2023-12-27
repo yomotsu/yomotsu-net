@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<script type="application/javascript;version=1.7">
+
+'use strict';
+
+const ITETARION = 128|0;
+const SIZE      = 256|0;
+const SIZE_SQ   = ( SIZE * SIZE )|0;
+const SIZE_SQRT = Math.sqrt( SIZE );
+const ONE4  = SIMD.Int32x4.splat( 1 );
+const TWO4  = SIMD.Float32x4.splat( 2.0 );
+const FOUR4 = SIMD.Float32x4.splat( 4.0 );
+
+var canvas    = document.getElementById( 'c' );
+var ctx       = c.getContext( '2d' );
+
+canvas.width = canvas.height = SIZE;
+
+var pxToCoord = function ( order ) {
+
+  var width  = SIZE;
+  var height = SIZE;
+
+  var h = ( order % height )|0;
+  var v = ( order / width )|0;
+
+  return [ h / width * 2 - 1, v / height * 2 - 1 ];
+
+}
+
+var julia = function ( time ) {
+
+  const C_RE4 = SIMD.Float32x4.splat( Math.sin( time * 0.5 ) );
+  const C_IM4 = SIMD.Float32x4.splat( Math.cos( time * 0.5 ) );
+
+  var imageData = ctx.createImageData( SIZE, SIZE );
+
+  for ( let i = 0|0; i < SIZE_SQ; i = ( i + 1 )|0 ) {
+
+    let v0 = pxToCoord( i     );
+    let v1 = pxToCoord( i + 1 );
+    let v2 = pxToCoord( i + 2 );
+    let v3 = pxToCoord( i + 3 );
+
+    let z_re4 = SIMD.Float32x4( v0[ 0 ], v1[ 0 ], v2[ 0 ], v3[ 0 ] );
+    let z_im4 = SIMD.Float32x4( v0[ 1 ], v1[ 1 ], v2[ 1 ], v3[ 1 ] );
+    let zNext_re4;
+    let zNext_im4;
+    let diverge;
+    let count4i = SIMD.Int32x4.splat( 0 );
+
+    for ( let ii = 0; ii < ITETARION; ii ++ ) {
+
+      zNext_re4 = SIMD.Float32x4.sub(
+        SIMD.Float32x4.mul( z_re4, z_re4 ),
+        SIMD.Float32x4.mul( z_im4, z_im4 )
+      );
+      zNext_im4 = SIMD.Float32x4.mul( SIMD.Float32x4.mul( TWO4, z_re4 ), z_im4 );
+
+      z_re4 = SIMD.Float32x4.add( zNext_re4, C_RE4 );
+      z_im4 = SIMD.Float32x4.add( zNext_im4, C_IM4 );
+
+      let lengthSq = SIMD.Float32x4.add(
+        SIMD.Float32x4.mul( z_re4, z_re4 ),
+        SIMD.Float32x4.mul( z_im4, z_im4 )
+      );
+
+      diverge = SIMD.Float32x4.greaterThan( lengthSq, FOUR4 );
+
+      if ( diverge.signMask === 0b1111 ) {
+
+        break;
+
+      }
+
+      count4i = SIMD.Int32x4.add( count4i, SIMD.Int32x4.and( diverge, ONE4 ) );
+
+    }
+
+    for ( let ii = 0|0; ii < 4; ii = ( ii + 4 )|0 ) {
+
+      let count = SIMD.Int32x4.extractLane( count4i, ii );
+
+      imageData.data[ i * 4     ] = count * 40;
+      imageData.data[ i * 4 + 1 ] = count * 80;
+      imageData.data[ i * 4 + 2 ] = count * 160;
+      imageData.data[ i * 4 + 3 ] = 255;
+
+    }
+
+  }
+
+  ctx.putImageData( imageData, 0, 0 );
+
+};
+
+
+
+;( function anim () {
+
+  requestAnimationFrame( anim );
+  julia( Date.now() * 0.004 );
+
+} )();
+
+
+</script>
+</body>
+</html>

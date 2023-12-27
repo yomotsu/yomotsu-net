@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Yomotsu net</title>
+  
+  
+  <link href="/blog/feed.xml" rel="self"/>
+  
+  <link href="https://yomotsu.net/blog/"/>
+  <updated>2022-06-17T00:29:27.554Z</updated>
+  <id>https://yomotsu.net/blog/</id>
+  
+  <author>
+    <name>Yomotsu</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>IE の歴史</title>
+    <link href="https://yomotsu.net/blog/2022/06/16/history-of-ie.html"/>
+    <id>https://yomotsu.net/blog/2022/06/16/history-of-ie.html</id>
+    <published>2022-06-15T15:00:00.000Z</published>
+    <updated>2022-06-17T00:29:27.554Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;/blog/assets/2022-06-16-history-of-ie/01.png&quot; alt=&quot;IE の歴史年表。1993 年 NCSA Mosaic, 1995 年 IE 1,  1996 年 IE 1.5, 1995 年 IE2, 1996 年
+      
+    
+    </summary>
+    
+    
+      <category term="microsoft" scheme="https://yomotsu.net/blog/tags/microsoft/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Reduce polygon count</title>
+    <link href="https://yomotsu.net/blog/2020/06/01/reduce-polycont.html"/>
+    <id>https://yomotsu.net/blog/2020/06/01/reduce-polycont.html</id>
+    <published>2020-05-31T15:00:00.000Z</published>
+    <updated>2020-06-03T08:34:31.492Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;3D models especially 3D scanned objects tend to have a high polygon count. Therefore the file size is proportional to the number of polyg
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>The future of EC experience with WebAR</title>
+    <link href="https://yomotsu.net/blog/2018/03/16/the-future-of-ec-experience-with-webar.html"/>
+    <id>https://yomotsu.net/blog/2018/03/16/the-future-of-ec-experience-with-webar.html</id>
+    <published>2018-03-15T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:48.113Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;WebAR or WebXR may come to Web browesers, without any plugins nor native apps.&lt;br&gt;Currentry, &lt;a href=&quot;https://github.com/google-ar/WebARo
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Compress 3D model files with Draco</title>
+    <link href="https://yomotsu.net/blog/2017/09/18/draco.html"/>
+    <id>https://yomotsu.net/blog/2017/09/18/draco.html</id>
+    <published>2017-09-17T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:49.622Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://github.com/google/draco&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Draco&lt;/a&gt; is a 3D model files compressing / decompressing librar
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Happy Holidays 2016 with WebGL</title>
+    <link href="https://yomotsu.net/blog/2016/12/25/xmas.html"/>
+    <id>https://yomotsu.net/blog/2016/12/25/xmas.html</id>
+    <published>2016-12-24T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:49.184Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;It has been exactly one year since I posted last time…then finally, Santa came back!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/blog/assets/2016-12-25-xmas/img_01
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Merry Christmas with three.js and cannon.js</title>
+    <link href="https://yomotsu.net/blog/2015/12/25/xmas.html"/>
+    <id>https://yomotsu.net/blog/2015/12/25/xmas.html</id>
+    <published>2015-12-24T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:46.299Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;I made a simple 3D demo with three.js and cannon.js&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/blog/assets/2015-12-25-xmas/img_01.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a hre
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>New skinned mesh animation system in three.js r73 and r74</title>
+    <link href="https://yomotsu.net/blog/2015/10/31/three-r73-anim.html"/>
+    <id>https://yomotsu.net/blog/2015/10/31/three-r73-anim.html</id>
+    <published>2015-10-30T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:47.738Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;The animation system for Skinned Mesh of three.js has been changed alot at &lt;a href=&quot;https://github.com/mrdoob/three.js/releases/tag/r73&quot; 
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Advanced usage of A360 View and Data API</title>
+    <link href="https://yomotsu.net/blog/2015/10/12/autodesk-a360-view-api.html"/>
+    <id>https://yomotsu.net/blog/2015/10/12/autodesk-a360-view-api.html</id>
+    <published>2015-10-11T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:45.334Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;On Oct 9th 2015, the conference called Autodesk University Japan was held in Tokyo, and Akatuka-san who is working for Mozilla japan and 
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SIMD.js を使ってみる</title>
+    <link href="https://yomotsu.net/blog/2015/07/29/simdjs.html"/>
+    <id>https://yomotsu.net/blog/2015/07/29/simdjs.html</id>
+    <published>2015-07-28T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:50.556Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://tokyo-web-perf.doorkeeper.jp/events/28289&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;第0回 東京 Web PerformanceでSIMD.js&lt;/a&gt;という勉強会が開催され、
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>自然の中の数学、ボロノイ Math in Nature, Voronoi</title>
+    <link href="https://yomotsu.net/blog/2015/07/26/voronoi.html"/>
+    <id>https://yomotsu.net/blog/2015/07/26/voronoi.html</id>
+    <published>2015-07-25T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:46.937Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;https://github.com/yomotsu/delaunay&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;任意の点群からドロネー図 ( Delaunay diagram ) とそこからボロノイ図 ( Voronoi diagr
+      
+    
+    </summary>
+    
+    
+      <category term="svg" scheme="https://yomotsu.net/blog/tags/svg/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>three.jsで立体的な火をつくる</title>
+    <link href="https://yomotsu.net/blog/2015/05/04/VolumetricFire.html"/>
+    <id>https://yomotsu.net/blog/2015/05/04/VolumetricFire.html</id>
+    <published>2015-05-03T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:49.981Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;three.js 用に火を表現するライブラリーを作りました。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/blog/assets/2015-05-04-VolumetricFire/img_01.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;3D では個体を表現するのは簡単です。一方で気
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JavaScript を PNG に圧縮する</title>
+    <link href="https://yomotsu.net/blog/2015/03/01/js2png.html"/>
+    <id>https://yomotsu.net/blog/2015/03/01/js2png.html</id>
+    <published>2015-02-28T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:49.054Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;JavaScript を PNG に圧縮するツールを作りました。&lt;a href=&quot;http://yomotsu.github.io/JS_Packer/JS_Packer.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;JS_Packer&lt;/a&gt;&lt;
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Project Spartan</title>
+    <link href="https://yomotsu.net/blog/2015/01/23/spartan.html"/>
+    <id>https://yomotsu.net/blog/2015/01/23/spartan.html</id>
+    <published>2015-01-22T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:49.125Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;2015 年 1 月 22 日に Microsoft から Windows 10 の発表とともに、Windows 10 のサービスのひとつとして Project Spartan というブラウザーの発表があった。「Project Spartan」と呼ばれているが正式名称ではな
+      
+    
+    </summary>
+    
+    
+      <category term="IE" scheme="https://yomotsu.net/blog/tags/IE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>three.js (WebGL) で TPS / FPS ゲームエンジン</title>
+    <link href="https://yomotsu.net/blog/2015/01/03/tps-game-engine.html"/>
+    <id>https://yomotsu.net/blog/2015/01/03/tps-game-engine.html</id>
+    <published>2015-01-02T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:49.303Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;去年 (2014 年) は &lt;a href=&quot;https://github.com/yomotsu/meshwalk.js&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;three.js (WebGL) で TPS ゲームエンジンのような JS ライブラリ
+      
+    
+    </summary>
+    
+    
+      <category term="webgl" scheme="https://yomotsu.net/blog/tags/webgl/"/>
+    
+      <category term="three.js" scheme="https://yomotsu.net/blog/tags/three-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>滝</title>
+    <link href="https://yomotsu.net/blog/2014/07/27/waterfall.html"/>
+    <id>https://yomotsu.net/blog/2014/07/27/waterfall.html</id>
+    <published>2014-07-26T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:46.495Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;/blog/assets/2014-07-27-waterfall/&quot;&gt;demo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;滝はディフューズテクスチャーを動かしている。&lt;/p&gt;
+&lt;p&gt;霧はポイントスプライト。&lt;/p&gt;
+&lt;p&gt;飛び込みたい。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ポータル</title>
+    <link href="https://yomotsu.net/blog/2014/07/26/portal.html"/>
+    <id>https://yomotsu.net/blog/2014/07/26/portal.html</id>
+    <published>2014-07-25T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:44.763Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;a href=&quot;/blog/assets/2014-07-26-portal/&quot;&gt;demo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ポータル。スプライトシートを用意してアニメーションしているだけ。&lt;/p&gt;
+&lt;p&gt;スプライトシートの作成は TPEditor が便利。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ポイントスプライトで炎</title>
+    <link href="https://yomotsu.net/blog/2014/07/20/flame.html"/>
+    <id>https://yomotsu.net/blog/2014/07/20/flame.html</id>
+    <published>2014-07-19T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:47.717Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;ポイントスプライトを使えば炎も簡単に表現できる。three.js では、自分で GLSL で書いたシェーダーを material としてそのまま利用することもできる。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/blog/assets/2014-07-20-flame/&quot;&gt;demo&lt;
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>water shader を試す</title>
+    <link href="https://yomotsu.net/blog/2014/07/19/watershader.html"/>
+    <id>https://yomotsu.net/blog/2014/07/19/watershader.html</id>
+    <published>2014-07-18T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:48.655Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;water-shader-を試す&quot;&gt;&lt;a href=&quot;#water-shader-を試す&quot; class=&quot;headerlink&quot; title=&quot;water shader を試す&quot;&gt;&lt;/a&gt;water shader を試す&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>WebGL でマンデルブロ集合とジュリア集合</title>
+    <link href="https://yomotsu.net/blog/2014/03/31/fractal.html"/>
+    <id>https://yomotsu.net/blog/2014/03/31/fractal.html</id>
+    <published>2014-03-30T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:47.649Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;複素平面を理解する&quot;&gt;&lt;a href=&quot;#複素平面を理解する&quot; class=&quot;headerlink&quot; title=&quot;複素平面を理解する&quot;&gt;&lt;/a&gt;複素平面を理解する&lt;/h2&gt;&lt;p&gt;普段使う”数”に実数 (real number) がある。例えば 0, 1, -10
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>a solution to control font-size relatively with media queries in Sass</title>
+    <link href="https://yomotsu.net/blog/2014/03/30/relative-font-size-in-sass.html"/>
+    <id>https://yomotsu.net/blog/2014/03/30/relative-font-size-in-sass.html</id>
+    <published>2014-03-29T15:00:00.000Z</published>
+    <updated>2020-05-26T06:16:44.763Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;SCSS で media queries を使いながら、相対的に font-size を扱うよさ気な方法を思いついた。&lt;/p&gt;
+&lt;p&gt;I just conceived a good solution to control font-size relatively with 
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>

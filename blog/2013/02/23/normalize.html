@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>なぜリセットではなく Normalize.css を使うのか | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/02/23/normalize.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				なぜリセットではなく Normalize.css を使うのか
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-02-22T15:00:00.000Z" itemprop="datePublished">2013-02-23</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/canvas/">canvas</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>まずは、歴史をみてみよう。</p>
+<h2 id="初期"><a href="#初期" class="headerlink" title="初期"></a>初期</h2><pre><code>* {
+  margin:0;
+  padding:0;
+  border:none;
+}
+</code></pre><p>table レイアウトから CSS レイアウトへの移行期に考案された。すべてゼロにするというコードで、実装者が書いたコードのみが適用できるという手法。弊害として input 要素の枠線など、本来、スタイルをゼロにする必要がない箇所までスタイルが消えてしまい、しょうがないので更に上から枠線を加えるなどが必要になっていた</p>
+<h2 id="中期"><a href="#中期" class="headerlink" title="中期"></a>中期</h2><p>今から 5 年ほど前の 2008 年、エリックメイヤー氏による<a href="http://meyerweb.com/eric/tools/css/reset/reset200802.css" target="_blank" rel="noopener">リセット CSS</a> や YUI のリセット CSS が登場した。全称セレクター「<code>*</code>」 ではなく、要素セレクターそれぞれに対して CSS をゼロにするという手法。</p>
+<p><del>ただし、<code>p</code> や見出し要素の上下マージンや <code>li</code> のリストスタイルまでも依然としてゼロになっていたため、次のような、本末転倒な HTML まで Web 上に現れる。</del></p>
+<p><del>段落対して余白がゼロだと</del></p>
+<pre><code>&lt;p&gt;段落&lt;/p&gt;
+&lt;p&gt;段落&lt;/p&gt;
+</code></pre><p><del>では行間が開かないため</del></p>
+<pre><code>&lt;p class=&quot;margin-bottom16&quot;&gt;段落&lt;/p&gt;
+&lt;p&gt;段落&lt;/p&gt;
+</code></pre><p><del>や</del></p>
+<pre><code>&lt;p&gt;段落&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;段落&lt;/p&gt;
+</code></pre><p><del>のようなコードがでてきたり、また、<code>li</code> の <code>list-style</code> がゼロだと箇条書きに於いて</del></p>
+<pre><code>&lt;ul&gt;
+  &lt;li&gt;・項目&lt;/li&gt;
+  &lt;li&gt;・項目&lt;/li&gt;
+  &lt;li&gt;・項目&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre><p><del>のように、ビュレットをテキストで明示したりといった本末転倒なコードが出てくるわけだ。</del></p>
+<h2 id="現在"><a href="#現在" class="headerlink" title="現在"></a>現在</h2><p><del>複数のブラウザー間の誤差を含めて、なにもかもゼロにすることで、実装を楽にするという、実装者の無知によりこうした<strong>リセット</strong>が使われてきた。</del></p>
+<p><del>しかしブラウザーを理解すれば、必ずしもすべてゼロにする必要はなく、誤差のみを補正し、すべて同じ動作とすれば、実装者は (基本的には) 一つの CSS を書くだけでいいということに気づいている人もいた。DOM を操作する際、実装者が JavaScript を書かずに jQuery を使うように。</del></p>
+<p><strong><a href="http://necolas.github.com/normalize.css/" target="_blank" rel="noopener">Nomalize.css</a> は CSS における jQuery</strong> と理解すればいいだろう。</p>
+<p>Nomalize.css は次のことをしてくれる</p>
+<ul>
+<li>表示をゼロにしない (sup や sub を使えば上付き、下付きになるし、ul は箇条書きになる)</li>
+<li>バグ補正 ( pre 要素における font-size、IE9 における SVG の overflow の挙動など)</li>
+<li>CSS 解析時に、解析ツール上に必要以上のゴミとなるコードを作らない (リセット系 CSS は結果的にゴミとなる margin:0 などが大量に挿入される)</li>
+<li>必要に応じて Nomalize.css の不要箇所を削除しても OK ( Nomalize.css は適切にコメントで区切られていて、不要箇所は削除が簡単)</li>
+<li><a href="https://github.com/necolas/normalize.css/wiki" target="_blank" rel="noopener">ドキュメンテーション</a>も用意されている</li>
+</ul>
+<p><del>だから、本末転倒なリセットをするのではなく、ノーマライズ (補正) するための CSS、<a href="http://necolas.github.com/normalize.css/" target="_blank" rel="noopener">Normalize.css</a> を使うことが、CSS を書き始める準備におけるベストプラクティスといえる。</del></p>
+<p>ちなみに、2013 年 2 月22 日に開催された W3Conf でもニコラス氏は、Nomalize.css を使うことがベストプラクティスであるとも触れていた。</p>
+<p><img src="/blog/assets/2013-02-23-normalize/img_03.png" alt=""></p>
+<p>また、Nomalize.css は、HTML5 Boilerplate や Twitter Bootstrap (Nomalize.css の作者は Twitter 社の人なのもあるだろうが) に組み込まれているし、<a href="http://www.sony.jp/" target="_blank" rel="noopener">ソニー(日本)</a>、<a href="http://data.nasa.gov/" target="_blank" rel="noopener">NASA</a> などの大規模だったり著名だったりする Web サイトにも採用されている。</p>
+<p>Nomalize.css はすでに jQuery と同じくらい、Web 開発においてはスタンダードといえる存在だろう。現段階では IE 6 もサポートに入っているので、日本国内の現場でも積極的に採用すべきだ。</p>
+<p><del>残念なことに、日本国内の<a href="http://w3q.jp/t/3591" target="_blank" rel="noopener">一般的な Web 制作者はここまで考えが至っていない</a>ようなので、ぜひもう一度考えてほしい。Web 開発のベストプラクティスは過去の失敗を活かしながら常に進化しているのだと。</del></p>
+<p>ちなみに、もっと詳しくは、Stack Overflow の <a href="http://stackoverflow.com/questions/6887336/what-is-the-difference-between-normalize-css-and-reset-css" target="_blank" rel="noopener">What is the difference between Normalize.css and Reset CSS?</a> が参考になる。</p>
+<p>追記。あくまでもnormalizeするために使い、その後はリセットするなり好きにすればOKだと思った。</p>
+<p><img src="/blog/assets/2013-02-23-normalize/normalize.png" alt=""></p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/02/16/canvas-lib.html">
+					canvas のラッパーライブラリーを作ろうと思った
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/02/26/gdl copy.html">
+					GDL 素材置場
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

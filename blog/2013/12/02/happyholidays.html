@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Behind The Scene of &quot;WebGL でクリスマス&quot; | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/12/02/happyholidays.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Behind The Scene of &quot;WebGL でクリスマス&quot;
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-12-01T15:00:00.000Z" itemprop="datePublished">2013-12-02</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>昨日公開した<a href="/blog/assets/2013-12-01-happyholidays/">作例 Santa’s Boxes!</a> の内容をざっくりまとめました。</p>
+<p><img src="/blog/assets/2013-12-02-happyholidays/1.jpg" alt=""></p>
+<h1 id="Ground"><a href="#Ground" class="headerlink" title="Ground"></a>Ground</h1><p><img src="/blog/assets/2013-12-02-happyholidays/2.jpg" alt=""></p>
+<p><a href="/blog/2012/12/01/create-terrain-with-threejs.html">去年のアドベントカレンダーに書いた内容</a>をそのままで、ディフューズ マップを変更して雪原を作りました。three.js の機能でバンプ マップを適用したところ、IE 11 でレンダリングできなかったため、ディフューズ マップのみ適用しています。</p>
+<p><a href="/blog/assets/2013-12-01-happyholidays/single-demos/ground.html">単品 demo</a></p>
+<h1 id="Skybox"><a href="#Skybox" class="headerlink" title="Skybox"></a>Skybox</h1><p><img src="/blog/assets/2013-12-02-happyholidays/3.jpg" alt=""></p>
+<p>three.js で cube ジオメトリーを作成し、スカイボックス用のディフューズ マップを適用しているだけです。立方体の内側を表面として表示するためには <code>material</code> の <code>side</code> プロパティーに <code>THREE.BackSide</code> を指定します。</p>
+<p>スカイボックス用に利用したテクスチャーは以下のような、シームレスな 6 面になっています。</p>
+<p><img src="/blog/assets/2013-12-02-happyholidays/4.png" alt=""></p>
+<p><a href="/blog/assets/2013-12-01-happyholidays/single-demos/skybox.html">単品 demo</a></p>
+<h1 id="Snowing"><a href="#Snowing" class="headerlink" title="Snowing"></a>Snowing</h1><p><img src="/blog/assets/2013-12-02-happyholidays/5.jpg" alt=""></p>
+<p>雪は <code>THREE.ParticleSystem</code> を用いて描画しています。1000 個のスノーフレークが常に舞っていますが、ParticleSystem のおかげで全体で 1 つのジオメトリーとして処理されており、一回の描画につき、ドローコールは一度しか発生しません。</p>
+<p><a href="/blog/assets/2013-12-01-happyholidays/single-demos/snow.html">単品 demo</a></p>
+<h1 id="Boxes"><a href="#Boxes" class="headerlink" title="Boxes"></a>Boxes</h1><p><img src="/blog/assets/2013-12-02-happyholidays/6.jpg" alt=""></p>
+<p>プレゼントボックスは、 Blender を経由して three.js 用の JSON ファイルに変換し利用しています。変換した JSON ファイルは、three.js の機能の jsonLoader で読み込みます。表示に必要な回数、読み込みを行うと、Ajax による HTTP リクエストが複数回発生してしまいます。そのため、一回のみ Ajax 読み込みを行い Mesh を生成した後、<code>メッシュ.clone()</code> でデュプリケイトしています。こうすることで、オブジェクト 1 つ分の HTTP 通信でいくつでもオブジェクトを増やすことができます。</p>
+<p><a href="/blog/assets/2013-12-01-happyholidays/single-demos/box.html">単品 demo</a></p>
+<h1 id="Trees"><a href="#Trees" class="headerlink" title="Trees"></a>Trees</h1><p><img src="/blog/assets/2013-12-02-happyholidays/7.jpg" alt=""></p>
+<p>木のオブジェクトは、プレゼントボックス同様に、Blender を経由して three.js 用の JSON ファイルに変換して利用しています。シーン内には 3 本の木が配置されています。コレを行うために、素直にシーンに木を 3 回配置 (<code>add</code>) してもいいのですが、これでは一回の描画につき、3回のドローコールが発生してしまいます。これを軽減するために、予め、3 本の木を、1 つのジオメトリーとしてマージしました。</p>
+<p>複数のメッシュやジオメトリーを、ひとつのジオメトリーとしてマージするには、</p>
+<pre><code>THREE.GeometryUtils.merge( ジオメトリーA, ジオメトリーB );
+</code></pre><p>を利用します。すると<code>ジオメトリーA</code>に<code>ジオメトリーB</code>がマージされます。<code>THREE.GeometryUtils.merge</code> の引数は、mesh オブジェクトも有効です。</p>
+<p><a href="/blog/assets/2013-12-01-happyholidays/single-demos/forrest.html">単品 demo</a></p>
+<h1 id="Santa"><a href="#Santa" class="headerlink" title="Santa"></a>Santa</h1><p><img src="/blog/assets/2013-12-02-happyholidays/8.jpg" alt=""></p>
+<p>サンタさんは、<a href="http://-paya.seesaa.net/article/308795489.html" target="_blank" rel="noopener">MMD 用として公開されているモデル</a>を使いました。このモデルに Blender 内でボーンとアイドル状態と走り状態のアニメーションを設定し、three.js 用の JSON ファイルとして出力しています。</p>
+<p><img src="/blog/assets/2013-12-02-happyholidays/9.jpg" alt=""></p>
+<p>scene に読み込んだ後、任意のイベントに合わせてアニメーションを再生すれば、アイドルや走りの表現を行えます。</p>
+<p><a href="/blog/assets/2013-12-01-happyholidays/single-demos/santa.html">単品 demo</a></p>
+<h1 id="Collisions"><a href="#Collisions" class="headerlink" title="Collisions"></a>Collisions</h1><p>衝突判定には、Cannon.js を利用しました。物理空間の衝突用オブジェクトとして、サンタは球体、プレゼントボックスは立方体、木は円柱が割り当てられています。ですので、実は物理空間ではプリミティブな図形のみでの衝突が行われています。この結果の座標や回転状態を three.js で表示されたそれぞれのオブジェクトにコピーし、表示空間と物理空間のリンクさせています。</p>
+<h1 id="まとめ"><a href="#まとめ" class="headerlink" title="まとめ"></a>まとめ</h1><p>実はあまり難しいことをしているわけではなく、ほとんどは Blender と three.js と Cannon.js の機能に頼って実現しています。11月が始まってから週末に少しずつ作ってきましたが、実質 1 週間位あればこれくらいのことはできてしまいます。とっても便利ですね!</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/12/01/happyholidays.html">
+					WebGL でクリスマス
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/12/12/bem-with-namespace.html">
+					BEM と接頭辞
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

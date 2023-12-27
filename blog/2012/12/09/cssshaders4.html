@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 4歩目、簡単な変形 1 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/09/cssshaders4.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 4歩目、簡単な変形 1
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-08T15:00:00.000Z" itemprop="datePublished">2012-12-09</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 9日目の記事です。</p>
+<p>この記事では、前回の記事サンプルに少し手を加え、簡単な変形を GLSL 内で行います。</p>
+<h2 id="前回のおさらい"><a href="#前回のおさらい" class="headerlink" title="前回のおさらい"></a>前回のおさらい</h2><p>次の HTML と vertex shader を用意しました。fragment shader は内容が空のテキストファイルです。</p>
+<h3 id="HTML-と-CSS"><a href="#HTML-と-CSS" class="headerlink" title="HTML と CSS"></a>HTML と CSS</h3><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;CSS Shaders!&lt;/title&gt;
+&lt;style&gt;
+.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32
+    );
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;sample&quot;&gt;
+    &lt;p&gt;CSS Shader!! シィーエスエス シェーダー!! &lt;/p&gt;
+    &lt;img src=&quot;nyantocat.gif&quot; alt=&quot;&quot;&gt;
+    &lt;p&gt;the Nyantocat by Cameron McEfee&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h3 id="shader-vs"><a href="#shader-vs" class="headerlink" title="shader.vs"></a>shader.vs</h3><pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+void main() {
+    gl_Position = u_projectionMatrix * a_position;
+}
+</code></pre><p><img src="http://yomotsu.net/blog/assets/2012-12-09-cssshaders4/1.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-09-cssshaders4/1.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<p>今回は上記のコードに手を加え、vertex shader 内に、変換行列 (transform matrix) を用意し、要素を移動や回転をしてみます。</p>
+<h2 id="GLSL-に登場する型"><a href="#GLSL-に登場する型" class="headerlink" title="GLSL に登場する型"></a>GLSL に登場する型</h2><p>さて、コードを紹介する前に、今回登場する型についてすこし知っておきましょう。GLSL には JavaScript と違ってたくさんの型があります。</p>
+<h3 id="変数の種類"><a href="#変数の種類" class="headerlink" title="変数の種類"></a>変数の種類</h3><p>attribute|Shader に送られてくる頂点毎に内容が異なる変数<br>uniform|Shader に送られてくる一定の変数<br>const|定数</p>
+<h3 id="変数の型"><a href="#変数の型" class="headerlink" title="変数の型"></a>変数の型</h3><p>float|小数点数<br>vec4|4成分のベクトル (4つの float の組み)<br>mat4|4x4 の行列 (16この float の組み)</p>
+<h2 id="移動する"><a href="#移動する" class="headerlink" title="移動する"></a>移動する</h2><p>さっそく、vertex shader に手を加え、移動をさせてみましょう。移動や回転などを行う方法の一つに、変換行列を利用する方法があります。ただし、次回もう少し簡単な方法を紹介します。<em>今回の記事は軽く読み流しておけばいいでしょう。</em></p>
+<p>移動するための変換行列はわかりやすいです。下に示す行列の Tx, Ty, Tz を移動したい距離に置き換えるだけです。</p>
+<math><br><matrix><br><matrixrow><br><cn>1</cn><cn>0</cn><cn>0</cn><cn>Tx</cn><br></matrixrow><br><matrixrow><br><cn>0</cn><cn>1</cn><cn>0</cn><cn>Ty</cn><br></matrixrow><br><matrixrow><br><cn>0</cn><cn>0</cn><cn>1</cn><cn>Tz</cn><br></matrixrow><br><matrixrow><br><cn>0</cn><cn>0</cn><cn>0</cn><cn>1</cn><br></matrixrow><br></matrix><br></math>
+
+<p>ただし、WebGL の場合は、行と列の順番が入れ替わるため、実際のコードでは以下のに当てはめることになります。</p>
+<pre><code>mat4(
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+     Tx,  Ty,  Tz, 1.0
+</code></pre><p>);</p>
+<p>X 方向に 0.5 移動させるには、次の行列を mat4 変数として用意して乗算します。</p>
+<pre><code>mat4 translate = mat4(
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.5, 0.0, 0.0, 1.0
+);
+</code></pre><p>vertex shader に反映してみます。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+void main() {
+    mat4 translate = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.5, 0.0, 0.0, 1.0
+    );
+    gl_Position = u_projectionMatrix * translate * a_position;
+}
+</code></pre><p>結果は次のようになります。CSS Shader による効果で X 方向に 0.5 動いたことがわかります。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-09-cssshaders4/2.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-09-cssshaders4/2.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<h2 id="回転する"><a href="#回転する" class="headerlink" title="回転する"></a>回転する</h2><p>回転は移動より少し複雑な行列が必要です。ここでは z 軸に対して回転する例をみてみましょう。z 軸に対して任意の角度分回転するには次の行列を用意します。</p>
+<math><br><matrix><br><matrixrow><br><cn>cz</cn><cn>-sz</cn><cn>0</cn><cn>0</cn><br></matrixrow><br><matrixrow><br><cn>sz</cn><cn>cz</cn><cn>0</cn><cn>0</cn><br></matrixrow><br><matrixrow><br><cn>0</cn><cn>0</cn><cn>1</cn><cn>0</cn><br></matrixrow><br><matrixrow><br><cn>0</cn><cn>0</cn><cn>0</cn><cn>1</cn><br></matrixrow><br></matrix><br></math>
+
+<p>上記の行列の</p>
+<ul>
+<li>sz は sin( r )</li>
+<li>cz は cos( r )</li>
+</ul>
+<p>です。また r はラジアンです。ラジアンは「角度 * π / 180」で求めることができます。</p>
+<p>ここでは、45 度回転してみましょう。移動と同様に、WebGL のコードでは行と列の順番が入れ替わるため、回転のための行列は次のように用意します。</p>
+<pre><code>mat4 translate = mat4(
+     cz,  sz, 0.0, 0.0,
+    -sz,  cz, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.5, 0.0, 0.0, 1.0
+);
+</code></pre><p>コードの反映すると vertex shader は次のように書くことができます。</p>
+<pre><code>precision mediump float;
+
+attribute vec4 a_position;
+uniform mat4 u_projectionMatrix;
+
+void main() {
+    const float PI = 3.1415;
+    float r = 45.0 * PI / 180.0;
+    mat4 rotate = mat4(
+         cos( r ), sin( r ), 0.0, 0.0,
+        -sin( r ), cos( r ), 0.0, 0.0,
+              0.0,      0.0, 1.0, 0.0,
+              0.0,      0.0, 0.0, 1.0
+    );
+    gl_Position =  u_projectionMatrix * rotate * a_position;
+}
+</code></pre><p><img src="http://yomotsu.net/blog/assets/2012-12-09-cssshaders4/3.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-09-cssshaders4/3.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<p>移動や回転をするために行列を用意しましたが、実は CSS からもっと簡単に入力することもできます。次回はその方法をまとめたいと思います。なお、その他の変換するための行列は、<a href="http://blogoben.wordpress.com/2011/06/05/webgl-basics-5-full-transformation-matrix/" target="_blank" rel="noopener">WebGL Basics 5 &#8211; Full transformation matrix &laquo; The Blog-o-Ben</a>が参考になるかもしれません。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/08/cssshaders3.html">
+					CSS Shaders はじめの 3歩目、簡単な vertex shader を適用する
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/10/cssshaders5.html">
+					CSS Shaders はじめの 5歩目、簡単な変形 2
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

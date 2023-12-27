@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CSS Shaders!</title>
+<style>
+.sample {
+	width:500px;
+	background: url( bg.png );
+	-webkit-filter: custom(
+		url( shader2.vs ) mix( url( shader2.fs ) multiply ),
+		32 32,
+		u_transform perspective( 1000 ) rotateX( 45deg ),
+		u_time 0
+	);
+	-webkit-transition: -webkit-filter ease-in-out 2s;
+}
+
+.sample:hover {
+	width:500px;
+	background: url( bg.png );
+	-webkit-filter: custom(
+		url( shader2.vs ) mix( url( shader2.fs ) multiply ),
+		32 32,
+		u_transform perspective( 1000 ) rotateX( 45deg ),
+		u_time 12
+	);
+}
+</style>
+</head>
+<body>
+
+<div class="sample">
+	<p>CSS Shader!! シィーエスエス シェーダー!! </p>
+	<img src="nyantocat.gif" alt="">
+	<p>the Nyantocat by Cameron McEfee</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>vec3 * mat4 using SIMD.js</title>
+</head>
+<body>
+
+this will only work on <a href="http://peterjensen.github.io/idf2014-simd/">SIMD supported browsers!</a>
+
+<script type="application/javascript;version=1.7">
+
+'use strict';
+
+function Vec3 ( x, y, z ) {
+
+  this.set( x, y, z );
+  return this;
+
+}
+
+Vec3.prototype.set = function ( x, y, z ) {
+
+  this.x = x;
+  this.y = y;
+  this.z = z;
+  return this;
+
+}
+
+function Mat4 ( n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 ) {
+
+  this.elements = new Float32Array( [
+
+    n11, n21, n31, n41,
+    n12, n22, n32, n42,
+    n13, n23, n33, n43,
+    n14, n24, n34, n44
+
+  ] );
+
+  return this;
+
+}
+
+
+function SIMD4Vec3 ( vec0, vec1, vec2, vec3 ) {
+
+  this._vectors = [ vec0, vec1, vec2, vec3 ];
+  this.x4 = SIMD.Float32x4( vec0.x, vec1.x, vec2.x, vec3.x );
+  this.y4 = SIMD.Float32x4( vec0.y, vec1.y, vec2.y, vec3.y );
+  this.z4 = SIMD.Float32x4( vec0.z, vec1.z, vec2.z, vec3.z );
+
+  return this;
+
+}
+
+SIMD4Vec3.prototype.apply = function () {
+
+  this._vectors[ 0 ].set(
+    SIMD.Float32x4.extractLane( this.x4, 0 ),
+    SIMD.Float32x4.extractLane( this.y4, 0 ),
+    SIMD.Float32x4.extractLane( this.z4, 0 )
+  );
+  this._vectors[ 1 ].set(
+    SIMD.Float32x4.extractLane( this.x4, 1 ),
+    SIMD.Float32x4.extractLane( this.y4, 1 ),
+    SIMD.Float32x4.extractLane( this.z4, 1 )
+  );
+  this._vectors[ 2 ].set(
+    SIMD.Float32x4.extractLane( this.x4, 2 ),
+    SIMD.Float32x4.extractLane( this.y4, 2 ),
+    SIMD.Float32x4.extractLane( this.z4, 2 )
+  );
+  this._vectors[ 3 ].set(
+    SIMD.Float32x4.extractLane( this.x4, 3 ),
+    SIMD.Float32x4.extractLane( this.y4, 3 ),
+    SIMD.Float32x4.extractLane( this.z4, 3 )
+  );
+
+  return this._vectors;
+
+}
+
+SIMD4Vec3.prototype.multiplyMatrix = function ( mat4 ) {
+
+  var x4 = this.x4;
+  var y4 = this.y4;
+  var z4 = this.z4;
+
+  var e = mat4.elements;
+  var e0  = SIMD.Float32x4.splat( e[  0 ] );
+  var e1  = SIMD.Float32x4.splat( e[  1 ] );
+  var e2  = SIMD.Float32x4.splat( e[  2 ] );
+  // var e3  = SIMD.Float32x4.splat( e[  3 ] );
+  var e4  = SIMD.Float32x4.splat( e[  4 ] );
+  var e5  = SIMD.Float32x4.splat( e[  5 ] );
+  var e6  = SIMD.Float32x4.splat( e[  6 ] );
+  // var e7  = SIMD.Float32x4.splat( e[  7 ] );
+  var e8  = SIMD.Float32x4.splat( e[  8 ] );
+  var e9  = SIMD.Float32x4.splat( e[  9 ] );
+  var e10 = SIMD.Float32x4.splat( e[ 10 ] );
+  // var e11 = SIMD.Float32x4.splat( e[ 11 ] );
+  var e12 = SIMD.Float32x4.splat( e[ 12 ] );
+  var e13 = SIMD.Float32x4.splat( e[ 13 ] );
+  var e14 = SIMD.Float32x4.splat( e[ 14 ] );
+
+  var e0_x4  = SIMD.Float32x4.mul( e0, x4 );
+  var e4_y4  = SIMD.Float32x4.mul( e4, y4 );
+  var e8_z4  = SIMD.Float32x4.mul( e8, z4 );
+
+  var e1_x4  = SIMD.Float32x4.mul( e1, x4 );
+  var e5_y4  = SIMD.Float32x4.mul( e5, y4 );
+  var e9_z4  = SIMD.Float32x4.mul( e9, z4 );
+
+  var e2_x4  = SIMD.Float32x4.mul( e2, x4 );
+  var e6_y4  = SIMD.Float32x4.mul( e6, y4 );
+  var e10_z4 = SIMD.Float32x4.mul( e10, z4 );
+
+  this.x4 = SIMD.Float32x4.add( 
+    SIMD.Float32x4.add( e0_x4, e4_y4 ),
+    SIMD.Float32x4.add( e8_z4, e12 )
+  );
+  this.y4 = SIMD.Float32x4.add( 
+    SIMD.Float32x4.add( e1_x4, e5_y4 ),
+    SIMD.Float32x4.add( e9_z4, e13 )
+  );
+  this.z4 = SIMD.Float32x4.add( 
+    SIMD.Float32x4.add( e2_x4, e6_y4 ),
+    SIMD.Float32x4.add( e10_z4, e14 )
+  );
+
+  return this;
+
+}
+
+// example code
+
+
+var v1 = new Vec3( 1, 1, 1 );
+var v2 = new Vec3( 2, 2, 2 );
+var v3 = new Vec3( 3, 3, 3 );
+var v4 = new Vec3( 4, 4, 4 );
+var vec3Group = new SIMD4Vec3( v1, v2, v3, v4 );
+
+var mat = new Mat4(
+  -1,  0,  0,  0,
+   0, -1,  0,  0,
+   0,  0, -1,  0,
+   0,  0,  0, -1
+);
+
+vec3Group.multiplyMatrix( mat );
+vec3Group.apply();
+
+console.log( v1, v2, v3, v4 ); // Object { x: -1, y: -1, z: -1 } Object { x: -2, y: -2, z: -2 } Object { x: -3, y: -3, z: -3 } Object { x: -4, y: -4, z: -4 }
+
+</script>
+</body>
+</html>

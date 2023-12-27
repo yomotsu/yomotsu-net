@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Santa's Boxes!</title>
+<style>
+body{margin: 0;padding: 0;}
+canvas{display: block;}
+</style>
+</head>
+<body>
+<div style="position:absolute;">
+  <button onclick="run.stop();idle.play();">idle</button>
+  <button onclick="idle.stop();run.play();">run</button>
+</div>
+<script src="../assets/js/vendor/three.min.js"></script>
+<script>
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    cameraTarget = new THREE.Vector3( 0, 0, 0 ),
+    renderer,
+    camera,
+    scene,
+    ambientLight,
+    helper,
+    santa,
+    idle,
+    run;
+
+init();
+main();
+renderLoop();
+
+function init () {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+  camera.position.set( 50, 10, 50 );
+  camera.lookAt( cameraTarget );
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize( width, height );
+  renderer.shadowMapEnabled = true;
+  document.body.appendChild( renderer.domElement );
+
+  ambientLight = new THREE.AmbientLight( 0xcccccc );
+  scene.add( ambientLight );
+
+  helper = new THREE.AxisHelper( 30 );
+  scene.add( helper );
+}
+
+function main(){
+  var loader = new THREE.JSONLoader();
+  loader.load( '../assets/model/santa/santa_notfixed.js', function( geo, mats ) {
+
+    mats.forEach( function ( mat ) {
+      mat.skinning = true;
+    } );
+
+    santa = new THREE.SkinnedMesh(
+      geo,
+      new THREE.MeshFaceMaterial( mats )
+    );
+
+    THREE.AnimationHandler.add( santa.geometry.animations[ 0 ] );
+    THREE.AnimationHandler.add( santa.geometry.animations[ 1 ] );
+
+    idle = new THREE.Animation(
+      santa,
+      santa.geometry.animations[ 0 ].name,
+      THREE.AnimationHandler.CATMULLROM
+    ),
+    run = new THREE.Animation(
+      santa,
+      santa.geometry.animations[ 1 ].name,
+      THREE.AnimationHandler.CATMULLROM
+    )
+
+    scene.add( santa );
+
+  } );
+}
+
+function renderLoop (){
+  requestAnimationFrame( renderLoop );
+  var delta = clock.getDelta();
+  var theta = clock.getElapsedTime()
+  camera.position.x = 50 * Math.sin( theta * 10 * Math.PI / 360 );
+  camera.position.z = 50 * Math.cos( theta * 10 * Math.PI / 360 );
+  camera.lookAt( cameraTarget );
+
+  THREE.AnimationHandler.update( delta );
+
+  renderer.render( scene, camera );
+}
+</script>
+</body>
+</html>

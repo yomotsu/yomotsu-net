@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>three.jsで立体的な火をつくる | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2015/05/04/VolumetricFire.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				three.jsで立体的な火をつくる
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2015-05-03T15:00:00.000Z" itemprop="datePublished">2015-05-04</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>three.js 用に火を表現するライブラリーを作りました。</p>
+<p><img src="/blog/assets/2015-05-04-VolumetricFire/img_01.jpg" alt=""></p>
+<p>3D では個体を表現するのは簡単です。一方で気体は普通には表現できません。なんとかしてそれらしく見せるしかありません。</p>
+<p>割と手軽に、それらしく表現するには、いわゆるパーティクルを使う方法があります。パーティクルは、要は、面を表示するかわりに、テクスチャー付きの頂点を表示する手法です。しかし、これには弱点があり、頂点の大きさ (<code>gl_pointSize</code>) には上限があり、その上限はデバイスのグラフィックカードによって異なります。</p>
+<p>これとは別に、スライスした面を重ねて立体的に見せる手法があります。始点の角度をかえるとそれに併せてスライスをしなおすこの手法は 2005 年、つまり、この記事を書いている時点から 10 年前に、当時 nVidia に所属していた @simesgreen さんが GDC で発表した手法です。</p>
+<p><img src="/blog/assets/2015-05-04-VolumetricFire/img_02.png" alt=""></p>
+<p>なんと @simesgreen さんご本人も反応してくださいました。英語で Twitter するといいものですね。</p>
+<p><blockquote class="twitter-tweet" lang="ja"><p lang="en" dir="ltr"><a href="https://twitter.com/yomotsu" target="_blank" rel="noopener">@yomotsu</a> <a href="https://twitter.com/mrdoob" target="_blank" rel="noopener">@mrdoob</a> nice, similar to: <a href="ftp://69.31.121.43/developer/presentations/2005/GDC/Sponsored_Day/GDC_2005_VolumeRenderingForGames.pdf" target="_blank" rel="noopener">ftp://69.31.121.43/developer/presentations/2005/GDC/Sponsored_Day/GDC_2005_VolumeRenderingForGames.pdf</a></p>&mdash; Simon Green (@simesgreen) <a href="https://twitter.com/simesgreen/status/590511213592743936" target="_blank" rel="noopener">2015, 4月 21</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>既に WebGL で別の実装があったのですが、three.js の Scene で使いたかったため、移植を行いました。ライブラリーにしていますので、入用の際にはお役立ちするかもしれません。</p>
+<p><a href="https://github.com/yomotsu/VolumetricFire" target="_blank" rel="noopener">VolumetricFire</a></p>
+<p><img src="/blog/assets/2015-05-04-VolumetricFire/img_03.jpg" alt=""></p>
+<p>three.js では BufferGeometry と RawShaderMaterial というコンストラクターがあり、これらを使うと、attribute, uniform, vertexShader, fragmentShader を自分で用意することができ、かなりローレベルな、ピュアな WebGL に近い操作をすることができます。これらを使えば、three.js でもだいたいなんでもできてしまうというわけです。</p>
+<p>一つわからなかったのは、three.js で一度 BufferGeometry に渡した TypedArray をリプレイスすることができなかったので、大きめのバッファーを作ってそれを使いまわしています…もしわかる人おりましたらコメントや issue で…。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2015/03/01/js2png.html">
+					JavaScript を PNG に圧縮する
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2015/07/26/voronoi.html">
+					自然の中の数学、ボロノイ Math in Nature, Voronoi
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

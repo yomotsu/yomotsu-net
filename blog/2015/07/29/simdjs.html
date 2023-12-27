@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>SIMD.js を使ってみる | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2015/07/29/simdjs.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				SIMD.js を使ってみる
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2015-07-28T15:00:00.000Z" itemprop="datePublished">2015-07-29</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="https://tokyo-web-perf.doorkeeper.jp/events/28289" target="_blank" rel="noopener">第0回 東京 Web PerformanceでSIMD.js</a>という勉強会が開催され、SIMD.js を触ってみました。</p>
+<p>イベントの内容は <a href="https://twitter.com/edvakf" target="_blank" rel="noopener">@edvakf</a>さんの<a href="http://inside.pixiv.net/entry/2015/07/28/230317" target="_blank" rel="noopener">レポート</a>を見ていただくといいです。</p>
+<p><img src="/blog/assets/2015-07-29-simdjs/img_01.jpg" alt=""></p>
+<p>簡単に SIMD.js の効能をいうなら、ループ回数を 1/4 にすることができる仕組み、という感じでしょうか。</p>
+<ul>
+<li>SIMD.js は Firefox Nightly、Chromium SIMD ビルド、Microsoft Edge (要フラグ設定)など、既に Safari を除く主要ブラウザーで実装が存在します。</li>
+<li><code>SIMD.float32x4()</code> などの、オブジェクトを作る関数は、コンストラクターではないため、<code>new</code> は付けずに使います</li>
+<li><code>add</code> や <code>mul</code> などのオペレーションは、引数にした SIMD オブジェクトに対して非破壊でおこなわれ、戻り値には新たに SIMD オブジェクトが返されます。</li>
+<li>要素を取得するためには、<code>SIMD.%type%.extractLane( instance, index )</code> を使います。<code>index</code> は <code>0</code> から始まる整数です</li>
+<li>SIMD のオブジェクトは InlineTransparentTypedObject なので、WebWorker と組み合わせて、別のスレッドでも同時進行すると並列処理の恩恵は更に大きくなりそうです。</li>
+</ul>
+<p>簡単な例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var a = SIMD.Float32x4( 1.0, 1.0, 1.0, 1.0 );</span><br><span class="line">var b = SIMD.Float32x4( 1.1, 2.2, 3.3, 4.4 );</span><br><span class="line">var ab = SIMD.Float32x4.add( a, b );</span><br><span class="line"></span><br><span class="line">console.log(</span><br><span class="line">  SIMD.Float32x4.extractLane( ab, 0 ),</span><br><span class="line">  SIMD.Float32x4.extractLane( ab, 1 ),</span><br><span class="line">  SIMD.Float32x4.extractLane( ab, 2 ),</span><br><span class="line">  SIMD.Float32x4.extractLane( ab, 3 )</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><img src="/blog/assets/2015-07-29-simdjs/img_02.png" alt=""></p>
+<p>「せっかくベクター的なオブジェクトを扱えるになったのに、マトリクスを書けることができないね」という会話がありました。これは以下のように、ベクターを横ではなく、縦で考えてみると SIMD の長所を活かせそうです。</p>
+<p>つまり、ベクターを</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var v0 = SIMD.Float32x4( x, y, z, w );</span><br><span class="line">var v1 = SIMD.Float32x4( x, y, z, w );</span><br><span class="line">var v2 = SIMD.Float32x4( x, y, z, w );</span><br><span class="line">var v3 = SIMD.Float32x4( x, y, z, w );</span><br></pre></td></tr></table></figure>
+<p>のように素直に考えるのではなく、</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var x4 = SIMD.Float32x4( x0, x1, x2, x3 );</span><br><span class="line">var y4 = SIMD.Float32x4( y0, y1, y2, y3 );</span><br><span class="line">var z4 = SIMD.Float32x4( z0, z1, z2, z3 );</span><br><span class="line">var w4 = SIMD.Float32x4( w0, w1, w2, w3 );</span><br></pre></td></tr></table></figure>
+<p>のように、成分ごとに考え、これに対してまとめて操作をすれば、SIMD の特長である並列処理の恩恵をうけることができます。</p>
+<p><a href="/blog/assets/2015-07-29-simdjs/mul-matrix.html">4 つのベクター 3 にマトリクスを掛ける例</a>を試しに作ってみました (要 SIMD.js をサポートしているブラウザー)</p>
+<p>結果として、4 組のベクターに対して、マトリクスを掛けることができました。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var v1 = new Vec3( 1, 1, 1 );</span><br><span class="line">var v2 = new Vec3( 2, 2, 2 );</span><br><span class="line">var v3 = new Vec3( 3, 3, 3 );</span><br><span class="line">var v4 = new Vec3( 4, 4, 4 );</span><br><span class="line"></span><br><span class="line">var mat = new Mat4(</span><br><span class="line">  -1,  0,  0,  0,</span><br><span class="line">   0, -1,  0,  0,</span><br><span class="line">   0,  0, -1,  0,</span><br><span class="line">   0,  0,  0, -1</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><img src="/blog/assets/2015-07-29-simdjs/img_03.png" alt=""></p>
+<p>また、SIMD.js の本家がマンデルブローをデモに使っていたので、<a href="/blog/assets/2015-07-29-simdjs/julia.html">SIMD.js を使ってジュリア集合</a>を描いてみました。パフォーマンスは測っていませんがおそらく、素の JS よりは速いのでしょう。</p>
+<p><img src="/blog/assets/2015-07-29-simdjs/img_04.gif" alt=""></p>
+<hr>
+<p>WebGL で何千、何万という attribute をまとめて処理していることを考えると SIMD はかなり貧弱に見えてしまいます。とはいえ、CPU で並列操作ができるのは、今までのなかった機能なのでとても新鮮に感じました。</p>
+<p>4 つごとに細切れの処理で冗長なコードになってしまいそうですが、ライブラリーを作って利用することを前提に覚えておくといいかもしれませんね。だって時代は低レベル API で未来を切り開くエクステンシブル Web なんだから！</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2015/07/26/voronoi.html">
+					自然の中の数学、ボロノイ Math in Nature, Voronoi
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2015/10/12/autodesk-a360-view-api.html">
+					Advanced usage of A360 View and Data API
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

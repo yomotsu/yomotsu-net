@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+body{
+  margin: 0;
+  padding: 0;
+}
+canvas{
+  display: block;
+}
+div{
+  text-align: center;
+  width: 100%;
+  position: absolute;
+}
+</style>
+</head>
+<body>
+<div>camera position<input type="range" value="75" min="0" max="100" id="cameraCtrl"></div>
+
+<script src="three.min.js"></script>
+<script src="stats.min.js"></script>
+<script>
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    cameraTarget = new THREE.Vector3( 0, 10, 0 ),
+    renderer,
+    camera,
+    scene,
+    ambientLight,
+    helper,
+    miku,
+    animation,
+    stats;
+
+stats = new Stats();
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.top = '0px';
+document.body.appendChild( stats.domElement );
+
+renderer = new THREE.WebGLRenderer();
+renderer.setSize( width, height );
+renderer.shadowMapEnabled = true;
+document.body.appendChild( renderer.domElement );
+
+scene = new THREE.Scene();
+
+camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+camera.position.set(
+  30 * Math.sin( 3 / 2 * Math.PI ),
+  10,
+  30 * Math.cos( 3 / 2 * Math.PI )
+);
+camera.lookAt( cameraTarget );
+
+ambientLight = new THREE.AmbientLight( 0xcccccc );
+scene.add( ambientLight );
+
+helper = new THREE.AxisHelper( 20 );
+scene.add( helper );
+
+
+var loader = new THREE.JSONLoader();
+loader.load( 'miku.js', function( geo, mat ) {
+  miku = new THREE.SkinnedMesh(
+    geo,
+    new THREE.MeshFaceMaterial( mat )
+  );
+
+  miku.material.materials.forEach(function ( mat ) {
+    mat.skinning = true;
+  } );
+
+  scene.add( miku );
+
+  THREE.AnimationHandler.add( miku.geometry.animations[ 0 ] );
+  animation = new THREE.Animation(
+    miku,
+    miku.geometry.animations[ 0 ].name,
+    THREE.AnimationHandler.CATMULLROM
+  );
+  animation.play();
+  
+  ( function renderLoop (){
+    requestAnimationFrame( renderLoop );
+    stats.update();
+    var delta = clock.getDelta();
+    var theta = clock.getElapsedTime();
+    animation.update( delta );
+    renderer.render( scene, camera );
+  } )();
+} );
+
+// cameraCtrl
+document.querySelector( '#cameraCtrl' ).addEventListener( 'change', function () {
+  var val = this.value / 100 * 2 * Math.PI;
+    camera.position.set(
+      30 * Math.sin( val ),
+      10,
+      30 * Math.cos( val )
+    );
+    camera.lookAt( cameraTarget );
+} );
+
+</script>
+</body>
+</html>

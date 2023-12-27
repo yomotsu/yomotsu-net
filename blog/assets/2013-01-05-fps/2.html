@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+canvas{border:1px solid #ddd;}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+
+( function(){
+
+    var myAnim = [
+        //this should be about 6 FPS
+        //( this is rerendered 6 times for 1 second )
+        'A', 'B', 'C', 'D', 'E', 'F'
+    ];
+
+    var frameLength = myAnim.length;
+
+    var RAF = ( function(){
+        return window.requestAnimationFrame       || 
+               window.webkitRequestAnimationFrame || 
+               window.mozRequestAnimationFrame    || 
+               window.oRequestAnimationFrame      || 
+               window.msRequestAnimationFrame     || 
+               function( callback ){
+                   window.setTimeout( callback, 1000 / 60 );
+               };
+    } )();
+
+    var now = window.performance && (
+       performance.now || 
+       performance.mozNow || 
+       performance.msNow || 
+       performance.oNow || 
+       performance.webkitNow );
+
+    var getTime = function() {
+        return ( now && now.call( performance ) ) || ( new Date().getTime() );
+    }
+
+    var startTime = getTime();
+
+    var i = 0;
+    ( function loop(){
+        if ( i >= 100 ) { return; }
+
+        RAF( loop );
+        var frame = Math.floor( ( getTime() - startTime ) / ( 1000 / frameLength ) % frameLength );
+        $( '.log' ).prepend( '<tr><td>' + Math.floor( ( getTime() - startTime ) ) + '</td><td>' + frame + '</td><td>' + myAnim[ frame ] + '</td></tr>' );
+        i++;
+    } )();
+} )();
+</script>
+<style>
+table, th, td{
+text-align: center;
+border:1px solid #333;
+}
+</style>
+</head>
+<body>
+<pre>var myAnim = [
+    //this should be about 6 FPS
+    //( this is rerendered 6 times for 1 second )
+    'A', 'B', 'C', 'D', 'E', 'F'
+];</pre>
+FPSをコントロールしようと思わず、時間に対するフレームを管理した方がいい。
+<table>
+<tr>
+<th>時間<br>(ms)</th>
+<th>時間に対する<br>フレーム</th>
+<th>フレームに<br>対する内容</th>
+</tr>
+<tbody class="log"></tbody>
+</table>
+
+</body>
+</html>

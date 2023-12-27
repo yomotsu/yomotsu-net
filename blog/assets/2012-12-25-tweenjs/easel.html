@@ -1,0 +1,56 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<script src="easeljs-0.5.0.min.js"></script>
+<script src="tweenjs-0.3.0.min.js"></script>
+<script>
+
+window.requestAnimationFrame = ( function(){
+  return  window.requestAnimationFrame       || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame    || 
+          window.oRequestAnimationFrame      || 
+          window.msRequestAnimationFrame     || 
+          function( callback ){
+            window.setTimeout( callback, 1000 / 60 );
+          };
+} )();
+
+document.addEventListener( 'DOMContentLoaded', function(){
+  createjs.Ticker.setFPS( 60 );
+
+  var canvas = document.querySelector( '#canvas' );
+  var stage = new createjs.Stage( canvas );
+
+  var circle = new createjs.Shape();
+  circle.graphics.beginFill( "#ff0000" ).drawCircle( 100, 100, 50 );
+  circle.x = 100;
+  circle.y = 100;
+  stage.addChild( circle );
+
+  createjs.Tween.get( circle, { loop: true } )
+  .to( { x: 300 }, 1000, createjs.Ease.quadOut )
+  .wait( 300 )
+  .to( { x: 100, y: 300 }, 1000, createjs.Ease.quadOut )
+  .to( { x: 100, y: 100 }, 1000, createjs.Ease.quadOut )
+  .call( function() {
+    console.log( 'done!' );
+  } );
+
+  ( function animloop(){
+    requestAnimationFrame( animloop );
+    stage.update();
+  } )();
+
+}, false );
+
+</script>
+</head>
+<body>
+
+<canvas width="500" height="500" id="canvas"></canvas>
+
+</body>
+</html>

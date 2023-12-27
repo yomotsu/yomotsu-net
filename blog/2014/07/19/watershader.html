@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>water shader を試す | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2014/07/19/watershader.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				water shader を試す
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2014-07-18T15:00:00.000Z" itemprop="datePublished">2014-07-19</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<h2 id="water-shader-を試す"><a href="#water-shader-を試す" class="headerlink" title="water shader を試す"></a>water shader を試す</h2><p><a href="https://github.com/jbouny/ocean" target="_blank" rel="noopener">ocean - Realistic water shader for Three.js</a>の basic のデモをもう少し分解して整理してみた。</p>
+<p><a href="/blog/assets/2014-07-19-watershader/">動く例</a></p>
+<h3 id="利用手順"><a href="#利用手順" class="headerlink" title="利用手順"></a>利用手順</h3><ul>
+<li>水面の凹凸に使うノーマルマップを読み込む</li>
+<li><code>THREE.Water</code> のインスタンスを作る</li>
+<li>インスタンスの <code>material</code> プロパティーを平面のマテリアルにしてメッシュを作る</li>
+<li>描画アップデート時 (requestAnimationFrame) に<ul>
+<li>シェーダーに送るユニフォーム変数を更新する <code>water.material.uniforms.time.value = 経過時間;</code></li>
+<li><code>インスタンス.render();</code> して反射用のテクスチャーを作る。ただし drawcall 回数が倍くらいになるので throttle したり、必要なければ実行しないほうがいい</li>
+</ul>
+</li>
+</ul>
+<h3 id="コード例"><a href="#コード例" class="headerlink" title="コード例"></a>コード例</h3><pre><code>&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/threejs/r67/three.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;water-material.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+var width, height, clock, scene, camera, renderer,
+    directionalLight, ground, sphere, waterSurface,
+    water, colorMap1, colorMap2, waterNormals;
+
+width = window.innerWidth;
+height = window.innerHeight;
+clock = new THREE.Clock();
+scene = new THREE.Scene();
+camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+camera.position.set( 0, 5, 30 );
+renderer = new THREE.WebGLRenderer();
+renderer.setSize( width, height );
+document.body.appendChild( renderer.domElement );
+
+colorMap1 = new THREE.ImageUtils.loadTexture( &apos;stone.jpg&apos; );
+colorMap1.wrapS = colorMap1.wrapT = THREE.RepeatWrapping;
+colorMap1.repeat.set( 3, 3 );
+
+ground = new THREE.Mesh(
+  new THREE.PlaneGeometry( 30, 30, 10, 10 ),
+  new THREE.MeshBasicMaterial( { map: colorMap1 } )
+);
+ground.position.set( 0, -3, 0 );
+ground.rotation.x = THREE.Math.degToRad( -90 );
+scene.add( ground );
+
+colorMap2 = new THREE.ImageUtils.loadTexture( &apos;grass.jpg&apos; );
+
+sphere = new THREE.Mesh(
+  new THREE.SphereGeometry( 2, 16, 16 ),
+  new THREE.MeshBasicMaterial( { map: colorMap2 } )
+);
+scene.add( sphere );
+
+directionalLight = new THREE.DirectionalLight( 0xffff55 );
+directionalLight.position.set( -100, 30, 100 );
+scene.add(directionalLight);
+
+// Load textures
+waterNormals = new THREE.ImageUtils.loadTexture( &apos;waternormals.jpg&apos; );
+waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
+
+// Create the water effect
+water = new THREE.Water( renderer, camera, scene, {
+  textureWidth: 256,
+  textureHeight: 256,
+  waterNormals: waterNormals,
+  distortionScale: 20,
+  noiseScale: .5,
+  alpha: .8,
+  sunDirection: directionalLight.position.normalize(),
+  sunColor: 0xffffff,
+  waterColor: 0x000000,
+  side: THREE.DoubleSide
+} );
+
+waterSurface = new THREE.Mesh(
+  new THREE.PlaneGeometry( 30, 30, 10, 10 ),
+  water.material
+);
+waterSurface.add(this.water);
+waterSurface.rotation.x = - Math.PI * 0.5;
+
+scene.add(waterSurface);
+
+;( function update () {
+
+  var elapsed = clock.getElapsedTime()
+  requestAnimationFrame( update );
+  water.render();
+  renderer.render( scene, camera );
+  water.material.uniforms.time.value = elapsed;
+
+} )();
+
+&lt;/script&gt;
+</code></pre>
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/03/31/fractal.html">
+					WebGL でマンデルブロ集合とジュリア集合
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2014/07/20/flame.html">
+					ポイントスプライトで炎
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

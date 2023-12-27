@@ -1,0 +1,256 @@
+@import url(http://fonts.googleapis.com/css?family=Mystery+Quest);
+@font-face {
+  font-family: 'icon';
+  src: url("../font/icon.eot");
+  src: url("../font/icon.eot#iefix") format("embedded-opentype"), url("../font/icon.woff") format("woff"), url("../font/icon.ttf") format("truetype"), url("../font/icon.svg#icon") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/* ==========================================================================
+   c4u
+   ========================================================================== */
+html {
+  color: #331902;
+  font-family: "\30D2\30E9\30AE\30CE\89D2\30B4\20\50\72\6F\20\57\33", "Hiragino Kaku Gothic Pro", "\30E1\30A4\30EA\30AA", Meiryo, "\FF2D\FF33\20\FF30\30B4\30B7\30C3\30AF", sans-serif;
+  font-size: 14px;
+  overflow-y: scroll; }
+
+body {
+  position: relative;
+  margin: 0;
+  padding: 110px 0 0;
+  background: url(../img/c4u/bg_02.png) repeat-x 0 62px, url(../img/c4u/bg_01.png) 50% 0; }
+  body:before {
+    content: '';
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 50%;
+    display: block;
+    width: 340px;
+    height: 240px;
+    margin-left: -170px;
+    background: url(../img/c4u/bow.png) no-repeat; }
+
+a {
+  color: #331902; }
+
+a:hover {
+  text-decoration: none; }
+
+/* ==========================================================================
+   c4u-pageHeader
+   ========================================================================== */
+.c4u-pageHeader {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 30px;
+  width: 240px;
+  padding: 10px 58px 60px 50px;
+  background: url(../img/c4u-pageHeader/bg_01.png) no-repeat 0 100%; }
+
+.c4u-pageHeader-logo {
+  width: 300px;
+  margin: 0 -30px 10px; }
+  .c4u-pageHeader-logo img {
+    display: block; }
+
+.c4u-pageHeader-infoButton {
+  text-decoration: underline;
+  cursor: pointer;
+  display: table;
+  margin: 0 auto; }
+
+.c4u-pageHeader-infoBody {
+  font-size: 0.85714em;
+  display: none; }
+  .c4u-pageHeader-infoBody ul {
+    margin-left: 20px;
+    padding-left: 0; }
+  .c4u-pageHeader-infoBody li {
+    margin: 0;
+    padding: 0; }
+
+/* ==========================================================================
+   c4u-experiment
+   ========================================================================== */
+.c4u-experiment {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  padding: 20px;
+  margin: 0 auto;
+  background: url(../img/c4u-experiment/bg_01.png) no-repeat; }
+
+.c4u-experiment-canvas3d {
+  position: absolute;
+  z-index: 8; }
+
+.c4u-experiment-stream {
+  position: absolute;
+  z-index: 7; }
+
+/* ==========================================================================
+   c4u-button
+   ========================================================================== */
+.c4u-buttonContainer {
+  text-align: center;
+  margin: 2em 0 0; }
+
+.c4u-button {
+  background-image: url(data:image/svg+xml,%3c%3fxml%20version%3d%221%2e0%22%3f%3e%3csvg%20xmlns%3d%22http%3a%2f%2fwww%2ew3%2eorg%2f2000%2fsvg%22%20width%3d%22100%25%22%20height%3d%22100%25%22%3e%3cdefs%3e%3clinearGradient%20id%3d%22G%22%20x2%3d%220%25%22%20y2%3d%22100%25%22%3e%3cstop%20style%3d%22stop%2dcolor%3a%23341c02%22%20offset%3d%220%25%22%2f%3e%3cstop%20style%3d%22stop%2dcolor%3a%23452503%22%20offset%3d%22100%25%22%2f%3e%3c%2flinearGradient%3e%3c%2fdefs%3e%3crect%20width%3d%22100%25%22%20height%3d%22100%25%22%20fill%3d%22url%28%23G%29%22%2f%3e%3c%2fsvg%3e);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #341c02),color-stop(100%, #452503));
+  background-image: -webkit-linear-gradient(#341c02 0%,#452503 100%);
+  background-image: -moz-linear-gradient(#341c02 0%,#452503 100%);
+  background-image: -o-linear-gradient(#341c02 0%,#452503 100%);
+  background-image: linear-gradient(#341c02 0%,#452503 100%);
+  color: #fff;
+  font-size: 1.14286em;
+  display: inline-block;
+  padding: 12px 50px;
+  border-radius: 3px;
+  cursor: pointer; }
+  .c4u-help--hasError .c4u-button {
+    display: none; }
+
+/* ==========================================================================
+   c4u-help
+   ========================================================================== */
+.c4u-help {
+  position: absolute;
+  z-index: 9;
+  width: 900px;
+  padding: 20px;
+  margin: -620px 0 0 -470px;
+  left: 50%;
+  background: #cfb88c;
+  transition: margin-top 1.5s;
+  -webkit-animation: slideIn 1s ease-out;
+  -moz-animation: slideIn 1s ease-out;
+  animation: slideIn 1s ease-out; }
+  .c4u-help.c4u-help--checked {
+    margin-top: 30px; }
+
+@-webkit-keyframes slideIn {
+  from {
+    margin-top: 30px; }
+
+  to {
+    margin-top: -620px; } }
+
+@-moz-keyframes slideIn {
+  from {
+    margin-top: 30px; }
+
+  to {
+    margin-top: -620px; } }
+
+@keyframes slideIn {
+  from {
+    margin-top: 30px; }
+
+  to {
+    margin-top: -620px; } }
+
+.c4u-help-errors {
+  display: none;
+  padding: 6px;
+  margin-bottom: 20px;
+  background: url(../img/c4u-help/bg_03.png);
+  -webkit-animation: bgSlide 1s linear;
+  -moz-animation: bgSlide 1s linear;
+  animation: bgSlide 1s linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite; }
+  .c4u-help--hasError .c4u-help-errors {
+    display: block; }
+
+@-webkit-keyframes bgSlide {
+  from {
+    background-position: 0 0; }
+
+  to {
+    background-position: 30px 0; } }
+
+@-moz-keyframes bgSlide {
+  from {
+    background-position: 0 0; }
+
+  to {
+    background-position: 30px 0; } }
+
+@keyframes bgSlide {
+  from {
+    background-position: 0 0; }
+
+  to {
+    background-position: 30px 0; } }
+
+.c4u-help-error1,
+.c4u-help-error2 {
+  display: none;
+  padding: 6px 12px;
+  background: #ffff00; }
+
+.c4u-help-steps {
+  *zoom: 1;
+  width: 900px;
+  margin: 0 auto;
+  transition: opacity .5s;
+  background: url(../img/c4u-help/bg_02.png) no-repeat 0 50%; }
+  .c4u-help-steps:before, .c4u-help-steps:after {
+    content: "";
+    display: table; }
+  .c4u-help-steps:after {
+    clear: both; }
+  .c4u-help--hasError .c4u-help-steps {
+    opacity: .3; }
+
+.c4u-help-step {
+  position: relative;
+  float: left;
+  display: table;
+  width: 240px;
+  padding: 10px;
+  margin-left: 60px; }
+  .c4u-help-step:first-child {
+    margin-left: 0; }
+  .c4u-help-step:before {
+    color: #fff;
+    font-family: "Mystery Quest", cursive;
+    font-size: 100px;
+    line-height: 1;
+    text-align: center;
+    vertical-align: top;
+    display: table-cell;
+    width: 60px; }
+  .c4u-help-step:first-child:before {
+    content: '1'; }
+  .c4u-help-step:first-child + .c4u-help-step:before {
+    content: '2'; }
+  .c4u-help-step:first-child + .c4u-help-step + .c4u-help-step:before {
+    content: '3'; }
+
+.c4u-help-stepHeader {
+  display: table-cell;
+  height: 125px;
+  min-height: 125px;
+  vertical-align: middle; }
+
+.c4u-help-stepBody {
+  display: table-row; }
+  .c4u-help-stepBody img {
+    display: block;
+    margin-right: -240px; }
+
+.c4u-help-url {
+  color: #452503;
+  font-size: 14px;
+  font-family: monospace;
+  word-break: break-all;
+  padding: 3px;
+  border: 1px solid #452503;
+  margin: .5em 0 0 -60px;
+  background: #fff; }

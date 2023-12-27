@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>なぜ HTML5 を使うのかを考えよう | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/01/20/think-about-browser.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				なぜ HTML5 を使うのかを考えよう
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-01-19T15:00:00.000Z" itemprop="datePublished">2013-01-20</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/HTML5/">HTML5</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>Web 制作の現場にも HTML5 が浸透し始めてきました。では、なぜ HTML5 を使わなければならないのかを考えてみましょう。</p>
+<h2 id="なぜ-HTML5-が求められるのか"><a href="#なぜ-HTML5-が求められるのか" class="headerlink" title="なぜ HTML5 が求められるのか"></a>なぜ HTML5 が求められるのか</h2><p>最近、Web を取り巻く環境は多様化し、プラグインをサポートしていない Web ブラウザーの普及、画面サイズの多様化、Web アプリケーション構築など、従来の Web ページには求められなかった様々なケースへの対応が必要になりつつあります。</p>
+<p>こうした、従来の Web ページにはなかった特性を実現するためには<em>新しい技術</em>が必要になります。これが HTML5 やその周辺技術というわけです。当然ながら<em>新しい技術</em>なので、古いブラウザーはこれらに対応していません。</p>
+<h2 id="Web-ブラウザーは家庭用ゲーム機と似ている"><a href="#Web-ブラウザーは家庭用ゲーム機と似ている" class="headerlink" title="Web ブラウザーは家庭用ゲーム機と似ている"></a>Web ブラウザーは家庭用ゲーム機と似ている</h2><p>世代ごとの Web ブラウザーはゲーム機に例えるとわかりやすいでしょう。</p>
+<p>現在、私たちは家庭用ゲーム機で高度なグラフィクスのゲームソフトを遊ぶことができます。ゲーム機といえば Wii U, PlayStation 3, Xbox 360 などさまざまあり、どれも似た体験ができます。一方で現在に至るまでゲーム機にはさまざまな世代がありました。</p>
+<p><img src="/blog/assets/2013-01-20-think-about-browser/img.png" alt=""></p>
+<p>ファミリーコンピュータでは 25 色のドットの世界でした。</p>
+<p>スーパーファミコンでは 256 色で、transform( 拡大縮小回転 )が有効な 2D の世界でした。</p>
+<p>Nintendo 64 では低ポリゴンのカクカクが少し気になりながらも 3D が当たり前となりそれまでとは違う体験ができるようになりました。</p>
+<p>Wii では解像度が低いながらも高ポリゴンでゲームを楽しむことができ、Wii U の登場でさらにその性能が増しました。</p>
+<p>このように、ゲーム機は世代ごとに機能相応の体験でゲームソフトを遊ぶことができます。</p>
+<p>これは Web ブラウザーの歴史と似ていて、最新の IE 10, Chrome, Firefox などでは HTML5 や CSS3、その他の周辺技術を利用してよりいい体験ができますが、古いブラウザーでは、それ相応の機能したないため、旧世代の Web ページしか表紙できないというわけです。</p>
+<p>スーパーファミコンでは Wii U 相当のゲームソフトは遊べないですよね。Web ブラウザーもこれと同じです。だからよりいいコンテンツを作りないなら新しい環境を利用する必要があるのです。</p>
+<p>一方で、最新の Web ブラウザーは従来のコンテンツも問題なく表示できます。これは Web ブラウザーや HTML の仕様自体に高度な後方互換機能がサポートされているためです。</p>
+<p>後方互換についてはゲーム機も似ていて、例えば、PlayStation 3 では<a href="http://www.jp.playstation.com/psn/tips/gamearchives/" target="_blank" rel="noopener">ゲームアーカイブ</a>から過去のゲームソフトを購入し遊ぶことができます。これは、現在のゲーム機が過去のゲーム機よりも性能が高いからです。</p>
+<h2 id="目的に合わせて新技術を使う"><a href="#目的に合わせて新技術を使う" class="headerlink" title="目的に合わせて新技術を使う"></a>目的に合わせて新技術を使う</h2><p>ここまで見てきたように、HTML5 は、新しいことを実現するための新しい技術であり、基本として古い Web ブラウザーでは利用できないというわけです。ですので、Web 制作の現場において、しばらくの間は次の 2 つの選択肢を適切に選んでいく必要があります。</p>
+<ul>
+<li>新しいことをやりたいから、HTML5 の高度な機能をを採用し、Web ブラウザーの完全サポートを諦める</li>
+<li>古い Web ブラウザーをサポートしなくてはいけないから、従来の表現に留め、HTML5 や CSS3 の高度な機能は諦める</li>
+</ul>
+<p>なぜ、あなたは HTML5 や新技術を使うのかをもう一度考え、サポートする Web ブラウザーを考えてみるといいかと思います。</p>
+<h2 id="Web-ブラウザーを家庭用ゲーム機にマッピングする"><a href="#Web-ブラウザーを家庭用ゲーム機にマッピングする" class="headerlink" title="Web ブラウザーを家庭用ゲーム機にマッピングする"></a>Web ブラウザーを家庭用ゲーム機にマッピングする</h2><p>Web ブラウザーを家庭用ゲーム機の世代にマッピングするなら例えば次のような感じでしょうか。</p>
+<table>
+<thead>
+<tr>
+<th>Web ブラウザー</th>
+<th>相当の家庭用ゲーム機</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internet Explorer 6</td>
+<td>ファミリーコンピュータ</td>
+</tr>
+<tr>
+<td>Internet Explorer 7</td>
+<td>スーパーファミコン</td>
+</tr>
+<tr>
+<td>Internet Explorer 8</td>
+<td>Nintendo 64</td>
+</tr>
+<tr>
+<td>Internet Explorer 9</td>
+<td>Wii</td>
+</tr>
+<tr>
+<td>Internet Explorer 10</td>
+<td>Wii U</td>
+</tr>
+<tr>
+<td>Firefox, Chrome, Opera</td>
+<td>PS 3 や XBox 360</td>
+</tr>
+<tr>
+<td>Mobile Safari, Android</td>
+<td>3DS や PS Vita</td>
+</tr>
+</tbody>
+</table>
+<p>性能が近い環境ならゲームの移植もされて、例えば <a href="http://www.tekken-official.jp/tag2ac/index.html" target="_blank" rel="noopener">TEKKEN TAG TOURNAMENT 2</a> は PS 3, Xbox 360, Wii U でそれぞれ発売されています。OpenGL と Direct X の違いはありますが。</p>
+<p>新しい Web 技術は多くの最新のブラウザーで閲覧することができます。細かい API 実装の違いはありますが。</p>
+<p>古いゲームでも、内容が面白ければ今でも遊びたいと思うこともあります。タクティクスオウガとか。</p>
+<p>従来の表現の Web ページでもコンテンツがよければ使われ続けます。例えば 2 ちゃんねるとか。</p>
+<h2 id="Polyfill-は"><a href="#Polyfill-は" class="headerlink" title="Polyfill は?"></a>Polyfill は?</h2><p>さて、一方で Polyfill という考え方があります。Polyfill は古い環境でも、機能を外部から補うことで、仮想的に新しい機能をエミュレートする手法を指します。私も以前は「IE6, ,7, 8 でも CSS3 を使いたい」から Polyfill という手段に頼ったことがありました。しかしこれは最悪で、例えば、旧 IE 上で CSS3 の border-radius などを再現することができる <a href="http://css3pie.com/" target="_blank" rel="noopener">PIE</a> は、HTML の構造に対して自動で独自の要素を追加し角丸などの表現してくれます。しかし、これにより、ただでさえ遅い旧世代のブラウザーの表示は更に遅くなり、また JavaScript によるインタラクションやアニメーション表現にも不具合が現れました。なので、Polyfill という選択は私の中にはほとんどありません。あるにしても安全な範囲で利用する程度です。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/01/05/fps.html">
+					requestAnimationFrame でフレームと再描画更新を制御する
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/02/06/why-webgl.html">
+					なぜ WebGL がいいの?
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Santa's Boxes!</title>
+<style>
+body{margin: 0;padding: 0;}
+canvas{display: block;}
+</style>
+</head>
+<body>
+<script src="../assets/js/vendor/three.min.js"></script>
+<script src="../assets/js/vendor/perlin-noise-simplex.js"></script>
+<script>
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    cameraTarget = new THREE.Vector3( 0, 0, 0 ),
+    renderer,
+    camera,
+    scene,
+    spotLight,
+    helper,
+    ground;
+
+init();
+main();
+renderLoop();
+
+function init () {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+  camera.position.set( 50, 10, 50 );
+  camera.lookAt( cameraTarget );
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize( width, height );
+  renderer.shadowMapEnabled = true;
+  document.body.appendChild( renderer.domElement );
+
+  spotLight = new THREE.SpotLight( 0xffffff );
+  spotLight.position.set( -10, 50, 10 );
+  scene.add( spotLight );
+
+  helper = new THREE.AxisHelper( 30 );
+  scene.add( helper );
+}
+
+function main(){
+  var i;
+  var simplexNoise = new SimplexNoise;
+  var vertex
+  var geometry = new THREE.PlaneGeometry( 150, 150, 64, 64 );
+  var diffuse, bump;
+
+  for ( i = 0; i < geometry.vertices.length; i++ ) {
+    vertex = geometry.vertices[i];
+    vertex.z = simplexNoise.noise( vertex.x / 10, vertex.y / 10 ) / 3;
+  }
+  geometry.computeFaceNormals();
+  geometry.computeVertexNormals();
+
+  diffuse = THREE.ImageUtils.loadTexture( '../assets/model/ground/diffuse.jpg' );
+  diffuse.wrapS = diffuse.wrapT = THREE.RepeatWrapping;
+  diffuse.repeat.set( 6, 6 );
+
+  // IE11 dose not render, if bump is attached
+  // bump = THREE.ImageUtils.loadTexture( '../assets/model/ground/bump.jpg' );
+  // bump.wrapS = bump.wrapT = THREE.RepeatWrapping;
+  // bump.repeat.set( 6, 6 );
+
+  ground = new THREE.Mesh(
+    geometry,
+    new THREE.MeshPhongMaterial( {
+      specular: 0x333333,
+      shininess: 25, 
+      map: diffuse,
+      // bumpMap: bump,
+      bumpScale: 2
+    } )
+  );
+
+  ground.rotation.x = Math.PI / -2;
+  scene.add( ground );
+}
+
+function renderLoop (){
+  requestAnimationFrame( renderLoop );
+  var theta = clock.getElapsedTime()
+  camera.position.x = 50 * Math.sin( theta * 10 * Math.PI / 360 );
+  camera.position.z = 50 * Math.cos( theta * 10 * Math.PI / 360 );
+  camera.lookAt( cameraTarget );
+  renderer.render( scene, camera );
+}
+</script>
+</body>
+</html>

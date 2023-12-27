@@ -1,0 +1,18 @@
+/* ==========================================================================
+   MathML
+   ========================================================================== */
+matrix{
+    display:table;
+    border-left:1px solid;
+    border-right:1px solid;
+}
+matrixrow{
+    display:table-row;
+}
+cn{
+    text-align: center;
+    display:table-cell;
+    padding:0 .2em;
+}
+cn:first-child{padding-left:.5em;};
+cn:last-child{padding-right:.5em;};

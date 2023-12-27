@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>requestAnimationFrame でフレームと再描画更新を制御する | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/01/05/fps.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				requestAnimationFrame でフレームと再描画更新を制御する
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-01-04T15:00:00.000Z" itemprop="datePublished">2013-01-05</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/GraphicalWeb/">GraphicalWeb</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>Canvas や SVG などを用いて、アニメーションを行う場合の描画繰り返しについて考えます。</p>
+<p>描画の繰り返しアニメーションには requestAnimationFrame や setTimeout など利用し、そのタイミングで再描画を繰り返すという手法が一般的です。</p>
+<p>これまで、 setTimeout を利用することが主流で、60 FPS のアニメーションの場合は例えば以下の様なコードで実現することも多かったかと思います。</p>
+<pre><code>var x = 0;
+( function loop(){
+    setTimeout( loop, 1000 / 60 );
+    x += 1;
+    console.log( x );
+} )();
+</code></pre><p>ただし、setTimeout や setInterval は、ブラウザー側で再描画の準備が整っているか否かにかかわらず、必ず実行されてしまいます。また、ブラウザーのタブが非表示 (バックグラウンド) の場合でも常に実行し続けます。</p>
+<p>一方で、requestAnimationFrame はブラウザーの負荷に合わせては 60 FPS 以内で再描画の準備が整ったタイミングで実行され、また、ブラウザーのタブが非表示 (バックグラウンド) にある場合は、発火頻度が自動で低下します。これにより、メモリーの消費を抑えることができます。</p>
+<p>こういった理由で requestAnimationFrame はタイマーメソッドより、アニメーションの表現に向いていると言えます。一方で、正確な FPS を制御することはできません。そのため、次のようなコードは、アニメーションの精度はあまり良くないといえます。</p>
+<pre><code>var x = 0;
+( function loop(){
+    requestAnimationFrame( loop );
+    x += 1;
+    console.log( x );
+} )();
+</code></pre><p>上記のコードは、</p>
+<ul>
+<li>任意の FPS で繰り返されないこと (例えば、このままでは 24 FPS で繰り返すことはできません)</li>
+<li>FPS にばらつきがあること ( 負荷が軽い場合には 62 FPS から 58 FPS で不正確に繰り返される)</li>
+</ul>
+<p>という問題点があります。</p>
+<p>次の demo で FPS のばらつきを確認することができます。IE10 以降あるはその他のブラウザーで動作します。(同様に setTimeout などのタイマーメソッドも正確ではありませんが。)</p>
+<p><a href="http://yomotsu.net/blog/assets/2013-01-05-fps/1.html">demo</a></p>
+<p>ですので、requestAnimationFrame のタイミングにたよって値を変えるするというのではなく、経過時間を管理し再描画のタイミングで「経過時間に合わせたフレーム」を表示してやればよさそうです。</p>
+<p>時間とフレームの対応例として <a href="http://yomotsu.net/blog/assets/2013-01-05-fps/2.html">6 FPS で 6 コマの繰り返しの demo</a> を用意しました。</p>
+<p>時間は、performance.now() や Date.getTime() などを利用し管理することができます。時間取得のための関数は以下のように用意することができます。</p>
+<p>ちなみに performance.now() は Date.getTime() や Date.now() よりも詳細な時間を取得することができます。</p>
+<pre><code>var now = window.performance &amp;&amp; (
+    performance.now || 
+    performance.mozNow || 
+    performance.msNow || 
+    performance.oNow || 
+    performance.webkitNow );
+
+var getTime = function() {
+    return ( now &amp;&amp; now.call( performance ) ) || ( new Date().getTime() );
+}
+</code></pre><p>そして、開始時間を一度だけ保存しておきます。</p>
+<pre><code>var startTime = getTime();
+</code></pre><p>requestAnimationFrame のタイミングで経過時間を知るには、以下で可能です。</p>
+<pre><code>( function loop(){
+    requestAnimationFrame( loop );
+    var lastTime = getTime();
+    console.log( startTime - lastTime );
+} )();
+</code></pre><p>上記の方法を利用し、経過時間から対応するフレームを求めるなら</p>
+<pre><code>var fps = 30;
+var frameLength = 6;
+( function loop(){
+    requestAnimationFrame( loop );
+    var frame = Math.floor( ( getTime() - startTime ) / ( 1000 / fps ) % frameLength );
+    console.log( frame );
+} )();
+</code></pre><p>のような方法で可能です。</p>
+<p>最終的に、ポリーフィルを含めて次のコードで「経過時間に合わせたフレームの表示」が可能です。requestAnimationFrame に FPS が追いつかない場合は、コマ落ちすることになりますが、他のアニメーションやタイムラインと連携する場合にはこの方法がいいのかなと思ってます。</p>
+<pre><code>var requestAnimationFrame = ( function(){
+    return  window.requestAnimationFrame       || 
+            window.webkitRequestAnimationFrame || 
+            window.mozRequestAnimationFrame    || 
+            window.oRequestAnimationFrame      || 
+            window.msRequestAnimationFrame     || 
+            function( callback ){
+                window.setTimeout( callback, 1000.0 / 60.0 );
+            };
+} )();
+
+var now = window.performance &amp;&amp; (
+    performance.now || 
+    performance.mozNow || 
+    performance.msNow || 
+    performance.oNow || 
+    performance.webkitNow );
+
+var getTime = function() {
+    return ( now &amp;&amp; now.call( performance ) ) || ( new Date().getTime() );
+}
+
+var startTime = getTime();
+var fps = 30.0;
+var frameLength = 6.0;
+
+( function loop(){
+    requestAnimationFrame( loop );
+    var lastTime = getTime();
+    var frame = Math.floor( ( lastTime - startTime ) / ( 1000.0 / fps ) % frameLength );
+    console.log( frame );
+} )();
+</code></pre><p>上記のコードは<a href="http://yomotsu.net/blog/assets/2013-01-05-fps/3.html">この demo</a> で確認できます。</p>
+<p>あとは適当に使うかもしれなさそうなのを試してみました。</p>
+<ul>
+<li><a href="http://yomotsu.net/blog/assets/2013-01-05-fps/4.html">requestAnimationFrame で 60 FPS 以下の FPS に制限する例</a></li>
+<li><a href="http://yomotsu.net/blog/assets/2013-01-05-fps/5.html">タイムラインにあわせて関数を実行する例</a></li>
+</ul>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/25/tweenjs.html">
+					TweenJS と描画系ライブラリーの組み合わせ
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/01/20/think-about-browser.html">
+					なぜ HTML5 を使うのかを考えよう
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

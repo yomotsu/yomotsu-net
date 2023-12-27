@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>Compress 3D model files with Draco | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2017/09/18/draco.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				Compress 3D model files with Draco
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2017-09-17T15:00:00.000Z" itemprop="datePublished">2017-09-18</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="https://github.com/google/draco" target="_blank" rel="noopener">Draco</a> is a 3D model files compressing / decompressing library, especially for Web use.</p>
+<p>Draco compression reduces over 90% of file size.</p>
+<p>here is a compression result.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_01.png" alt="Original OBJ file: 16.5MB, Draco compressed file: 343KB"></p>
+<p>In this article, I will show how to compress with Draco compressor.</p>
+<h2 id="1-get-Draco-Repo"><a href="#1-get-Draco-Repo" class="headerlink" title="1. get Draco Repo"></a>1. get Draco Repo</h2><p>Visit <a href="https://github.com/google/draco" target="_blank" rel="noopener">Draco repositry</a> and download entire repository.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_02.png" alt=""></p>
+<h2 id="2-Install-CMake"><a href="#2-Install-CMake" class="headerlink" title="2. Install CMake"></a>2. Install CMake</h2><p>In order to build Draco, you need to use <a href="https://cmake.org/download/" target="_blank" rel="noopener">CMake</a></p>
+<p><img src="/blog/assets/2017-09-18-draco/img_03.png" alt=""></p>
+<p>download and extract dmg, then install CMake.app</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_04.png" alt=""></p>
+<h2 id="3-CMake"><a href="#3-CMake" class="headerlink" title="3. CMake"></a>3. CMake</h2><p>Make a folder and run CMake with the folder. When you press “Generate” button, you will have a XCode project file.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_05.png" alt=""></p>
+<p>You will see following log when CMake has been done.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_06.png" alt=""></p>
+<p>and you should have several files in the folder.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_07.png" alt=""></p>
+<h2 id="4-build-with-XCode"><a href="#4-build-with-XCode" class="headerlink" title="4. build with XCode"></a>4. build with XCode</h2><p>Open <code>draco.excodeproj</code> in XCode.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_08.png" alt=""></p>
+<p>then press build button.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_09.png" alt=""></p>
+<p>after that, CLIs will be generated. In order to compress with Draco, we will use “draco_encoder”</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_10.png" alt=""></p>
+<h2 id="4-Compress-with-Draco"><a href="#4-Compress-with-Draco" class="headerlink" title="4. Compress with Draco"></a>4. Compress with Draco</h2><p>open Terminal and exec draco_encoder. Encoder take 3 arguments. Path to input file, output file name and compression level</p>
+<p>FYI: Draco can only take OBJ and PLY format so far.</p>
+<p><img src="/blog/assets/2017-09-18-draco/img_11.png" alt=""></p>
+<ul>
+<li><code>-i</code> is the path to input file.</li>
+<li><code>-o</code> is the name of the compressed file.</li>
+<li><code>-cl</code> is the compression level. You can set a number from 0 to 10.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./draco_encoder -i testdata/my-3d-model.obj -o out.drc -cl 8</span><br></pre></td></tr></table></figure>
+<p>Here is a final example.</p>
+<p><a href="/blog/assets/2017-09-18-draco/demo/demo1.html">three.js + draco example</a></p>
+<h2 id="Zip-compression"><a href="#Zip-compression" class="headerlink" title="Zip compression"></a>Zip compression</h2><p>If you need another compressor for other formats such as three.js JSON, glTF, There is Zip compression. Zip reduce about 70%, because three.js JSON consist mostly of <em>number</em>.</p>
+<p>Here is a zip encoder for JS.</p>
+<p><a href="https://yomotsu.github.io/ZipLoader/examples/Alicia.html" target="_blank" rel="noopener">three.js + unzip example</a></p>
+<p><a href="https://www.npmjs.com/package/zip-loader" target="_blank" rel="noopener">Unzip JS library</a> is available on NPM</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2016/12/25/xmas.html">
+					Happy Holidays 2016 with WebGL
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2018/03/16/the-future-of-ec-experience-with-webar.html">
+					The future of EC experience with WebAR
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Santa's Boxes!</title>
+<style>
+body{margin: 0;padding: 0;}
+canvas{display: block;}
+</style>
+</head>
+<body>
+<script src="../assets/js/vendor/three.min.js"></script>
+<script src="../assets/js/vendor/cannon.min.js"></script>
+<script>
+
+;( function () {
+  const PLAYER_MOVEMENT_SPEED = 20;
+
+  KeyInput = function ( playerObject ) {
+    this.player = playerObject;
+
+    this.keyInput = {
+      up : false,
+      down : false,
+      left : false,
+      right : false
+    };
+
+    window.addEventListener( 'keydown', KeyInput.onkeydown.bind( this ), false );
+    window.addEventListener( 'keyup',   KeyInput.onkeyup.bind( this ),   false );
+  }
+
+  KeyInput.prototype.update = function () {
+    var up    = this.keyInput.up;
+    var left  = this.keyInput.left;
+    var right = this.keyInput.right;
+    var down  = this.keyInput.down;
+    var frontAngle = 0;
+    if ( !up && !left &&  down && !right) { frontAngle +=   0 * Math.PI / 180 }
+    if ( !up && !left &&  down &&  right) { frontAngle +=  45 * Math.PI / 180 }
+    if ( !up && !left && !down &&  right) { frontAngle +=  90 * Math.PI / 180 }
+    if (  up && !left && !down &&  right) { frontAngle += 135 * Math.PI / 180 }
+    if (  up && !left && !down && !right) { frontAngle += 180 * Math.PI / 180 }
+    if (  up &&  left && !down && !right) { frontAngle += 225 * Math.PI / 180 }
+    if ( !up &&  left && !down && !right) { frontAngle += 270 * Math.PI / 180 }
+    if ( !up &&  left &&  down && !right) { frontAngle += 315 * Math.PI / 180 }
+
+    if ( up || left || down || right ) {
+      this.player.mesh.rotation.y = frontAngle;
+      this.player.body.velocity.x = -Math.sin( frontAngle ) * PLAYER_MOVEMENT_SPEED;
+      this.player.body.velocity.z = -Math.cos( frontAngle ) * PLAYER_MOVEMENT_SPEED;
+    } else {
+      this.player.body.velocity.x = 0;
+      this.player.body.velocity.z = 0;
+    }
+  };
+
+  KeyInput.onkeydown = function ( e ) {
+    //W || up arrow
+    if ( e.keyCode === 87 || e.keyCode === 38 ) {
+      this.keyInput.up = true;
+      this.keyInput.down = false;
+    };
+    //S || down arrow
+    if ( e.keyCode === 83 || e.keyCode === 40 ) {
+      this.keyInput.down = true;
+      this.keyInput.up = false;
+    };
+    //A || left arrow
+    if ( e.keyCode === 65 || e.keyCode === 37 ) {
+      this.keyInput.left = true;
+      this.keyInput.right = false;
+    };
+    //D || right arrow
+    if ( e.keyCode === 68 || e.keyCode === 39 ) {
+      this.keyInput.right = true;
+      this.keyInput.left = false;
+    };
+  }
+
+  KeyInput.onkeyup = function ( e ) {
+    if( e.keyCode === 87 || e.keyCode === 38 ){
+      this.keyInput.up = false;
+    } else if ( e.keyCode === 83 || e.keyCode === 40 ){
+      this.keyInput.down = false;
+    } else if ( e.keyCode === 65 || e.keyCode === 37 ){
+      this.keyInput.left = false;
+    } else if ( e.keyCode === 68 || e.keyCode === 39 ){
+      this.keyInput.right = false;
+    }
+  }
+
+} )();
+
+
+
+function Ground () {
+  this.mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry( 150, 150, 32, 32 ),
+    new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } )
+  );
+  this.mesh.rotation.x = Math.PI / -2;
+  scene.add( this.mesh );
+
+  this.body = new CANNON.RigidBody( 0, new CANNON.Plane() );
+  this.body.quaternion.setFromAxisAngle( new CANNON.Vec3( 1, 0, 0 ), Math.PI / -2 );
+  world.add( this.body );
+}
+
+function Santa () {
+  const MASS = 80;
+  const RADIUS = 2;
+
+  this.mesh = new THREE.Mesh(
+    new THREE.SphereGeometry( RADIUS, 6, 6 ),
+    new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+  );
+  scene.add( this.mesh );
+
+  this.body = new CANNON.RigidBody( MASS, new CANNON.Sphere( RADIUS ) );
+  this.body.position.set( 0, 10, 0 );
+  world.add( this.body );
+}
+Santa.prototype.update = function () {
+  this.body.position.copy( this.mesh.position );
+}
+
+function Box () {
+    const SIZE = 2.5;
+    
+    this.mesh = new THREE.Mesh( 
+      new THREE.CubeGeometry( SIZE, SIZE, SIZE ),
+      new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+    );
+    scene.add( this.mesh );
+    
+    this.body = new CANNON.RigidBody(
+      3,
+      new CANNON.Box( new CANNON.Vec3( SIZE / 2, SIZE / 2 , SIZE / 2 ) )
+    );
+    world.add( this.body );
+}
+Box.prototype.update = function () {
+  this.body.quaternion.copy( this.mesh.quaternion);
+  this.body.position.copy( this.mesh.position);
+}
+
+function Tree () {
+  const RADIUS = 5;
+  const HEIGHT = 20;
+    
+  this.mesh = new THREE.Mesh(
+    new THREE.CylinderGeometry( RADIUS, RADIUS, HEIGHT, 8 ),
+    new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
+  );
+  this.mesh.position.y = HEIGHT / 2;
+  scene.add( this.mesh );
+
+  this.body = new CANNON.RigidBody(
+      0,
+      new CANNON.Cylinder( RADIUS, RADIUS, HEIGHT, 8 )
+  );
+
+  var axisX = new CANNON.Vec3( 1, 0, 0 );
+  this.body.quaternion.setFromAxisAngle( axisX, Math.PI / -2 );
+  world.add( this.body );
+}
+
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    cameraTarget = new THREE.Vector3( 0, 5, 0 ),
+    renderer,
+    camera,
+    scene,
+    helper,
+    world;
+
+init();
+var ground = new Ground();
+var tree1 = new Tree();
+var tree2 = new Tree();
+var tree3 = new Tree();
+var santa = new Santa();
+tree1.body.position.set( -10, 10,   5);
+tree2.body.position.set( -30, 10, -10);
+tree3.body.position.set(  10, 10,   5);
+tree1.mesh.position.set( -10, 10,   5);
+tree2.mesh.position.set( -30, 10, -10);
+tree3.mesh.position.set(  10, 10,   5);
+var keyInput = new KeyInput( santa );
+var box1 = new Box();
+var box2 = new Box();
+var box3 = new Box();
+var box4 = new Box();
+var box5 = new Box();
+var box6 = new Box();
+var box7 = new Box();
+var box8 = new Box();
+var box9 = new Box();
+var box10 = new Box();
+box1.body.position.set( -10, 1.25, -12.5 );
+box2.body.position.set( -10, 1.25, -10 );
+box3.body.position.set( -10, 1.25, -7.5 );
+box4.body.position.set( -10, 1.25, -5 );
+box5.body.position.set( -10, 3.75, -11. );
+box6.body.position.set( -10, 3.75, -8.7 );
+box7.body.position.set( -10, 3.75, -6.2 );
+box8.body.position.set( -10, 6.25, -10 );
+box9.body.position.set( -10, 6.25, -7.5 );
+box10.body.position.set( -10, 8.75, -8.75 );
+renderLoop();
+
+
+function init () {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera( 60, width / height, 1, 1300 );
+  camera.position.set( 0, 10, -40 );
+  camera.lookAt( cameraTarget );
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize( width, height );
+  renderer.shadowMapEnabled = true;
+  document.body.appendChild( renderer.domElement );
+
+  helper = new THREE.AxisHelper( 30 );
+  scene.add( helper );
+
+  world = new CANNON.World();
+  world.gravity.set( 0, -9.82, 0 );
+  world.broadphase = new CANNON.NaiveBroadphase();
+}
+
+function renderLoop (){
+  requestAnimationFrame( renderLoop );
+  // var theta = clock.getElapsedTime()
+  // camera.position.x = 50 * Math.sin( theta * 10 * Math.PI / 360 );
+  // camera.position.z = 50 * Math.cos( theta * 10 * Math.PI / 360 );
+  // camera.lookAt( cameraTarget );
+
+  keyInput.update();
+  world.step( 1.0 / 60.0 );
+  santa.update();
+  box1.update();
+  box2.update();
+  box3.update();
+  box4.update();
+  box5.update();
+  box6.update();
+  box7.update();
+  box8.update();
+  box9.update();
+  box10.update();
+  renderer.render( scene, camera );
+}
+</script>
+</body>
+</html>

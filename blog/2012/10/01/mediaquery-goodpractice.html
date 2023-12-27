@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>レスポンシブ・ウェブデザインでの CSS コードの書き方 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/10/01/mediaquery-goodpractice.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				レスポンシブ・ウェブデザインでの CSS コードの書き方
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-09-30T15:00:00.000Z" itemprop="datePublished">2012-10-01</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/css/">css</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>いわゆるレスポンシブ・ウェブデザイン、つまりメディアクエリーを採用した Web サイトを構築する際の一番管理しやすいと感じるコードの書き方をまとめました。ただし、あくまでも個人的な、経験から感じた意見ですので絶対ではありません。</p>
+<h2 id="CSS-のコードの配置"><a href="#CSS-のコードの配置" class="headerlink" title="CSS のコードの配置"></a>CSS のコードの配置</h2><p>広く知られている方法はいくつかあります。</p>
+<ul>
+<li>CSS ファイル自体を分ける方法</li>
+<li>@media 規則で 1ファイル内にメディア特性単位に書く方法</li>
+<li>@media 規則で 1ファイル内にパーツ単位で書く方法</li>
+</ul>
+<p>それぞれをコードで表すなら以下の書き方が該当します。</p>
+<h3 id="方法1-CSS-ファイル自体を分ける方法"><a href="#方法1-CSS-ファイル自体を分ける方法" class="headerlink" title="方法1 : CSS ファイル自体を分ける方法"></a>方法1 : CSS ファイル自体を分ける方法</h3><p>この方法は管理が大変でおすすめできません。これでファイルごとコード分割されてしまったらコード検索しづらいわけです。</p>
+<pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;desktop.css&quot; media=&quot;(min-width:769px)&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;tablet.css&quot;  media=&quot;(max-width:768px) and (min-width: 321px)&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;mobile.css&quot;  media=&quot;(max-width:320px)&quot;&gt;
+</code></pre><h3 id="方法2-media-規則で-1ファイル内にメディア特性単位に書く方法"><a href="#方法2-media-規則で-1ファイル内にメディア特性単位に書く方法" class="headerlink" title="方法2 : @media 規則で 1ファイル内にメディア特性単位に書く方法"></a>方法2 : @media 規則で 1ファイル内にメディア特性単位に書く方法</h3><p>この方法も管理が大変でおすすめできません。コード探す (検索する) 手間がわけた分だけ発生してしまいます。</p>
+<pre><code>@media(min-width:769px){
+    .pageHeader{...}
+    .pageMain{...}
+    .pageSub{...}
+    .pageFooter{...}
+}
+@media(max-width:768px) and (min-width: 321px){
+    .pageHeader{...}
+    .pageMain{...}
+    .pageSub{...}
+    .pageFooter{...}
+}
+@media(max-width:320px){
+    .pageHeader{...}
+    .pageMain{...}
+    .pageSub{...}
+    .pageFooter{...}
+}
+</code></pre><h3 id="方法3-media-規則で-1ファイル内にパーツ単位で書く方法"><a href="#方法3-media-規則で-1ファイル内にパーツ単位で書く方法" class="headerlink" title="方法3 : @media 規則で 1ファイル内にパーツ単位で書く方法"></a>方法3 : @media 規則で 1ファイル内にパーツ単位で書く方法</h3><p>この方法が最も管理しやすくおすすめです。ある程度巨大な Web サイトであってもこの方法で運用できています。さらに併せて、Sass などの機能である程度パーツのグループ単位でファイル分割すればより管理しやすいでしょう。</p>
+<pre><code>/* pageHeader */
+.pageHeader{...}
+@media(max-width:768px){
+    .pageHeader{...}
+}
+
+/* pageMain */
+.pageMain{
+    float:left;
+    ...
+}
+@media(max-width:768px){
+    .pageMain{
+        float:none;
+        ...
+    }
+}
+...
+</code></pre><h2 id="パーツ単位で書く方法のコツ"><a href="#パーツ単位で書く方法のコツ" class="headerlink" title="パーツ単位で書く方法のコツ"></a>パーツ単位で書く方法のコツ</h2><p>特性の単位でコードをまとめてしまうと、おなじ箇所 (class や id など) をコントロールするスタイルが離れた場所に配置されることになります。例えば、ある一つのパーツのスタイルを調整するとき、複数のファイルにまたがり該当箇所を探す必要がありますし、場合によっては調整漏れが発生する可能性もあります。</p>
+<p>一方で、パーツ単位でまとめておけばそれはありません。上手くコメントを使い、ある程度パーツ単位で CSS のコードをまとめておくといいです。</p>
+<p>もう一つのコツとして、デスクトップ向けの記述は @media 規則の外に出しておき、その上で、その他のデバイス (タブレットやモバイル) 向けに<strong>上書き</strong>をしてデスクトップ向けのスタイルを流用することです。これは次に紹介する書き方の流れを通してみてきましょう。</p>
+<p>具体的には次のような書き方です。なお、<a href="/blog/assets/2012-10-01-mediaquery-goodpractice/index.html">実際に動く完成版</a>も用意しています。書き方の手順とコード見比べながら参考にしてみてください。</p>
+<h3 id="手順1-ひな形の-HTML-を用意する"><a href="#手順1-ひな形の-HTML-を用意する" class="headerlink" title="手順1 : ひな形の HTML を用意する"></a>手順1 : ひな形の HTML を用意する</h3><p>viewport 設定を忘れずに書きましょう。併せて、とりあえず HTML5Shiv 目的で modernizr も読み込ませています。</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang=&quot;ja&quot; class=&quot;no-js&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+&lt;title&gt;sample&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;all.css&quot;&gt;
+&lt;script src=&quot;modernizr.custom.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h3 id="手順2-パーツの-HTML-用意する"><a href="#手順2-パーツの-HTML-用意する" class="headerlink" title="手順2 : パーツの HTML 用意する"></a>手順2 : パーツの HTML 用意する</h3><p>body 内にパーツの HTML を書きます。ここではサンプルとして見出しと画像とテキストがセットになっているパーツの HTML を書きました。</p>
+<pre><code>&lt;section class=&quot;mod-sampleBlock&quot;&gt;
+    &lt;header class=&quot;mod-sampleBlock-header&quot;&gt;
+        &lt;h1&gt;見出し&lt;/h1&gt;
+    &lt;/header&gt;
+    &lt;div class=&quot;mod-sampleBlock-image&quot;&gt;
+        &lt;img src=&quot;img.png&quot; alt=&quot;&quot; width=&quot;240&quot; height=&quot;180&quot;&gt;
+    &lt;/div&gt;
+    &lt;p&gt;テキストテキストテキストテキストテキストテキスト&lt;/p&gt;
+&lt;/section&gt;
+</code></pre><h3 id="手順3-デスクトップ用の-CSS-を書く"><a href="#手順3-デスクトップ用の-CSS-を書く" class="headerlink" title="手順3 : デスクトップ用の CSS を書く"></a>手順3 : デスクトップ用の CSS を書く</h3><p>普通に書きます。media queries も使いません。コードは長いですが、特別なことはしていません。特別なことをしていないので旧 IE でも意図したとおりに表示されるでしょう。ちなみに自分は普段、コメントの書き方は <a href="https://github.com/necolas/idiomatic-css" target="_blank" rel="noopener">idiomatic-css</a> を参考にしています。</p>
+<pre><code>/* mod-sampleBlock
+   ========================================================================== */
+/* [ 1 ] */
+.mod-sampleBlock{
+    padding:10px;
+    background:#eee;
+    *zoom:1;
+}
+.mod-sampleBlock:after{
+    content:&apos;&apos;;
+    clear:both;
+    display:table;
+}
+/* [ 2 ] */
+.mod-sampleBlock .mod-sampleBlock-header{
+    border-bottom:1px solid #000;
+    margin:0 0 .5em;
+}
+.mod-sampleBlock .mod-sampleBlock-header h1{
+    font-size:1.25em;
+    margin:0;
+}
+/* [ 3 ] */
+.mod-sampleBlock .mod-sampleBlock-image {
+    float:right;
+    margin:0 0 0 10px;
+}
+</code></pre><ul>
+<li>&#91; 1 &#93; パーツの大枠である .mod-sampleBlock を装飾しつつ clearfix を適用</li>
+<li>&#91; 2 &#93; パーツ内のヘッダーである .mod-sampleBlock-header に装飾</li>
+<li>&#91; 3 &#93; パーツ内の画像コンテナーである .mod-sampleBlock-image を float して右に配置する</li>
+</ul>
+<p>これでデスクトップ向け画像が右に浮いたパーツ (モジュール) ができます。</p>
+<h3 id="手順4-小さい画面のデバイス向けの-CSS-を書く"><a href="#手順4-小さい画面のデバイス向けの-CSS-を書く" class="headerlink" title="手順4 : 小さい画面のデバイス向けの CSS を書く"></a>手順4 : 小さい画面のデバイス向けの CSS を書く</h3><p>続けて、小さい画面向けの CSS を<strong>追記</strong>します。この際、分けて書く必要はありません。先ほどのコードの続きとしてあくまでも追記するのです。</p>
+<p>追記する内容は以下のとおり。</p>
+<pre><code>@media(max-width:600px){
+    .mod-sampleBlock .mod-sampleBlock-image {
+        float:none;
+        margin:0 10px;
+    }
+    .mod-sampleBlock .mod-sampleBlock-image img{margin:0 auto;}
+}
+</code></pre><p>小さい画面用の CSS のコードは先ほどのコードに比べるとだいぶ少ないですがこれでいいのです。なぜなら先程のコードは @media 規則の外にでておりグローバルな状態になっています。なので、小さい画面では、先程の状態を継承しつつ必要な部分だけを上書きしています。</p>
+<p>つまり、<strong>特定のデバイスに向けたスタイルのみ上書きして使う</strong>わけです。</p>
+<p>メリットとして以下があります。</p>
+<ul>
+<li>追記で書かれているので、コードの位置が近いため把握しやすい</li>
+<li>コードが最小限で済む</li>
+<li>グローバル (デスクトップ) の装飾を変更すればそれが自動で小さい画面にも反映される</li>
+</ul>
+<p>なお、旧 IE は media queries に対応していないため @media 規則でくくった内側を無視します。</p>
+<h3 id="補足-Media-Queries-のポリーフィルライブラリは使わない"><a href="#補足-Media-Queries-のポリーフィルライブラリは使わない" class="headerlink" title="補足 : Media Queries のポリーフィルライブラリは使わない"></a>補足 : Media Queries のポリーフィルライブラリは使わない</h3><p>Media Queries のポリーフィルライブラリは使わないこともとても大切です。ポリーフィルライブラリは例えば、<a href="https://github.com/scottjehl/Respond" target="_blank" rel="noopener">Respond.js</a> が該当します。</p>
+<p>IE6,7,8 は Media Queries に対応しておらず、これらの旧ブラウザーでも<strong>変形</strong>を行うためには、ポリーフィルライブラリーを使うことになるわけですが、果たしてそれは必要でしょうか。</p>
+<p><strong>否!</strong></p>
+<p>メリットは少なく、デメリットが大きいです。なので使うべきではありません。</p>
+<ul>
+<li>メリット : 旧ブラウザーを使っていても変形してかっこいい…かっこいいだけ。</li>
+<li>デメリット : media queries で振り分けられた @media 規則の内側にも旧 IE 基準の CSS を書かなくてはいけない。</li>
+</ul>
+<p>よく考えてみてください。レスポンシブ・ウェブデザインは誰のための実装でしょうか。モバイル版がほぼ存在しない旧 IE はデスクトップ向けの表示だけで十分でしょう。無理にポリーフィルする必要はありません。</p>
+<p>旧 IE には先ほど書いたグローバルなスタイルが適用されます。一方で旧 IE は @media 規則でクロージャのごとく区切られたコードは無視します。なので、これまでの書き方で旧 IE には対応できるし、@media 規則を用いて<strong>追記</strong>したコードで、さまざまなサイズのデバイスにも対応できるというわけです。</p>
+<p>なお、これはつまり、@media 規則の内側では IE9 を基準に CSS3 や CSS2.1 を利用することができます。例えばそう、display:table; です。ちなみにもうすぐ発売する WebDesigning 11月号に display:table; を活用した小技を寄稿していますのでよろしければぜひ。</p>
+<h2 id="追記"><a href="#追記" class="headerlink" title="追記"></a>追記</h2><p>ここで解説した方法では、@media 規則がたくさん登場することになり、もし特性、つまりブレークポイントの幅など変更する場合至る箇所を書き換えないといけないのでは? と、はてブでコメントいただきましたが、Sass 3.2 を使えば予め特性を変数にしておくこともできます。</p>
+<p>例えば以下のように。</p>
+<pre><code>$break-small: 320px;
+$break-large: 1200px;
+
+.profile-pic {
+  float: left;
+  width: 250px;
+  @media screen and (max-width: $break-small) {
+    width: 100px;
+    float: none;
+  }
+  @media screen and (min-width: $break-large) {
+    float: right;
+  }
+}
+</code></pre><p>via. <a href="http://thesassway.com/intermediate/responsive-web-design-in-sass-using-media-queries-in-sass-32" target="_blank" rel="noopener">Responsive Web Design in Sass: Using Media Queries in Sass 3.2</a></p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/09/11/think-about-rwd.html">
+					マルチデバイス時代のWebページ
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/10/09/webfont-license.html">
+					Web フォントとライセンス
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

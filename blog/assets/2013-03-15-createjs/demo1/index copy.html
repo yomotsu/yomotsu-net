@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width">
+<title>with EaselJS</title>
+<style>
+#div{
+  background: red;
+}
+</style>
+</head>
+<body>
+
+<div id="div">hello</div>
+
+<script src="http://code.createjs.com/easeljs-0.6.0.min.js"></script>
+<script src="http://code.createjs.com/tweenjs-0.4.0.min.js"></script>
+<script>
+
+( function () {
+
+  var obj = {
+    value1 : 0,
+    value2 : 0
+  }
+
+  createjs.Tween.get( obj, { loop: true } )
+  .to( { value1: 100, value2 : 255 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .to( { value1 : 0, value2 : 0 }, 1000, createjs.Ease.quadOut )
+  .wait( 2000 )
+  .call( function() {
+    console.log( 'done!' );
+  } );
+
+  var update = function() {
+    console.log( obj.value1 );
+    var div = document.getElementById( 'div' );
+    div.style.opacity = obj.value1 * 0.01;
+
+    var color = '#ffff' + (obj.value2|0).toString(16);
+    console.log( color )
+    // div.style.backgroundColor = '#ffff' + blue;
+  }
+
+  createjs.Ticker.setFPS( 60 );
+  createjs.Ticker.addEventListener( 'tick', update );
+} )();
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>three.js (WebGL) で TPS / FPS ゲームエンジン | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2015/01/03/tps-game-engine.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				three.js (WebGL) で TPS / FPS ゲームエンジン
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2015-01-02T15:00:00.000Z" itemprop="datePublished">2015-01-03</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>去年 (2014 年) は <a href="https://github.com/yomotsu/meshwalk.js" target="_blank" rel="noopener">three.js (WebGL) で TPS ゲームエンジンのような JS ライブラリー</a>を作っていました。</p>
+<p>ライブラリーの名前は未だに迷っているので名前空間ごと変えるかもしれませんが、今のところ用意している機能として:</p>
+<ul>
+<li>height field (高さマップ)、つまり、凸凹の地形を歩ける機能</li>
+<li>three.js のメッシュを剛体( height field も含む) に変換する機能</li>
+<li>プレイヤー 対 壁や天井との衝突</li>
+<li>「崖」に接地している場合は滑り落ちる機能</li>
+<li>どれくらい急な斜面を「崖」として扱うか</li>
+<li>ジャンプと着地</li>
+<li>基本的なキーボード (WASD、矢印キー、Spaceキー) 入力</li>
+<li>TPS カメラ (プレイヤーとの距離を 0 に近づけると FPS になる)</li>
+<li>TPS カメラと壁との衝突 (カメラが壁の中にめり込まない)</li>
+</ul>
+<p>などがあります。</p>
+<p><a href="http://yomotsu.github.io/meshwalk.js/example/7_conclusion.html" target="_blank" rel="noopener">demo</a></p>
+<p>上記のそれぞれの機能については、リポジトリーの readme 内のリンクから実際に動かして試すことができます。</p>
+<p>プレイヤーと剛体との衝突は、物理演算エンジンを使わずに独自に用意しています。なので必要以上のことはしていません。例えば、物理演算エンジンを利用する際の基礎となる重力や重さ、摩擦などの概念はこのライブラリーには今のところ存在しません。かわりに移動速度、ジャンプ力、降下速度などが存在します。</p>
+<p>物理演算エンジンのようなリアルさがないので「凸凹の地形を歩ける機能」が実現できます。</p>
+<p>例えば、リアルな物理演算エンジンでは、ゆるやかな上り坂であったとしても、それを登った後は慣性で飛んでしまいます。</p>
+<p><img src="/blog/assets/2015-01-03-tps-game-engine/img_01.png" alt=""></p>
+<p>しかし、ゲームでは、ゆるやかな坂であっても通常の地面のように歩きたいでしょうし、このライブラリーでも慣性を無視できるように実装しています。</p>
+<p><img src="/blog/assets/2015-01-03-tps-game-engine/img_02.png" alt=""></p>
+<hr>
+<p>「カメラが壁の中にめり込まない」機能は、例えば普通に 3D でカメラを配置すると、壁の中にカメラがめり込んでしまったり、そうでない場合でも、near より手前が表示されません。そうした場合、自動でカメラを手前に引くようにしています。</p>
+<p><img src="/blog/assets/2015-01-03-tps-game-engine/img_03.jpg" alt=""></p>
+<p><img src="/blog/assets/2015-01-03-tps-game-engine/img_04.jpg" alt=""></p>
+<hr>
+<p>three.js をある程度扱える知識があれば、扱える程度の API で構成されていますので、使いやすいかなと思います。使い方について、詳しくは<a href="https://github.com/yomotsu/meshwalk.js#usage-and-learning" target="_blank" rel="noopener">リポジトリ内の readme の Usage and Learning</a> からのリンク先を見ればわかるようにしていますが、簡単な流れとしては以下の 4 ステップです。</p>
+<ol>
+<li>world を作る</li>
+<li><a href="http://ja.wikipedia.org/wiki/%E5%85%AB%E5%88%86%E6%9C%A8" target="_blank" rel="noopener">octree</a> を world の中に手動で作る。(octree は衝突判定の絞り込みのために使います)<ul>
+<li>octree は直方体で、2つの角と分割数を指定する</li>
+<li>2つの角の座標の範囲内にこれから作る地形や障害物が収まるようにする</li>
+</ul>
+</li>
+<li>three.js で用意した地形や障害物のメッシュを octree に突っ込む</li>
+<li>プレイヤーを world に投入する</li>
+</ol>
+<p>また、もし、いい追加機能やアイディアがありましたらプルリクエストをいただけると嬉しいです。ゲームエンジンについての知識はなく、普段プレイしているゲームの挙動から想像してコードを書いただけですので…。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2014/07/27/waterfall.html">
+					滝
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2015/01/23/spartan.html">
+					Project Spartan
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

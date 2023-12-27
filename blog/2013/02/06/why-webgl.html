@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>なぜ WebGL がいいの? | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/02/06/why-webgl.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				なぜ WebGL がいいの?
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-02-05T15:00:00.000Z" itemprop="datePublished">2013-02-06</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>この記事は 「<a href="http://codeflow.org/entries/2013/feb/02/why-you-should-use-webgl/" target="_blank" rel="noopener">Why you should use WebGL</a>」の著者 <a href="https://twitter.com/pyalot" target="_blank" rel="noopener">Florian</a> 氏に転載許可をいただき、<a href="http://creativecommons.org/licenses/by-sa/2.0/" target="_blank" rel="noopener">CC-by-sa license</a> のもと公開します。まだ翻訳途中です ( still translating… )</p>
+<hr>
+<script src="http://www.google.com/jsapi"></script>
+<script>google.load('visualization', '1', {packages: ['corechart']});</script>
+<script>
+var ext = function(a, b){
+    return $.extend({}, a, b);
+}
+var chartStyle = {
+    backgroundColor: 'transparent',
+    legendTextStyle: {
+        color: 'black'
+    },
+    titleTextStyle: {
+        color: 'black',
+    },
+};
+var pieStyle = ext(chartStyle, {
+    is3D: true
+});
+var stackedStyle = ext(chartStyle, {
+    isStacked: true
+});
+var capsStyle = ext(chartStyle, {
+    legend: 'none',
+    hAxis: {
+        titleTextStyle: {color: 'black'},
+        textStyle: {color: 'black'}
+    },
+    vAxis: {
+        title: 'Users',
+        titleTextStyle: {color: 'black'}, textStyle: {color: 'black'},
+    },
+});
+var lineStyle = ext(chartStyle, {
+    curveType: 'none'
+});
+</script>
+
+<p><img src="/blog/assets/2013-02-06-why-webgl/img.png" alt="" width="320" height="180"></p>
+<p>There is (among graphics enthusiasts) a lot of debate what API/version of something to use with a bunch of hotly contested alternatives. I would like to convince you to <em>give WebGL a try</em>, and this blog post explains why. It will also quickly summarize a few things people usually ask about WebGL. There are many gotchas (like with anything) as well, and I am aware of a lot more of them than you can imagin</p>
+<h2 id="WebGL-って何"><a href="#WebGL-って何" class="headerlink" title="WebGL って何?"></a>WebGL って何?</h2><p><a href="http://www.khronos.org/webgl/" target="_blank" rel="noopener">WebGL</a> は Web 用の <a href="http://www.khronos.org/opengles/2_X/" target="_blank" rel="noopener">OpenGL ES 2.0</a> です。<a href="http://en.wikipedia.org/wiki/JavaScript Javascript" target="_blank" rel="noopener">JavaScript</a> でプログラミングします。(Java ではないですよ)</p>
+<h3 id="OpenGL-なしで動くの"><a href="#OpenGL-なしで動くの" class="headerlink" title="OpenGL なしで動くの?"></a>OpenGL なしで動くの?</h3><p>はい。WebGL は <em>OpenGL なしで動きます</em>。<a href="http://code.google.com/p/angleproject/" target="_blank" rel="noopener">Angle という互換ライブラリー</a>が、下記の技術をつかって WebGL を実行してくれるのです。</p>
+<ul>
+<li>Desktop OpenGL (Linux と OSX)</li>
+<li>Mobile OpenGL ES 2.0 (android と blackberry)</li>
+<li>Direct3D 9 (Windows)</li>
+</ul>
+<h3 id="お気に入りのブラウザーで動くの"><a href="#お気に入りのブラウザーで動くの" class="headerlink" title="お気に入りのブラウザーで動くの?"></a>お気に入りのブラウザーで動くの?</h3><p><em>WebGL をサポートしている</em>ブラウザー以下です。</p>
+<ul>
+<li>Desktop Chrome</li>
+<li>Desktop Firefox</li>
+<li>Desktop Safari (on OSX, <a href="https://discussions.apple.com/thread/3300585?start=0&amp;tstart=0" target="_blank" rel="noopener">要設定</a>)</li>
+<li>Desktop Opera</li>
+<li>Mobile Firefox for Android</li>
+<li>Mobile Chrome Beta for Android (<a href="https://plus.google.com/113862800338869870683/posts/G2HwY7tW7zP" target="_blank" rel="noopener">要設定</a>)</li>
+<li>Mobile Opera for Android</li>
+<li>Firefox OS builtin browser</li>
+<li>Blackberry builtin browser</li>
+</ul>
+<p><em>WebGL をサポート</em>していないブラウザーは以下です。</p>
+<ul>
+<li>Internet Explorer</li>
+<li>Desktop Safari on Windows</li>
+<li>Mobile Safari (iOS, iPhone, iPad etc.)</li>
+<li>Opera for iOS</li>
+<li>Builtin Android browser</li>
+</ul>
+<h3 id="私の環境で動くの"><a href="#私の環境で動くの" class="headerlink" title="私の環境で動くの?"></a>私の環境で動くの?</h3><p>動くか否かは、グラフィックス ドライバーのバージョン、OS のバージョン、その他の因子で決まります。このことは、<a href="http://www.khronos.org/webgl/wiki/BlacklistsAndWhitelists" target="_blank" rel="noopener">ホワイトリスト/ブラックリスト</a> から知ることができます。</p>
+<p>いやが応でも WebGL が<em>動作しない</em>環境もあります。</p>
+<ul>
+<li>Windows on ARM (surface など)</li>
+<li>Windows Phones</li>
+<li>Windows 8 Modern UI</li>
+<li>iOS (iPhone, iPad etc.)</li>
+</ul>
+<p>これは、<em>Microsoft</em> と <em>Apple</em> が WebGL の実装をしていないことに加え、これらの環境でデフォルトのブラウザー以外を排除しているためです。</p>
+<p>App ストアーからデフォルトのブラウザー以外をダウンロードできるので、こう書くと混乱する人もいるかもしれません。しかし、App ストアーから入手できるブラウザーは見た目こそ違うものの内部的には Internet Explorer あるいは、モバイル Safari のエンジンをそのまま使わなければならないという制約があります。他のブラウザーベンダーは自身のエンジンを持ち込むことができないために WebGL をサポートできないのです。</p>
+<h3 id="どれくらいの人たちが-WebGL-を体験できないの"><a href="#どれくらいの人たちが-WebGL-を体験できないの" class="headerlink" title="どれくらいの人たちが WebGL を体験できないの?"></a>どれくらいの人たちが WebGL を体験できないの?</h3><p>簡単には言い切れませんが、答えの一つとしてここでは <a href="http://webglstats.com/" target="_blank" rel="noopener">WebGL statistics platform</a> の情報を紹介します。2013 年 2 月 2 日現在の情報です。</p>
+<p><div id="supported" style="height:200px"></div></p>
+<script>
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'OS');
+data.addColumn('number', 'Amount');
+data.addRows([
+    ['WebGL',{v:68}],
+    ['No WebGL',{v:32}]
+]);
+new google.visualization.PieChart($('#supported')[0]).draw(data, ext(pieStyle, {
+    title: '全 WebGL サポート'
+}));
+</script>
+
+<p><div id="desktops" style="height:200px"></div></p>
+<script>
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'Support');
+data.addColumn('number', 'Amount');
+data.addRows([
+    ['WebGL',{v:74}],
+    ['No WebGL',{v:26}]
+]);
+new google.visualization.PieChart($('#desktops')[0]).draw(data, ext(pieStyle, {
+    title: 'デスクトップ環境での WebGL サポート'
+}));
+</script>
+
+<p><div id="mobiles" style="height:200px"></div></p>
+<script>
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'Support');
+data.addColumn('number', 'Amount');
+data.addRows([
+    ['WebGL',{v:6}],
+    ['No WebGL',{v:94}]
+]);
+new google.visualization.PieChart($('#mobiles')[0]).draw(data, ext(pieStyle, {
+    title: 'モバイルでの WebGL サポート'
+}));
+</script>
+
+<p>データは、過去 60 日間の 530 以上のサイトの閲覧者 1300 万人の情報です。</p>
+<p>過去 30 日間に、モバイルにおけるサポートが 4% から 6% になったことに注目してください。これはとても大きな変化です (50 % 増しですよ)! そのほとんどは Android 版 Chrome beta における、WebGL のサポート (要設定) のおかげです。</p>
+<h2 id="もっとも簡単な-3D-API"><a href="#もっとも簡単な-3D-API" class="headerlink" title="もっとも簡単な 3D API"></a>もっとも簡単な 3D API</h2><p>もしあなたが 3D のアプリケーションの作るなら、コードを書き始める際、セットアップ方法とひな形の書き方をすべて知っておく必要があるでしょう。凄腕ゲームプログラマーのジョン・カーマック氏のように。しかし、幸運にも、WebGL はそんなに必要なことはありません。</p>
+<p>Canvas を取得します</p>
+<pre><code>var canvas = document.createElement(&apos;canvas&apos;);
+document.body.appendChild(canvas);
+</code></pre><p>コンテキストを取得します</p>
+<pre><code>var gl = canvas.getContext(&apos;experimental-webgl&apos;);
+</code></pre><p>これで終わりです。複雑な makefile や GLX/GLU などのインクルードは必要ありません。わずらわしいことはブラウザーがすべてやってくれます。これで API を利用する準備ができているのです。</p>
+<p>そして、チュートリアル付きの <a href="http://learningwebgl.com/lessons" target="_blank" rel="noopener">Learning WebGL</a> のような参考ドキュメントもたくさんありますし、shader の例としては <a href="http://glsl.heroku.com" target="_blank" rel="noopener">GLSL Sandbox</a> がとても参考になります。</p>
+<h2 id="最高にテストされた-3D-の-API"><a href="#最高にテストされた-3D-の-API" class="headerlink" title="最高にテストされた 3D の API"></a>最高にテストされた 3D の API</h2><p>ハードウェア アクセラレーテッドなプログラミングを行う際にはたくさんの問題がつきまといます。そのうちの一つは、無数に存在するグラフィックスドライバーと、それらの非互換性です。</p>
+<h3 id="適合性テスト-スイート"><a href="#適合性テスト-スイート" class="headerlink" title="適合性テスト スイート"></a>適合性テスト スイート</h3><p>これらすべての問題を根絶するために、WebGL は総合的 (かつ成長する) <a href="http://www.khronos.org/webgl/wiki/Testing/Conformance" target="_blank" rel="noopener">適合性テスト</a>を有しており、これには<em>何千もの</em>動作しなければいけない項目があります。<em>だれでも試験することができ</em>、もしテストに通らず問題点を見つけたらブラウザーベンダーに伝えてもかまいません。私が知っている限りでは、<em>このようなテストを有している 3D API は WebGL だけです</em>。このことは、WebGL のみを向上させるだけではありません。WebGL が Nvidia や AMD、Apple などのグラフィックスドライバーを利用するため、結果として OpenGL、OpenGL ES そして、Direct3D をも向上することにつながります。</p>
+<h3 id="Performance-regression-tests"><a href="#Performance-regression-tests" class="headerlink" title="Performance regression tests"></a>Performance regression tests</h3><p>Sometimes it is possible that a driver update, or a change in the WebGL implementation results in worse performance. To detect these problems, there is also a <a href="https://github.com/KhronosGroup/WebGLPerf" target="_blank" rel="noopener">performance regression test suite</a>. Again, as far as I know WebGL is the only 3D API in posession of such a test suite.</p>
+<h2 id="参考ドキュメントが一番多い-3D-API"><a href="#参考ドキュメントが一番多い-3D-API" class="headerlink" title="参考ドキュメントが一番多い 3D API"></a>参考ドキュメントが一番多い 3D API</h2><p>他の 3D API やフレームワークと異なり、WebGL はとてもオープンな標準技術です。</p>
+<ul>
+<li><a href="https://github.com/KhronosGroup/WebGL" target="_blank" rel="noopener">Specification, tests and extensions on github</a></li>
+<li><a href="https://github.com/KhronosGroup/WebGLPerf" target="_blank" rel="noopener">performance regressions on github</a></li>
+<li><a href="http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf" target="_blank" rel="noopener">quick reference card from Khronos</a></li>
+<li><a href="http://www.khronos.org/webgl/" target="_blank" rel="noopener">Khronos topic page</a></li>
+<li><a href="http://www.khronos.org/webgl/wiki/Main_Page" target="_blank" rel="noopener">Khronos WebGL wiki</a></li>
+<li><a href="https://www.khronos.org/registry/webgl/specs/1.0/" target="_blank" rel="noopener">Specification</a></li>
+<li><a href="http://www.khronos.org/webgl/public-mailing-list/" target="_blank" rel="noopener">Public Mailing list</a></li>
+<li><a href="http://www.khronos.org/registry/webgl/extensions/" target="_blank" rel="noopener">extension registry</a></li>
+</ul>
+<p>加えて、非オフィシャルなドキュメントもあります。</p>
+<ul>
+<li><a href="http://learningwebgl.com/blog/" target="_blank" rel="noopener">Learning WebGL</a></li>
+<li><a href="http://www.reddit.com/r/webgl" target="_blank" rel="noopener">r/webgl</a></li>
+<li>freenode.net 上の IRC チャンネル #webgl</li>
+</ul>
+<h2 id="拡張可能"><a href="#拡張可能" class="headerlink" title="拡張可能"></a>拡張可能</h2><p>WebGL は OpenGL から <a href="http://www.khronos.org/registry/webgl/extensions/" target="_blank" rel="noopener">拡張メカニズム</a> も引き継いでいるため、</p>
+<p>Web の 3D の技術としては唯一、新しいバージョンのリリースを待たずに<em>機能を追加</em>することができます。そして、それは、旧バージョンの API にも、上位バージョンの機能を追加できることになります。</p>
+<p>現段階では、次の実装があります。</p>
+<ul>
+<li>Single and half floating point textures</li>
+<li>Standard derivatives functions in shaders</li>
+<li>Vertex Array Objects (VAOs)</li>
+<li>S3TC Compressed textures</li>
+<li>Depth Textures</li>
+<li>Anisotropic texture filtering</li>
+</ul>
+<p>その他の拡張も提案されており、Multi-Render Targets や instanced drawing が草案を経て最終的には実装されることが期待されています。</p>
+<h2 id="WebGL-を使わなくても気にかけないとダメ"><a href="#WebGL-を使わなくても気にかけないとダメ" class="headerlink" title="WebGL を使わなくても気にかけないとダメ?"></a>WebGL を使わなくても気にかけないとダメ?</h2><p>WebGL の存在はブラウザー、JavaScript、グラフィックスドライバーをよくすることにつながります。</p>
+<ul>
+<li>開発者は JavaScript に速度を求めました。なので、ブラウザーベンダーは JavaScript の処理性能を向上しました。</li>
+<li>WebGL を実装した結果、ブラウザーのガベージ コレクションはすこし向上しました。</li>
+<li><em>Web</em> の技術であるため、グラフィック ハードウェア ベンダーや OEM に対してたくさんの人がより良いグラフィックスドライバーを作るようにプッシュしてきました。</li>
+</ul>
+<h2 id="クリックできるリンクがユーザーを増やす"><a href="#クリックできるリンクがユーザーを増やす" class="headerlink" title="クリックできるリンクがユーザーを増やす"></a>クリックできるリンクがユーザーを増やす</h2><p>Web 以外の技術は、アプリケーションを使えるようにするために、いくつもの手順を繰り返すことになります。例えば、よくあるデスクトップ環境なら次のような手順となるでしょう。</p>
+<ul>
+<li>ダウンロードのためのリンクを発見する</li>
+<li>ダウンロードして保存する</li>
+<li>ダウンロードしたフォルダーを開く</li>
+<li>インストーラーをクリックする</li>
+<li>何度も「はい」をクリックして「パス」を入力して、また何度も「はい」をクリックします</li>
+<li>そのあと待って…</li>
+<li>インストーラーを閉じて</li>
+<li>インストールしたアプリケーションを見つけて</li>
+<li>アプリケーションを起動して</li>
+<li>オートアップデートが完了するのを待って</li>
+<li>やっとアプリケーションを楽しめます</li>
+</ul>
+<p>App ストアーにあるアプリケーションならもう少し少ない手順で楽しめるでしょう。でも WebGL のアプリケーションではどうでしょうか?</p>
+<ul>
+<li>起動するためのリンクを見つける</li>
+<li>リンクをクリックする</li>
+<li>これでアプリケーションを楽しめます</li>
+</ul>
+<h2 id="お金になるの"><a href="#お金になるの" class="headerlink" title="お金になるの?"></a>お金になるの?</h2><p>おそらくは。この記事執筆時点では<a href="http://www.webgljobs.com/" target="_blank" rel="noopener">WebGL job board</a>に <em>50 ほどの職</em>が掲載されています。それに、過去 2 年で私は WebGL でそれなりの収入を得ています。これは「Web はお金になるのか」という質問と同じことで、もちろんなりますよね。それと、もともと Java アプレットで作られた Minecraft が 2012 年に 9000 万ドルを稼ぎだしたことも思い出しました ( 私たちは JavaScirpt を使いますが、Java アプレットのほうが遥かに限られた環境ですよね )。</p>
+<h2 id="比較してみる"><a href="#比較してみる" class="headerlink" title="比較してみる"></a>比較してみる</h2><p>もちろん、他の技術との比較をしてみないとダメですよね。それでは見てみましょう。</p>
+<h3 id="Unity-3D"><a href="#Unity-3D" class="headerlink" title="Unity 3D"></a>Unity 3D</h3><p>Unity 3D は API というよりはエンジンといったほうがいいかもしれません。そして、多くの人は Unity3D Web プレイヤーをインストールしていませんし、どのみちモバイル環境では動作しません。Web のことをあまり気にしないのであれば Unity 3D でもいいのでしょうが、私の場合は Web が好きなのであまり使うことはありません。</p>
+<p>一応、Unity 3D を Web (とモバイル環境) で扱うこともできます。</p>
+<ul>
+<li>Google Chrome の NaCL (Native Client) では、Unity 3D をコンパイルして利用できます(明らかな欠陥ですが)。ただし、フレームワークやライブラリーなど様々な Web の技術とは組み合わせることはまだできません。HTML/CSS/JS と組み合わせられること意味があるのであり、そうすることでその他の様々な技術と組み合わせることができるのです。</li>
+<li>Unity 3D はモバイル向けにコンパイルし、Appストアーから配布することもできます。しかし、それは「クリックしてすぐ再生」ができるWebページとは全くの別物です。</li>
+</ul>
+<h3 id="Flash-Stage-3D"><a href="#Flash-Stage-3D" class="headerlink" title="Flash Stage 3D"></a>Flash Stage 3D</h3><p>Flash では (Direct3D や OpenGL の様式とは異なる) <em>非標準の API</em> を利用します。そして、その API に関する<em>ドキュメントは乏しい</em>ようです (私が探した限りでは)。さらに残念なことに、Shader の記述形式は実質、<em>アセンブラー言語</em>です。一方で WebGL の Shader は、C 言語に近く、扱いやすい言語でプログラミングすることができます。Flash はもちろん<em>モバイル環境では動きません</em>(よく知られた話ではありますが)。Web 開発者としての観点としては、Flash が他の Web 技術と組み合わせることができないのも残念です。そして、さらに、Flash にはコンパイル済みの Shader が必要です。オンライン上では Shader をコンパイルすることができないのです。</p>
+<p>Flash 自体はモバイルでは動かないのですが、一方でネイティブアプリとしてコンパイルして App ストアーから配布することはできます。ただ、それは Unity 3D と同様に、「クリックしてすぐ再生」ができる Web ページとは別物です (それが Flash のよさだったのですが)。</p>
+<h3 id="Silverlight-3D"><a href="#Silverlight-3D" class="headerlink" title="Silverlight 3D"></a>Silverlight 3D</h3><p>Microsoft は Silverlight にそれほど注力していません。Silverlight 3D はさらに注力されていません。不便さ (モバイルで動作しない、プラグインが必要、ドキュメントが乏しい) もあり、加えてシェーダーをプリコンパイルする必要もあります。もちろん、Silverlight として何かを作る場合には開発環境として Visual Studio と .Net が必要になります。</p>
+<p>そして、最大のハードルは、Silverlight の 3D 有効化のダイアログを多くのユーザーが無視してしまうことです。これでは事実上使い物にならないため、Silverlight 3D の採用は選択肢からは外れることでしょう。</p>
+<h3 id="Direct3D"><a href="#Direct3D" class="headerlink" title="Direct3D"></a>Direct3D</h3><p>Web 上では動作しません。モバイル環境でも動作しません。Apple 製品でも動作しません。標準化された API ではないのです。</p>
+<h3 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h3><p>深刻なグラフィックス ドライバーの問題があります。Web 上では動作しません。モバイル環境でも動作しません。</p>
+<h3 id="OpenGL-ES"><a href="#OpenGL-ES" class="headerlink" title="OpenGL ES"></a>OpenGL ES</h3><p>デスクトップ環境では動作しません。たくさんのモバイル環境で動作します。ただし、Web では動作しません。</p>
+<h2 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h2><p>WebGL/HTML5 やその他はまだまだ完璧とは言えません。複雑な技術ゆえにまだたくさんの課題を抱えています。しかし、私は WebGL が最高の 3D 技術だと強く信じています。Web 標準であることは、一つのコードにより様々なプラットフォームで動作することを意味します。私はこれまで WebGL でたくさん楽しんできました。そして、同様に皆さんにも WebGL で楽しんでいただければ幸いです。</p>
+<h2 id="謝辞"><a href="#謝辞" class="headerlink" title="謝辞"></a>謝辞</h2><p>I know I can be a grumpy and offensive guy at times, but this is to say a little thanks to all the unsung heroes who make WebGL possible and better. Kenneth Russel, Gregg Tavares, Brandon Jones, Jeff Gilbert, Benoit Jacob, Paul Irish, and everybody else, you do a fabulous job!</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/01/20/think-about-browser.html">
+					なぜ HTML5 を使うのかを考えよう
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/02/16/canvas-lib.html">
+					canvas のラッパーライブラリーを作ろうと思った
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

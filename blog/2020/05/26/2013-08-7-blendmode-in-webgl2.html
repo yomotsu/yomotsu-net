@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>WebGL で高速 BlendMode その 2 | Yomotsu net</title>
+<link rel="canonical" href="http://yomotsu.net/2020/05/26/2013-08-7-blendmode-in-webgl2.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				WebGL で高速 BlendMode その 2
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2020-05-26T06:16:48.671Z" itemprop="datePublished">2020-05-26</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>この前の記事で試したブレンドモードは、ひとつのメッシュでのテクスチャーの色合成だったため、それぞれの画像を別々に管理できませんでした。この課題は、blendFunc を使えば解決できます。</p>
+<p>OpenGL 由来の関数を使いながらなので、ブレンドモードの公式にそのまま当てはめて計算とは行かないのですが、よく利用しそうなブレンドはおおよそできました。個別のレイヤーなので、それぞれに別の動き（アニメーションなど）を与えながら色のブレンドをすることもできます。</p>
+<p><a href="/blog/assets/2013-08-07-blendmode-in-webgl2/">demo</a></p>
+<h3 id="DEFAULT"><a href="#DEFAULT" class="headerlink" title="DEFAULT"></a>DEFAULT</h3><pre><code>gl.enable( gl.BLEND );
+...
+gl.drawElements( /* Background */ );
+
+gl.blendFunc( gl.ONE, gl.ZERO );
+gl.drawElements( /* Foreground */ );
+</code></pre><h3 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h3><pre><code>gl.enable( gl.BLEND );
+...
+gl.drawElements( /* Background */ );
+
+gl.blendFunc( gl.SRC_ALPHA, gl.ONE );
+gl.drawElements( /* Foreground */ );
+</code></pre><h3 id="MULTIPLY"><a href="#MULTIPLY" class="headerlink" title="MULTIPLY"></a>MULTIPLY</h3><pre><code>gl.enable( gl.BLEND );
+...
+gl.drawElements( /* Background */ );
+
+gl.blendFunc( gl.DST_COLOR, gl.ZERO );
+gl.drawElements( /* Foreground */ );
+</code></pre><p>または <code>gl.blendFunc( gl.ZERO, gl.SRC_COLOR )</code> でも同じ</p>
+<h3 id="SCREEN"><a href="#SCREEN" class="headerlink" title="SCREEN"></a>SCREEN</h3><pre><code>gl.enable( gl.BLEND );
+...
+gl.drawElements( /* Background */ );
+
+gl.blendFunc( gl.ONE_MINUS_DST_COLOR, gl.ONE );
+gl.drawElements( /* Foreground */ );
+</code></pre><hr>
+<p><code>gl.blendFunc</code>、<code>gl.blendEquation</code> とは別に、<code>gl.blendFuncSeparate</code> と <code>gl.blendEquationSeparate</code> という関数もあり、これらを使うと alpha 値を別で渡すことができます。</p>
+<hr>
+<p>考え方は<a href="http://wiki.livedoor.jp/mikk_ni3_92/d/%A5%D6%A5%EC%A5%F3%A5%C7%A5%A3%A5%F3%A5%B0%3A%3A%B7%D7%BB%BB%BC%B0%A4%CE%C0%DF%C4%EA" target="_blank" rel="noopener">ブレンディング::計算式の設定</a>の例1が参考になりました。</p>
+<blockquote>
+<p>glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA)</p>
+<p>この場合、<br>現在の色(Rd, Gd, Bd, Ad)<br>これから塗る色(Rs, Gs, Bs, As)<br>とした時、ブレンディング係数は<br>(Sr, Sg, Sb, Sa) → ( As, As, As, As)<br>(Dr, Dg, Db, Da) → (1-As, 1-As, 1-As)<br>となる。</p>
+<p>つまり、「これから塗る色」のα値：Asが混ざり具合を決定する。(アルファブレンド)</p>
+</blockquote>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2020/05/26/2013-08-4-blendmode-in-webgl.html">
+					WebGL で高速 BlendMode
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2020/06/01/reduce-polycont.html">
+					Reduce polygon count
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

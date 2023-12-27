@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 2歩目、custom() で何が行われるのか | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/07/cssshaders2.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 2歩目、custom() で何が行われるのか
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-06T15:00:00.000Z" itemprop="datePublished">2012-12-07</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 7日目の記事です。</p>
+<p>この記事では、CSS Shaders、つまり CSS Filters の custom 関数を利用したとき、何が行われるのかを知ります。</p>
+<p>なお、この記事以降に登場する CSS Shader は、2012年 12月現在、Chrome Canary でしか動作せず、かつ、CSS Shader の設定を有効にしておく必要があります。実際の demo を表示したい場合にはこの記事の末尾で解説する手順で Chrome Canary をインストールし、設定を有効にしておいてください。</p>
+<h2 id="CSS-Shader-を使う"><a href="#CSS-Shader-を使う" class="headerlink" title="CSS Shader を使う"></a>CSS Shader を使う</h2><p>custom 関数は、CSS Filters の他の関数と違い、その引数はすこし複雑です。この記事執筆段階の草案には次のように示されています。</p>
+<pre><code>custom(&lt;vertex-shader&gt; &lt;fragment-shader&gt;? [ , &lt;vertex-mesh&gt; ]? [ , &lt;params&gt; ]?)
+</code></pre><p>上記のそれぞれの意味は次の通りです。</p>
+<p>vertex-shader|頂点を扱うシェーダー。基本的に url()で指定する。必須<br>fragment-shader|色とラスタライズを扱うシェーダー基本的に url()で指定する。オプション。<br>vertex-mesh|メッシュ分割数。2つの数値で指定され、それぞれは縦分割数と横分割数として扱われる。オプション<br>params|その他の任意に利用できる引数。オプション</p>
+<p>例えば具体的には次のように利用します。</p>
+<pre><code>selector{
+    -webkit-filter: custom( url( shader.vs ) url( shader.fs ), 16 16, u_myVal1 10.0, u_myVal2 30.0 );
+}
+</code></pre><h2 id="CSS-Shaders-適用時の流れ"><a href="#CSS-Shaders-適用時の流れ" class="headerlink" title="CSS Shaders 適用時の流れ"></a>CSS Shaders 適用時の流れ</h2><p>各値の説明だけではわかりづらいと思いますの。なぜこれらを指定する必要があるのか、CSS Shaders 適用時の流れも参考にするとそれらの意味がわかってくるでしょう。</p>
+<h3 id="1-メッシュ化"><a href="#1-メッシュ化" class="headerlink" title="1. メッシュ化"></a>1. メッシュ化</h3><p>HTML の要素はまず分割数 (vertex-mesh) に応じたメッシュとして扱われます。例えばこの図の場合は costum 関数の引数の分割数として 4 4 が指定されていることになります。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/1.png" alt=""></p>
+<h3 id="2-頂点シェーダー"><a href="#2-頂点シェーダー" class="headerlink" title="2. 頂点シェーダー"></a>2. 頂点シェーダー</h3><p>メッシュとなった要素は頂点シェーダー (vertex shader) に応じて変形されます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/2.png" alt=""></p>
+<h3 id="3-フラグメントシェーダー"><a href="#3-フラグメントシェーダー" class="headerlink" title="3. フラグメントシェーダー"></a>3. フラグメントシェーダー</h3><p>変形された要素は、ピクセルに応じた色がつけられ、ラスタライズされます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/3.png" alt=""></p>
+<h3 id="4-表示"><a href="#4-表示" class="headerlink" title="4. 表示"></a>4. 表示</h3><p>ラスタライズされた要素が表示されます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/4.png" alt=""></p>
+<p>次回は実際に簡単な CSS Shader を作成します。</p>
+<h2 id="付録-Chrome-Canary-で-CSS-Shader-を有効にするまでの流れ"><a href="#付録-Chrome-Canary-で-CSS-Shader-を有効にするまでの流れ" class="headerlink" title="付録 : Chrome Canary で CSS Shader を有効にするまでの流れ"></a>付録 : Chrome Canary で CSS Shader を有効にするまでの流れ</h2><p>Chrome Canary は開発版の Google Chrome で、一般向けにリリースされている正式版の Chrome よりも 1つから 2つほど上のバージョンを試すことができます。</p>
+<p>Chrome Canary を利用することで、すこし未来に実装される予定の機能を試すことができます。</p>
+<p>インストールしても通常の Chrome と競合することなく、別のブラウザーとして動きます。通常版と Canary を同時に起動することもできます。</p>
+<p>インストールするには、<a href="https://tools.google.com/dlpage/chromesxs/" target="_blank" rel="noopener">Chrome Canary</a>からダウンロードします。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/5.png" alt=""></p>
+<p>インストールが完了したら、CSS Shaders を有効にしましょう。CSS Shaders はまだ新しい機能のため、デフォルトでは設定がオフとなっています。設定をオンにするには、URL バーに about:flags を入力し設定画面を開きます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/6.png" alt=""></p>
+<p>機能一覧にある Enable CSS Shaders を Enable (有効) に設定します。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-07-cssshaders2/7.png" alt=""></p>
+<p>これで CSS Shaders を表示する準備の完了です。このあと投稿する予定の記事では、どうすればこの変形ができるのかを解説していきます。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/06/cssshaders1.html">
+					CSS Shaders はじめの一歩、CSS Filter を知る
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/08/cssshaders3.html">
+					CSS Shaders はじめの 3歩目、簡単な vertex shader を適用する
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

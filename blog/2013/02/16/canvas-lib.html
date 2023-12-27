@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>canvas のラッパーライブラリーを作ろうと思った | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2013/02/16/canvas-lib.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				canvas のラッパーライブラリーを作ろうと思った
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2013-02-15T15:00:00.000Z" itemprop="datePublished">2013-02-16</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/canvas/">canvas</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>Canvas の勉強がてら、Canvas のラッパーライブラリーの原型らしきものを作ってみた。でも EaselJS や Paper.js のような優秀なライブラリーがあるのでそれらを使ったほうがいいよなと。</p>
+<p>ただせっかくなので、作ってみたライブラリーの残骸をここに。</p>
+<h2 id="矩形配置"><a href="#矩形配置" class="headerlink" title="矩形配置"></a>矩形配置</h2><p>とりあえず矩形</p>
+<p>code</p>
+<pre><code>C4U.init( &apos;#canvas&apos; );
+
+var myRect1 = new C4U.Rect( 100, 100 );
+myRect1.position = { x: 50, y:50 };
+myRect1.color = &apos;rgb( 255, 0, 0 )&apos;;
+
+C4U.render();
+</code></pre><p><a href="/blog/assets/2013-02-16-canvas-lib/1.html">demo</a></p>
+<h2 id="画像配置"><a href="#画像配置" class="headerlink" title="画像配置"></a>画像配置</h2><p>onload された画像を Canvas に入れる用</p>
+<p>code</p>
+<pre><code>C4U.init( &apos;#canvas&apos; );
+
+var img = new Image();
+img.src = &apos;miku.png&apos;;
+
+img.onload = function () {
+  var myRaster = new C4U.Raster( img );
+  myRaster.position = { x: 200, y: 200 };
+  C4U.render();
+}
+</code></pre><p><a href="/blog/assets/2013-02-16-canvas-lib/2.html">demo</a></p>
+<h2 id="イベント"><a href="#イベント" class="headerlink" title="イベント"></a>イベント</h2><p>Canvas 内でも jQuery ぽく使いたくて</p>
+<p>code</p>
+<pre><code>C4U.init( &apos;#canvas&apos; );
+
+var myRect1 = new C4U.Rect( 100, 100 );
+myRect1.position = { x: 300, y: 300 };
+myRect1.color = &apos;rgb( 255, 0, 0 )&apos;;
+myRect1.name = &apos;red square!&apos;
+
+myRect1.on( &apos;click&apos;, function ( e ) {
+  alert( this.name ); // you&apos;ll see &apos;red square!&apos;
+} );
+</code></pre><p><a href="/blog/assets/2013-02-16-canvas-lib/3.html">demo</a></p>
+<h2 id="アニメーション"><a href="#アニメーション" class="headerlink" title="アニメーション"></a>アニメーション</h2><p>普通に requestAnimationFrame のラッパー</p>
+<p>code</p>
+<pre><code>C4U.init( &apos;#canvas&apos; );
+
+var myRect1 = new C4U.Rect( 100, 100 );
+myRect1.position = { x: -50, y: 100 };
+myRect1.color = &apos;rgb( 255, 0, 0 )&apos;;
+
+( function loop(){
+  window.C4U.update( loop );
+  myRect1.position.x += 2;
+  C4U.render();
+} )();
+</code></pre><p><a href="/blog/assets/2013-02-16-canvas-lib/4.html">demo</a></p>
+<h2 id="ブレンド"><a href="#ブレンド" class="headerlink" title="ブレンド"></a>ブレンド</h2><p>CSS だとできないけど Canvas はピクセル操作できるからね!</p>
+<p>code</p>
+<pre><code>C4U.init( &apos;#canvas&apos; );
+
+var img = new Image();
+img.src = &apos;miku.png&apos;;
+
+img.onload = function () {
+main();
+}
+
+function main () {
+  var myRect1 = new C4U.Rect( 100, 100 );
+  myRect1.position = { x: 100, y: 100 };
+  myRect1.rotation = 45;
+  myRect1.color = &apos;rgb( 255, 0, 0 )&apos;;
+
+  var myRaster = new C4U.Raster( img );
+  myRaster.position = { x: 100, y: 100 };
+  myRaster.blendMode = &apos;multiply&apos;;
+
+  C4U.render();
+}
+</code></pre><p><a href="/blog/assets/2013-02-16-canvas-lib/5.html">demo</a></p>
+<p>とりあえず、<a href="https://github.com/yomotsu/CanvasForUI" target="_blank" rel="noopener">Github においてあります</a>。何かの参考になれば…。</p>
+<p>今年は three.js と EaselJS の二刀流でいこうと思います (予定)。</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2013/02/06/why-webgl.html">
+					なぜ WebGL がいいの?
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2013/02/23/normalize.html">
+					なぜリセットではなく Normalize.css を使うのか
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

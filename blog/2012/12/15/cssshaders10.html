@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 10歩目、アニメーション | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/15/cssshaders10.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 10歩目、アニメーション
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-14T15:00:00.000Z" itemprop="datePublished">2012-12-15</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 15日目の記事です。</p>
+<p>前回までの記事で vertex shader による変換と fragment shader による色の使い方をひと通り見てきました。今回は、これに動きを加えます。</p>
+<p>順をおってみて行きましょう。まず前回の状態の HTML, CSS, Shader 2種を用意します。</p>
+<h2 id="手順-1"><a href="#手順-1" class="headerlink" title="手順 1"></a>手順 1</h2><h3 id="HTML-と-CSS"><a href="#HTML-と-CSS" class="headerlink" title="HTML と CSS"></a>HTML と CSS</h3><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;CSS Shaders!&lt;/title&gt;
+&lt;style&gt;
+.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg )
+    );
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;sample&quot;&gt;
+    &lt;p&gt;CSS Shader!! シィーエスエス シェーダー!! &lt;/p&gt;
+    &lt;img src=&quot;nyantocat.gif&quot; alt=&quot;&quot;&gt;
+    &lt;p&gt;the Nyantocat by Cameron McEfee&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h3 id="vertex-shader"><a href="#vertex-shader" class="headerlink" title="vertex shader"></a>vertex shader</h3><pre><code>precision mediump float;
+
+attribute vec4 a_position;
+attribute vec2 a_meshCoord;
+
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_transform;
+
+// fragment shader に渡すために varying 変数を宣言
+varying vec4 v_color;
+
+void main() {
+    float z = sin( a_meshCoord.x * 3.1415) * 100.0;
+    vec4 pos = vec4( a_position.xy, z, a_position.w );
+
+    // z の高さ ( 0 ~ 100 ) に応じて、透明度の異なる黒を fragment shader に送る
+    v_color = vec4( 0.0, 0.0, 0.0, min( 0.75, 1.0 - ( z / 100.0 ) ) );
+    gl_Position = u_projectionMatrix * u_transform * pos;
+}
+</code></pre><h3 id="fragment-shader"><a href="#fragment-shader" class="headerlink" title="fragment shader"></a>fragment shader</h3><pre><code>precision mediump float;
+
+// vertex shader から受け取るために varying 変数を宣言
+varying vec4 v_color;
+
+void main() {
+    css_MixColor = v_color;
+}
+</code></pre><p><img src="http://yomotsu.net/blog/assets/2012-12-15-cssshaders10/1.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-15-cssshaders10/1.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<h2 id="手順-2、filter-プロパティーの値に引数を追加"><a href="#手順-2、filter-プロパティーの値に引数を追加" class="headerlink" title="手順 2、filter プロパティーの値に引数を追加"></a>手順 2、filter プロパティーの値に引数を追加</h2><p>custom 関数の引数に「u_time という名前の変数、値は 0」を追加しました。</p>
+<h3 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h3><pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg ),
+        u_time 0
+    );
+}
+</code></pre><h2 id="手順-3、vertex-shader-で引数を利用"><a href="#手順-3、vertex-shader-で引数を利用" class="headerlink" title="手順 3、vertex shader で引数を利用"></a>手順 3、vertex shader で引数を利用</h2><p>CSS から渡された u_time を float 型として宣言し、さらに変換時の z 座標に影響を与えるようにします。こうすることで、 CSS から渡される u_time の値が変わるたびにメッシュの z 座標を変えることができます。</p>
+<h3 id="vertex-shader-1"><a href="#vertex-shader-1" class="headerlink" title="vertex shader"></a>vertex shader</h3><pre><code>precision mediump float;
+
+attribute vec4 a_position;
+attribute vec2 a_meshCoord;
+
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_transform;
+// u_time を float として宣言
+uniform float u_time;
+
+varying vec4 v_color;
+
+void main() {
+    // u_time の値が sin 波に影響を与えるようにする
+    float z = sin( a_meshCoord.x * 3.1415 + u_time ) * 100.0;
+    vec4 pos = vec4( a_position.xy, z, a_position.w );
+
+    v_color = vec4( 0.0, 0.0, 0.0, min( 0.75, 1.0 - ( z / 100.0 ) ) );
+    gl_Position = u_projectionMatrix * u_transform * pos;
+}
+</code></pre><h2 id="手順-4-CSS-にアクションを追加"><a href="#手順-4-CSS-にアクションを追加" class="headerlink" title="手順 4 : CSS にアクションを追加"></a>手順 4 : CSS にアクションを追加</h2><p>ここでは transition プロパティーを追加し、合わせて :hover 時のスタイルを追加しました。:hover 時には、u_time の値が 12 に設定されていることにも注目してください。</p>
+<p>CSS 全体は次のようになっています。</p>
+<h3 id="CSS-1"><a href="#CSS-1" class="headerlink" title="CSS"></a>CSS</h3><pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) multiply ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg ),
+        u_time 0
+    );
+    -webkit-transition: -webkit-filter ease-in-out 2s;
+}
+
+.sample:hover {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) multiply ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg ),
+        u_time 12
+    );
+}
+</code></pre><p>これにより、:hover することにより u_time の値が変化し、そこには CSS transitions が効いているため、CSS Shader により変換されるメッシュがアニメーションします。</p>
+<video width="514" height="680" controls><br><source src="http://yomotsu.net/blog/assets/2012-12-15-cssshaders10/2.webm"><br><source src="http://yomotsu.net/blog/assets/2012-12-15-cssshaders10/2.mp4"><br></video>
+
+<p><a href="http://yomotsu.net/blog/assets/2012-12-15-cssshaders10/2.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/14/cssshaders9.html">
+					CSS Shaders はじめの 9歩目、座標に応じた影っぽい色
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/25/tweenjs.html">
+					TweenJS と描画系ライブラリーの組み合わせ
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

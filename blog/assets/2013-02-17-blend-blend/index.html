@@ -1,0 +1,162 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+canvas,table,th,td{border:1px solid #ddd;}
+img{display: block;}
+</style>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+<script src="jquery-1.8.3.min.js"></script>
+<script src="paper.js"></script>
+<script src="stats.min.js"></script>
+<script src="dat.gui.min.js"></script>
+<script>
+
+$( function() {
+
+  var $bg     = $( '<img/>' ).attr( { src : 'bg.jpg' } );
+  var $img    = $( '<img/>' ).attr( { src : 'miku.png' } );
+  var $canvas = $( '#canvas' );
+
+  var myPaper = new paper.PaperScope();
+  myPaper.setup( $canvas[ 0 ] );
+
+  var circle, path, raster;
+
+  $.when(
+    preloadImage( $bg ),
+    preloadImage( $img )
+  ).done(
+    function(){
+      initStats();
+      main();
+      setGUI();
+    }
+  );
+
+  function preloadImage( $img ){
+    var d = $.Deferred();
+    $img.on( 'load', function(){
+      d.resolve();
+    } );
+    return d.promise();
+  };
+
+  function initStats () {
+    var stats = new Stats();
+    var $el = $( stats.domElement );
+    $el.css( {
+      'position': 'absolute',
+      'top': 0
+    } );
+    $( document.body ).append( $el );
+    $canvas.on( 'frameUpdate', function () {
+      stats.update();
+    } );
+  }
+
+  function main(){
+    var startTime = new Date / 1000;
+    var elapsedTime = 0;
+    var lastTime = 0;
+
+    bg = new myPaper.Raster( $bg[ 0 ] );
+    bg.position = { x : myPaper.view.center.x, y : myPaper.view.center.y };
+
+    circle = new myPaper.Path.Circle( new myPaper.Point( 0, 0 ), 80.0 );
+    circle.fillColor = 'green';
+    circle.blendMode = 'multiply';
+    circle.position = { x : myPaper.view.center.x - 200, y : myPaper.view.center.y };
+
+    path = new myPaper.Path( [
+      new myPaper.Point( 100.0,   0.0 ),
+      new myPaper.Point(   0.0, 100.0 ),
+      new myPaper.Point( 200.0, 100.0 )
+    ] );
+    path.closed = true;
+    path.strokeColor = 'black';
+    path.fillColor = 'red';
+    path.blendMode = 'multiply';
+    path.position = { x : myPaper.view.center.x, y : myPaper.view.center.y };
+
+    raster = new myPaper.Raster( $img[ 0 ] );
+    raster.blendMode = 'multiply';
+    raster.position = { x : myPaper.view.center.x + 200, y : myPaper.view.center.y };
+
+    myPaper.view.onFrame = function( e ){
+      elapsedTime = new Date / 1000 - startTime;
+      $canvas.trigger( 'frameUpdate' );
+      var x = myPaper.view.center.x + Math.cos( elapsedTime ) * 100;
+      var y = myPaper.view.center.y + Math.sin( elapsedTime ) * 100;
+      circle.position = { x : x - 200 , y : y };
+      path.position   = { x : x       , y : y };
+      raster.position = { x : x + 200 , y : y };
+    }
+  }
+
+  function setGUI(){
+    var gui = new dat.GUI();
+    var item = {
+      blendMode : 'multiply'
+    }
+
+    gui.add( item, 'blendMode', [
+      'normal',
+      'multiply',
+      'screen',
+      'overlay',
+      'soft-light',
+      'hard-light',
+      'color-dodge',
+      'color-burn',
+      'darken',
+      'lighten',
+      'difference',
+      'exclusion',
+      'hue',
+      'saturation',
+      'luminosity',
+      'color',
+      'add',
+      'subtract',
+      'average',
+      'pin-light',
+      'negation'
+    ] )
+    .onChange( function( value ) {
+      circle.blendMode = value;
+      path.blendMode   = value;
+      raster.blendMode = value;
+    } );
+  }
+
+} );
+
+</script>
+</head>
+<body>
+
+<canvas width="960" height="540" id="canvas"></canvas>
+
+<table>
+<caption>resources</caption>
+<tr>
+  <th>image</th>
+  <th>background image</th>
+</tr>
+<tr>
+  <td>
+    <img src="miku.png" alt>
+    180 * 180
+  </td>
+  <td>
+    <img src="bg.jpg" alt width="320" height="180">
+    960 * 540
+  </td>
+</tr>
+</table>
+
+</body>
+</html>

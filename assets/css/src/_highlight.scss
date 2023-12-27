@@ -1,0 +1,105 @@
+
+pre,
+code {
+	font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
+}
+
+.ymt-ContentsBody{
+
+	.highlight {
+		color: #ccc;
+		border: 1px solid #000;
+		background: #2d2d2d;
+		margin: 20px 0;
+		table {
+			table-layout: fixed;
+			width: 100%;
+			margin: 0;
+		}
+		td{
+			border: none;
+			padding: 0;
+		}
+		.gutter{
+			color: #666;
+			text-align: right;
+			width: 3em;
+		}
+		.code{}
+		pre {
+			overflow: auto;
+			-webkit-overflow-scrolling: touch;
+			white-space: pre;
+			padding:14px;
+			margin: 0;
+			box-shadow:
+				inset 0 1px 10px rgba( 0, 0, 0, .3 ),
+				0  1px 0 rgba( 255, 255, 255, .1 ),
+				0 -1px 0 rgba( 0, 0, 0, .5 );
+		}
+		.line {
+			font-size: 14px;
+			line-height: 1.6em;
+			height: 1.6em;
+		}
+	}
+
+
+	pre .comment,
+	pre .title {
+	  color: #999;
+	}
+	pre .variable,
+	pre .attribute,
+	pre .tag,
+	pre .regexp,
+	pre .ruby .constant,
+	pre .xml .tag .title,
+	pre .xml .pi,
+	pre .xml .doctype,
+	pre .html .doctype,
+	pre .css .id,
+	pre .css .class,
+	pre .css .pseudo {
+	  color: #f2777a;
+	}
+	pre .number,
+	pre .preprocessor,
+	pre .built_in,
+	pre .literal,
+	pre .params,
+	pre .constant {
+	  color: #f99157;
+	}
+	pre .class,
+	pre .ruby .class .title,
+	pre .css .rules .attribute {
+	  color: #9c9;
+	}
+	pre .string,
+	pre .value,
+	pre .inheritance,
+	pre .header,
+	pre .ruby .symbol,
+	pre .xml .cdata {
+	  color: #9c9;
+	}
+	pre .css .hexcolor {
+	  color: #6cc;
+	}
+	pre .function,
+	pre .python .decorator,
+	pre .python .title,
+	pre .ruby .function .title,
+	pre .ruby .title .keyword,
+	pre .perl .sub,
+	pre .javascript .title,
+	pre .coffeescript .title {
+	  color: #69c;
+	}
+	pre .keyword,
+	pre .javascript .function {
+	  color: #c9c;
+	}
+
+}

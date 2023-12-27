@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Santa's Boxes!</title>
+<style>
+body{margin: 0;padding: 0;}
+canvas{display: block;}
+</style>
+</head>
+<body>
+<script src="../assets/js/vendor/three.min.js"></script>
+<script>
+var width  = window.innerWidth,
+    height = window.innerHeight,
+    clock = new THREE.Clock(),
+    cameraTarget = new THREE.Vector3( 0, 5, 0 ),
+    renderer,
+    camera,
+    scene,
+    ambientLight,
+    spotLight,
+    helper,
+    tree,
+    forrest;
+
+init();
+main();
+renderLoop();
+
+function init () {
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera( 40, width / height, 1, 1000 );
+  camera.position.set( 50, 5, 50 );
+  camera.lookAt( cameraTarget );
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize( width, height );
+  renderer.shadowMapEnabled = true;
+  document.body.appendChild( renderer.domElement );
+
+  ambientLight = new THREE.AmbientLight( 0xcccccc );
+  scene.add( ambientLight );
+
+  spotLight = new THREE.SpotLight( 0xffffff );
+  spotLight.position.set( -10, 50, 10 );
+  scene.add( spotLight );
+
+  helper = new THREE.AxisHelper( 30 );
+  scene.add( helper );
+}
+
+function main(){
+  var tmpGeometry = new THREE.Geometry();
+  var loader = new THREE.JSONLoader();
+  loader.load( '../assets/model/tree/tree.js', function( geo, mat ) {
+    tree = new THREE.Mesh(
+      geo,
+      new THREE.MeshFaceMaterial( mat )
+    );
+    for ( var i = 0; i < 5; i ++ ) {
+      ( function () {
+        var clone = tree.clone();
+        clone.position.set( i * 10 - 20, 0, 0 );
+        THREE.GeometryUtils.merge( tmpGeometry, clone );
+      } )();
+    }
+
+    forrest = new THREE.Mesh(
+      tmpGeometry,
+      new THREE.MeshFaceMaterial( mat )
+    );
+    scene.add( forrest );
+  } );
+}
+
+function renderLoop (){
+  requestAnimationFrame( renderLoop );
+  var theta = clock.getElapsedTime()
+  camera.position.x = 50 * Math.sin( theta * 10 * Math.PI / 360 );
+  camera.position.z = 50 * Math.cos( theta * 10 * Math.PI / 360 );
+  camera.lookAt( cameraTarget );
+  renderer.render( scene, camera );
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>The future of EC experience with WebAR | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2018/03/16/the-future-of-ec-experience-with-webar.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				The future of EC experience with WebAR
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2018-03-15T15:00:00.000Z" itemprop="datePublished">2018-03-16</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/three-js/">three.js</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p>WebAR or WebXR may come to Web browesers, without any plugins nor native apps.<br>Currentry, <a href="https://github.com/google-ar/WebARonARCore" target="_blank" rel="noopener">test build browsers</a> built on top of ARCore(for Android) / ARKit(for iOS) by Google AR team are available for both Android and iOS.</p>
+<p><img src="/blog/assets/2018-03-16-the-future-of-ec-experience-with-webar/img_01.png" alt=""></p>
+<p>Mozilla has also posted <a href="https://blog.mozilla.org/blog/2017/10/20/bringing-mixed-reality-web/" target="_blank" rel="noopener">a blog about WebXR</a>.</p>
+<h2 id="Let’s-imagine-What-if-WebAR-XR-comes-to-the-web"><a href="#Let’s-imagine-What-if-WebAR-XR-comes-to-the-web" class="headerlink" title="Let’s imagine, What if WebAR/XR comes to the web?"></a>Let’s imagine, What if WebAR/XR comes to the web?</h2><p>One example is here. I have made at a 3 day hackathon, inspired by <a href="https://twitter.com/brendanluu/status/948423339495886848" target="_blank" rel="noopener">this tweet</a>. Check to see this video!</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ttDLGV5IJCM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<ul>
+<li><a href="https://ar-store-demo.herokuapp.com/" target="_blank" rel="noopener">working example on Heroku</a>, only works with <a href="https://github.com/google-ar/WebARonARCore" target="_blank" rel="noopener">WebAR-ready-Chromium</a></li>
+</ul>
+<p>The biggest benefit of WebAR/XR is, just click a link to open the experience, no installation nor preparation required.</p>
+<p>Also, unlike WebVR, users don’t need to have any hardware, except mobile phone or tablet. That means, WebAR/WebXR experience could be reached to <a href="https://www.statista.com/statistics/274774/forecast-of-mobile-phone-users-worldwide/" target="_blank" rel="noopener">5 billion people</a>.</p>
+<p>This demo can be applied several e-commerce cases and others. I’m very excited to see the futuer of the web. The web will be connected to the real world via WebAR/XR.</p>
+<hr>
+<p>The 3D models which I used are 3D scanned. EC shop owner can easily make 3D models without 3D modeling for several products.</p>
+<p><img src="/blog/assets/2018-03-16-the-future-of-ec-experience-with-webar/img_02.png" alt=""></p>
+<p>Although the mesh of 3D scanned model is not ideal for WebGL due to the number of points. But <a href="/blog/2017/09/18/draco.html">Draco</a> may help.</p>
+<p>In the demo, I also have used “glb” format as well. glb is the binary version of glTF, and packed all assets into single file. It is woking very well thanks to the loader for three.js and the exporter for Blender.</p>
+<p>glTF and glb exporter for Blender can be found in GitHub: <a href="https://github.com/KhronosGroup/glTF-Blender-Exporter" target="_blank" rel="noopener">KhronosGroup/glTF-Blender-Exporter</a></p>
+<p><img src="/blog/assets/2018-03-16-the-future-of-ec-experience-with-webar/img_03.png" alt=""></p>
+<p>One thing I notice is: Directly glb export may cause problem for its file size. I reccomend that, export to glTF then check the json file and assets, after that, convert to glb.</p>
+<p>Recently, <a href="https://developers.facebook.com/docs/sharing/3d-posts" target="_blank" rel="noopener">Facebook also supported 3D model post</a> with glb BTW.</p>
+<p>Fb embeded example: you can drag to rotate the embeded 3D model.</p>
+<iframe width="350" height="480" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" src="https://www.facebook.com/v2.12/plugins/post.php?app_id=113869198637480&amp;channel=https%3A%2F%2Fstaticxx.facebook.com%2Fconnect%2Fxd_arbiter%2Fr%2FMs1VZf1Vg1J.js%3Fversion%3D42%23cb%3Df2cf67791d091a4%26domain%3Ddevelopers.facebook.com%26origin%3Dhttps%253A%252F%252Fdevelopers.facebook.com%252Ff23c6dd66777e1c%26relation%3Dparent.parent&amp;container_width=734&amp;href=https%3A%2F%2Fwww.facebook.com%2Fakihiro.oyamada%2Fposts%2F10204260513310566&amp;locale=en_US&amp;sdk=joey&amp;show_text=true&amp;width=320"></iframe>
+
+<p>I have been using three.js JSON for 3D model format, but I guess it’s about time to move on glTF/glb.</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2017/09/18/draco.html">
+					Compress 3D model files with Draco
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2020/06/01/reduce-polycont.html">
+					Reduce polygon count
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>

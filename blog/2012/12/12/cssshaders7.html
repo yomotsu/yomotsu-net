@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="msapplication-TileImage" content="/assets/img/win8-tile-144.png">
+<meta name="msapplication-TileColor" content="#000000">
+<meta property="og:image" content="https://yomotsu.net/assets/img/og-image.png">
+
+<title>CSS Shaders はじめの 7歩目、色の塗りつぶしと乗算 | Yomotsu net</title>
+<link rel="canonical" href="https://yomotsu.net/blog/2012/12/12/cssshaders7.html">
+<link rel="alternate" href="/blog/feed.xml" title="Yomotsu net" type="application/atom+xml">
+
+<link rel="stylesheet" href="/assets/css/main.min.css">
+
+</head>
+<body>
+
+<header class="ymt-PageHeader">
+	<div class="ymt-PageHeader__Inner">
+		<div class="ymt-PageHeader__Logo">
+			<a href="/">
+				<img src="/assets/img/logo.svg" alt="Yomotsu net" width="116" height="36" />
+			</a>
+		</div>
+	</div>
+</header>
+
+
+
+<div class="ymt-PageContents">
+	<div class="ymt-PageContents__Inner">
+		<article>
+
+	<div class="ymt-ContentsTitle">
+		<div class="ymt-ContentsTitle__Inner">
+			<h1 class="ymt-ContentsTitle__Heading">
+				CSS Shaders はじめの 7歩目、色の塗りつぶしと乗算
+			</h1>
+			<div class="ymt-ContentsTitle__Meta">
+				Posted : <time datetime="2012-12-11T15:00:00.000Z" itemprop="datePublished">2012-12-12</time>
+			</div>
+			<div class="ymt-ContentsTitle__Meta">
+				<ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/webgl/">webgl</a></li></ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="ymt-ContentsBody">
+
+		<div class="ymt-Markdown">
+			<p><a href="http://www.adventar.org/calendars/10" target="_blank" rel="noopener">GraphicalWeb Advent Calendar 2012</a> の 12日目の記事です。</p>
+<p>今回は、CSS Shaders における fragment shader の基本として、塗りつぶしと乗算についてを見ていきます。せっかくなので、前回作成したサンプルの fragment shader を編集していきます。</p>
+<h2 id="前回作成したサンプルのおさらい"><a href="#前回作成したサンプルのおさらい" class="headerlink" title="前回作成したサンプルのおさらい"></a>前回作成したサンプルのおさらい</h2><h3 id="HTML-と-CSS"><a href="#HTML-と-CSS" class="headerlink" title="HTML と CSS"></a>HTML と CSS</h3><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;title&gt;CSS Shaders!&lt;/title&gt;
+&lt;style&gt;
+.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg )
+    );
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;sample&quot;&gt;
+    &lt;p&gt;CSS Shader!! シィーエスエス シェーダー!! &lt;/p&gt;
+    &lt;img src=&quot;nyantocat.gif&quot; alt=&quot;&quot;&gt;
+    &lt;p&gt;the Nyantocat by Cameron McEfee&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h3 id="vertex-shader"><a href="#vertex-shader" class="headerlink" title="vertex shader"></a>vertex shader</h3><pre><code>precision mediump float;
+
+attribute vec4 a_position;
+attribute vec2 a_meshCoord;
+
+uniform mat4 u_projectionMatrix;
+uniform mat4 u_transform;
+
+void main() {
+    float z = sin( a_meshCoord.x * 3.1415) * 100.0;
+    vec4 pos = vec4( a_position.xy, z, a_position.w );
+
+    gl_Position = u_projectionMatrix * u_transform * pos;
+}
+</code></pre><p>前回までは fragment shader として読み込んでいる shader.fs の内容は空でした。今回は新たにこの中身を書いていきます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-12-cssshaders7/1.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-12-cssshaders7/1.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+<h2 id="fragment-shader-を適用する"><a href="#fragment-shader-を適用する" class="headerlink" title="fragment shader を適用する"></a>fragment shader を適用する</h2><p>fragment shader を mix() を使わずに、そのままの状態で適用してみましょう。CSS のコードでは、これまで <code>mix( url( shader.fs ) )</code> としていた部分を <code>url( shader.fs )</code> とします。</p>
+<pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) url( shader.fs ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg )
+    );
+}
+</code></pre><p>そして、shader.fs の内容を次のように用意します。</p>
+<pre><code>precision mediump float;
+
+void main() {
+    gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+}
+</code></pre><p>fragment shader では、<code>main</code> 関数で最終的に <code>gl_FragColor</code> に代入された色が処理中のピクセルの色となります。ここでは <code>gl_FragColor</code> に <code>vec4( 1.0, 0.0, 0.0, 1.0 )</code> を代入しています。すると全ピクセルは赤で塗りつぶされることになります。</p>
+<p><code>gl_FragColor</code> は <code>vec4</code> 型を座標としてではなく <code>vec4( 赤, 緑, 青, 透明度 )</code> のように色として利用しているわけです。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-12-cssshaders7/2.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-12-cssshaders7/1.html">ここまでの状態の demo</a></p>
+<h2 id="色を乗算する"><a href="#色を乗算する" class="headerlink" title="色を乗算する"></a>色を乗算する</h2><p>塗りつぶしてしまってはせっかくのコンテンツが見えなくなってしまいます。そこで乗算を利用します。</p>
+<p>CSS 側では fragment shader の指定を <code>url( shader.fs )</code> から <code>mix( url( shader.fs ) multiply )</code> に変更します。</p>
+<pre><code>.sample {
+    width:500px;
+    background: url( bg.png );
+    -webkit-filter: custom(
+        url( shader.vs ) mix( url( shader.fs ) multiply ),
+        32 32,
+        u_transform perspective( 1000 ) rotateX( 45deg )
+    );
+}
+</code></pre><p>fragment shader では色が <code>gl_FragColor</code> ではなく、<code>css_MixColor</code> に代入されるように変更します。</p>
+<pre><code>precision mediump float;
+
+void main() {
+  css_MixColor = vec4( 1.0, 0.0, 0.0, 1.0 );
+}
+</code></pre><p>すると、コンテンツに対して、任意の色が乗算され表示されます。</p>
+<p><img src="http://yomotsu.net/blog/assets/2012-12-12-cssshaders7/3.png" alt=""></p>
+<p><a href="http://yomotsu.net/blog/assets/2012-12-12-cssshaders7/3.html">ここまでの状態の demo</a>(2012年 12月現在では CSS Shader を有効にした Chrome 25以降である必要があります。)</p>
+
+		</div>
+
+		
+			<div class="ymt-ArticleNav">
+	<ul class="ymt-ArticleNav__List">
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--home">
+			<a href="/blog/">Blog Top</a>
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--prev">
+			
+				<a href="/blog/2012/12/11/cssshaders6.html">
+					CSS Shaders はじめの 6歩目、すこし複雑な変形
+				</a> 
+			
+		</li>
+		<li class="ymt-ArticleNav__Item ymt-ArticleNav__Item--next">
+			
+				<a href="/blog/2012/12/13/cssshaders8.html">
+					CSS Shaders はじめの 8歩目、ピクセルごとに異なる色
+				</a>
+			
+		</li>
+	</ul>
+</div>
+
+		
+
+		
+			<div id="disqus_thread"></div>
+		
+
+	</div>
+
+</article>
+
+
+	</div>
+</div>
+
+
+<footer class="ymt-PageFooter">
+	<div class="ymt-PageFooter__Inner">
+
+		<aside class="ymt-PageFooter__Author">
+			<h1>Author</h1>
+			<div class="ymt-PageFooter__AuthorImage">
+				<img src="//www.gravatar.com/avatar/3d8d92b9ff9e708e3e4c247d5ab787ba.png?s=256" alt="" width="80" height="80">
+				<img src="/assets/img/mvp.png" alt="Microsoft MVP" width="40" height="64">
+			</div>
+			<div class="ymt-PageFooter__AuthorText">
+				<p>Akihiro Oyamada (a.k.a yomotsu) </p>
+				<p>I'm a Web-Front-End-Engineer, as well as a Microsoft MVP for Internet Explorer since 2011 to 2017. Playing with CSS3, SVG, WebGL and others.</p>
+				<!-- <p>執筆や講演の履歴など、<a href="/profile/">さらに詳細な情報は Profile をお読みください</a>。</p> -->
+				<hr>
+				<p>If you have any feedback or comments, as well as speaker invitation, use <a href="/contact/">Contact form</a>.<br>For business or project offering, email my company info@pxgrid.com</p>
+				<p>ご意見ご感想や、執筆、講演などのご相談は<a href="/contact/">お問い合わせフォーム</a>へ。<br>Web 制作のご相談は info@pxgrid.com へ。</p>
+			</div>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--social">
+			<h1>Find Me!</h1>
+			<ul>
+				<li><a href="https://www.facebook.com/akihiro.oyamada">Facebook</a></li>
+				<li><a href="https://twitter.com/yomotsu/">Twitter</a></li>
+				<li><a href="https://github.com/yomotsu/">GitHub</a></li>
+			</ul>
+		</aside>
+
+		<aside class="ymt-PageFooter__Aside ymt-PageFooter__Aside--aside">
+			<h1>Subscribe to this Blog!</h1>
+			<ul>
+				<li><a href="/blog/feed.xml">Feed</a></li>
+			</ul>
+		</aside>
+
+	</div>
+</footer>
+
+
+<div class="ymt-PageBackground"></div>
+
+<script src="/assets/js/main.min.js"></script>
+</body>
+</html>
